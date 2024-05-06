@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -71,14 +72,16 @@ ${Body}</body>
                 switch (e.ErrorType)
                 {
                     case ErrorType.SettingFileNotFound:
-                        MessageBox.Show("Setting file not found.see log file for sample of setting.xml");
                         Logger.Error("Setting file not found.");
+                        Logger.Error(e.Message);
                         Logger.Info("sample setting file:\n" + sample_setting_xml);
+                        MessageBox.Show("Setting file not found.see log file for sample of setting.xml");
                         break;
                     case ErrorType.SettingFileLoadError:
-                        MessageBox.Show("Setting file not found.see log file for sample of setting.xml");
-                        Logger.Error("Setting file not found.");
+                        Logger.Error("Setting file load error.");
+                        Logger.Error(e.Message);
                         Logger.Info("sample setting file:\n" + sample_setting_xml);
+                        MessageBox.Show("Setting file load error.see log file for sample of setting.xml");
                         break;
                     default:
                         MessageBox.Show(e.Message);
@@ -130,10 +133,29 @@ ${Body}</body>
             if(e.Key == Key.Delete)
             {
                 System.Diagnostics.Debug.WriteLine("del key ");
-                string entryID = ((OutlookMailItem)((DataGridRow)sender).Item).EntryID;
-                IgnoreFile.Add(entryID);
+                OutlookMailItem outlookMailItem = (OutlookMailItem)((DataGridRow)sender).Item;
+                string entryID = outlookMailItem.EntryID;
+                IgnoreFile.Add(entryID,outlookMailItem,Logger);
                 context.HideMail(entryID);
             }
+        }
+
+        private void ListFolders_Click(object sender,RoutedEventArgs e)
+        {
+            OutlookUtil.ListAllFolders(Logger);
+        }
+        private void OpenLogFolder_Click(object sender, RoutedEventArgs e)
+        {
+            string logDir = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "log");
+            if(!Directory.Exists(logDir))Directory.CreateDirectory(logDir);
+            var psi = new System.Diagnostics.ProcessStartInfo() { FileName = logDir, UseShellExecute = true };
+            System.Diagnostics.Process.Start(psi);
+        }
+        private void OpenSettingFile_Click(object sender, RoutedEventArgs e)
+        {
+            string settingfile = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "setting.xml");
+            var psi = new System.Diagnostics.ProcessStartInfo() { FileName = settingfile, UseShellExecute = true };
+            System.Diagnostics.Process.Start(psi);
         }
     }
 }

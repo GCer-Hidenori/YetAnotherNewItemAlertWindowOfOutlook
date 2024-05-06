@@ -83,23 +83,49 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
             pathParts.RemoveAt(0);
             return GetNormalFolder(store.GetRootFolder(), pathParts);
-            /*
-
-            foreach (MAPIFolder search_folder in store.GetSearchFolders())
-            {
-                if (search_folder.Name == pathParts[pathParts.Length - 1])
-                {
-                    return search_folder;
-                }
-            }
-            throw new NoFolderFoundException();
-            */
         }
         public static MailItem GetMail(string entryID, Microsoft.Office.Interop.Outlook.Application outlook)
         {
             var ns = outlook.GetNamespace("MAPI");
             return ns.GetItemFromID(entryID);
 
+        }
+        public static void ListAllFolders(NLog.Logger logger)
+        {
+            logger.Info("list folders");
+            ListRootFolders(logger);
+            logger.Info("list search folders");
+            ListSearchFolders(logger);
+        }
+        static void ListRootFolders(NLog.Logger logger)
+        {
+            var outlook = new Application();
+            var ns = outlook.GetNamespace("MAPI");
+            foreach (var folder in ns.Folders)
+            {
+                GetFolders((MAPIFolder)folder,logger);
+            }
+        }
+        public static void GetFolders(MAPIFolder folder,NLog.Logger logger)
+        {
+            logger.Info(folder.FullFolderPath);
+            foreach (MAPIFolder subFolder in folder.Folders)
+            {
+                GetFolders(subFolder, logger);
+            }  
+        }
+        static void ListSearchFolders(NLog.Logger logger) 
+        {
+            var outlook = new Application();
+            
+            foreach(Store store in outlook.Session.Stores)
+            {
+                logger.Info(store.DisplayName);
+                foreach(MAPIFolder folder in store.GetSearchFolders())
+                {
+                    logger.Info(folder.FullFolderPath);
+                }
+            }
         }
     }
     public class NoFolderFoundException : System.Exception

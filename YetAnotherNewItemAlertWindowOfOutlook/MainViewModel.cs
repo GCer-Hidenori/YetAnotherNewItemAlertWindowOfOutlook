@@ -16,12 +16,12 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 {
     internal class MainViewModel
     {
-        public ObservableCollection<OutlookMailItem> OutlookMailItemCollection { get; set; } // DataGridにバインディングするリスト
+        public ObservableCollection<OutlookMailItem> OutlookMailItemCollection { get; set; }
         public Dictionary<string, OutlookMailItem> DicOutlookMailItem = new();
         private Timer timer;
         private int timer_count = 0;
         List<TargetProcessing> list_target_processing = new();
-        private Window window;  //ウィンドウを前に出すために使う
+        private Window window;
         Microsoft.Office.Interop.Outlook.Application outlook;
         private Setting setting;
         private NLog.Logger logger;
@@ -70,36 +70,15 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             OutlookMailItemCollection = new ObservableCollection<OutlookMailItem>();
             list_target_processing = MainViewModel.GetTargetProcessings(setting,logger);
 
-
-
-            /*
-            foreach(var target_processing in list_target_processing)
-            {
-                target_processing.RefreshOutlookMailItem();
-                foreach(string mail_entryID in target_processing.List_OutlookMailEntryID)
-                {
-                    if(!DicOutlookMailItem.ContainsKey(mail_entryID))
-                    {
-                        var outlookmailitem = OutlookMailItem.CreateNew(mail_entryID,outlook);
-                        DicOutlookMailItem.Add(mail_entryID, outlookmailitem);
-                        OutlookMailItemCollection.Add(outlookmailitem);
-                    }       
-                }
-            }
-            */
-
             RefreshOutlookMailItem();
             StartTimer();
             
         }
         public void StartTimer()
         {
-            int timer_interval_sec = setting.Timer_interval_sec * 1000;
-            if (timer_interval_sec <= 0)
-            {
-                timer_interval_sec = 10 * 1000;
-            }
-            timer = new Timer(timer_interval_sec); 
+ 
+            int timer_interval_millisec = setting.TimerIntervalSec * 1000;
+            timer = new Timer(timer_interval_millisec); 
             timer.Elapsed += (sender, e) =>
             {
                 RefreshOutlookMailItem();

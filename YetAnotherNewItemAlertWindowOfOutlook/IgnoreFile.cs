@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
@@ -20,13 +20,21 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
             return false;
         }
-        public static void Add(string entryID)
+        public static void Add(string entryID,OutlookMailItem outlookMailitem,NLog.Logger logger)
         {
             if (!Directory.Exists(ignoreDirPath))
             {
                 Directory.CreateDirectory(ignoreDirPath);
             }
-            File.Create(Path.Combine(ignoreDirPath, entryID));
+            string fileName = Path.Combine(ignoreDirPath, entryID);
+            string body = "subject: " + outlookMailitem.Subject + "\n" + "receivedTime: " + outlookMailitem.ReceivedTime + "\n" + "from: " + outlookMailitem.SenderName + "<" + outlookMailitem.SenderEmailAddress + ">"; 
+
+            Encoding enc = Encoding.UTF8;
+            using (StreamWriter writer = new StreamWriter(fileName, false, enc))
+            {
+                writer.WriteLine(body);
+            }
+            logger.Info($"ignore file create or updated {fileName}");
         }
     }
 }

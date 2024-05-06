@@ -15,7 +15,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
     {
         private List<Target> targets = new();
         private static readonly string fileName = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "setting.xml");
-        private int timer_interval_sec = 0;
+        private int timer_interval_sec = 60;
 
         public List<Target> Targets
         {
@@ -23,7 +23,20 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             set { targets = value; }
         }
 
-        public int Timer_interval_sec { get => timer_interval_sec; set => timer_interval_sec = value; }
+        public int TimerIntervalSec {
+            get => timer_interval_sec; 
+            set
+            {
+                if (value > 0)
+                {
+                    timer_interval_sec = value;
+                }
+                else
+                {
+                    timer_interval_sec = 60;
+                }
+            }
+        }
 
         /*
         public void Save()
@@ -44,7 +57,12 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 {
                     xdoc.Load(fileName);
                     var setting = new Setting();
-
+                    XmlNode x;
+                    if((x=xdoc.SelectSingleNode("/Setting/Timer[@interval_sec!='']")) != null)
+                    {
+                        setting.TimerIntervalSec = int.Parse(x.Attributes["interval_sec"].Value);
+                    }
+               
                     xdoc.SelectNodes("/Setting/Targets/Target").Cast<XmlNode>().ToList().ForEach(x =>
                     {
                         var target = new Target();
@@ -90,15 +108,17 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 catch (XmlException e)
                 {
                     string message = $@"source:{e.Source}
+Message:{e.Message}
 Line number:{e.LineNumber}
-Line position:{e.LinePosition}";
-                    throw new YError(ErrorType.SettingFileLoadError);
+Line position:{e.LinePosition}
+";
+                    throw new YError(ErrorType.SettingFileLoadError,message);
 
                 }
             }
             else
             {
-                throw new YError(ErrorType.SettingFileNotFound);
+                throw new YError(ErrorType.SettingFileNotFound,fileName);
             }
         }
         /*

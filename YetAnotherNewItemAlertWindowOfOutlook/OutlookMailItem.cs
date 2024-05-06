@@ -29,7 +29,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private string recipient_emails;
         private DateTime? reminder_time;
         private DateTime? receive_time;
-        private string sender_email;
+        private string sender_email_address;
         private string sender_name;
         private DateTime? sent_on;
         private string subject;
@@ -126,13 +126,13 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 }
             }
         }
-        public string SenderEmail {
-            get => sender_email; 
+        public string SenderEmailAddress {
+            get => sender_email_address; 
             set
             {
-                if(sender_email != value)
+                if(sender_email_address != value)
                 {
-                    sender_email = value;
+                    sender_email_address = value;
                     RaisePropertyChanged();
                 }
             }
@@ -217,7 +217,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 subject = mailItem.Subject,
                 to = mailItem.To,
                 unread = mailItem.UnRead,
-                sender_email = mailItem.SenderEmailAddress,
+                sender_email_address = mailItem.SenderEmailAddress,
                 sender_name = mailItem.SenderName
             };
 

@@ -13,6 +13,11 @@
                 <MenuItem Header="Pause"  Click="PauseTimer_Click"/>
                 <MenuItem Header="Start"  Click="StartTimer_Click"/>
             </MenuItem>
+            <MenuItem Header="Util">
+                <MenuItem Header="List folders to log file" Click="ListFolders_Click"/>
+                <MenuItem Header="Open log folder" Click="OpenLogFolder_Click"/>
+                <MenuItem Header="Open setting file" Click="OpenSettingFile_Click"/>
+            </MenuItem>
             <!--MenuItem Header="Cache">
                 <MenuItem Header="Open cache folder"></MenuItem>
                 <MenuItem Header="Clear cache(!)"></MenuItem>
