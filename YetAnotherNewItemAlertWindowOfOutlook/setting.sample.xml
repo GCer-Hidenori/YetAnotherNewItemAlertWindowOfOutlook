@@ -1,0 +1,31 @@
+<Setting>
+    <Targets>
+        <Target>
+            <TargetFolderType>NormalFolder</TargetFolderType>
+            <IntervalMin>1</IntervalMin>
+            <Path>\\yanaw@example.com\ImportantMails</Path>
+        </Target>
+        <Target>
+            <TargetFolderType>SearchFolder</TargetFolderType>
+            <IntervalMin>1</IntervalMin>
+            <Path>\\yanaw@example.com\search folder\search folder01</Path>
+		    <Filter>
+			    <And>
+				    <SenderEmailAddress>sender111@example.com</SenderEmailAddress>
+			    </And>
+		    </Filter>
+            <Actions>
+                <Activate_Window>true</Activate_Window>
+                <Create_File fileName="c:\work\inbox\${entryID}.md">
+                    <body>---
+Subject: ${Subject}
+ReceivedTime: ${ReceivedTime}
+From: ${SenderName}&lt;${SenderEmailAddress}&gt;
+---
+# Body
+${Body}</body>
+                </Create_File>
+            </Actions>
+        </Target>
+    </Targets>
+</Setting>

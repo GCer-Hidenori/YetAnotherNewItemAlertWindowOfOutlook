@@ -24,40 +24,27 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static string sample_setting_xml = @"<Setting>
-    <Targets>
-        <Target>
-            <TargetFolderType>NormalFolder</TargetFolderType>
-            <IntervalMin>1</IntervalMin>
-            <Path>\\yanaw@example.com\ImportantMails</Path>
-        </Target>
-        <Target>
-            <TargetFolderType>SearchFolder</TargetFolderType>
-            <IntervalMin>1</IntervalMin>
-            <Path>\\yanaw@example.com\search folder\search folder01</Path>
-		    <Filter>
-			    <And>
-				    <SenderEmailAddress>sender111@example.com</SenderEmailAddress>
-			    </And>
-		    </Filter>
-            <Actions>
-                <Activate_Window>true</Activate_Window>
-                <Create_File fileName=""c:\work\inbox\${entryID}.md"">
-                    <body>---
-Subject: ${Subject}
-ReceivedTime: ${ReceivedTime}
-From: ${SenderName}&lt;${SenderEmailAddress}&gt;
----
-# Body
-${Body}</body>
-                </Create_File>
-            </Actions>
-        </Target>
-    </Targets>
-</Setting>"; 
         MainViewModel context;
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private bool ready = false;
+
+
+        private System.Xml.XmlDocument ReadSettingSampleXml1()
+        {
+            System.Xml.XmlDocument xdoc = new System.Xml.XmlDocument();
+            xdoc.Load(ReadSettingSampleXmlString());
+            return xdoc;
+        }
+        private string ReadSettingSampleXmlString()
+        {
+            System.Xml.XmlDocument xdoc = new System.Xml.XmlDocument();
+            var info = System.Windows.Application.GetResourceStream(new Uri("setting.sample.xml", UriKind.Relative));
+            using (var sr = new StreamReader(info.Stream))
+            {
+                return sr.ReadToEnd();
+            }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -76,13 +63,13 @@ ${Body}</body>
                     case ErrorType.SettingFileNotFound:
                         Logger.Error("Setting file not found.");
                         Logger.Error(e.Message);
-                        Logger.Info("sample setting file:\n" + sample_setting_xml);
+                        Logger.Info("sample setting file:\n" + ReadSettingSampleXmlString());
                         MessageBox.Show("Setting file not found.see log file for sample of setting.xml");
                         break;
                     case ErrorType.SettingFileLoadError:
                         Logger.Error("Setting file load error.");
                         Logger.Error(e.Message);
-                        Logger.Info("sample setting file:\n" + sample_setting_xml);
+                        Logger.Info("sample setting file:\n" + ReadSettingSampleXmlString());
                         MessageBox.Show("Setting file load error.see log file for sample of setting.xml");
                         break;
                     default:
