@@ -27,23 +27,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         MainViewModel context;
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private bool ready = false;
+        string settingFilePath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "setting.xml");
 
-
-        private System.Xml.XmlDocument ReadSettingSampleXml1()
-        {
-            System.Xml.XmlDocument xdoc = new System.Xml.XmlDocument();
-            xdoc.Load(ReadSettingSampleXmlString());
-            return xdoc;
-        }
-        private string ReadSettingSampleXmlString()
-        {
-            System.Xml.XmlDocument xdoc = new System.Xml.XmlDocument();
-            var info = System.Windows.Application.GetResourceStream(new Uri("setting.sample.xml", UriKind.Relative));
-            using (var sr = new StreamReader(info.Stream))
-            {
-                return sr.ReadToEnd();
-            }
-        }
 
         public MainWindow()
         {
@@ -63,13 +48,34 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     case ErrorType.SettingFileNotFound:
                         Logger.Error("Setting file not found.");
                         Logger.Error(e.Message);
-                        Logger.Info("sample setting file:\n" + ReadSettingSampleXmlString());
+                        Logger.Info("sample setting file:\n" + Util.ReadSettingSampleXmlString());
                         MessageBox.Show("Setting file not found.see log file for sample of setting.xml");
+                        MessageBoxResult res = MessageBox.Show("Do you want to create a configuration file from your Outlook folder structure?", "Confirmation", MessageBoxButton.YesNo);
+                        if (res == MessageBoxResult.Yes)
+                        {
+                            try
+                            {
+                                Util.CreateSettingFile(outlook,settingFilePath,Logger);
+                                Logger.Info("Setting file created.");
+                                MessageBox.Show("Setting file created.\nExit the application. Restart the application manually.");
+                                this.Close();
+                            }
+                            catch (System.Exception ex)
+                            {
+                                Logger.Error("Setting file creation error.");
+                                Logger.Error(ex.Message);
+                                MessageBox.Show("Setting file creation error.");
+                            }
+                        }
+                        else
+                        {
+                            Logger.Info("User canceled.");
+                        }
                         break;
                     case ErrorType.SettingFileLoadError:
                         Logger.Error("Setting file load error.");
                         Logger.Error(e.Message);
-                        Logger.Info("sample setting file:\n" + ReadSettingSampleXmlString());
+                        Logger.Info("sample setting file:\n" + Util.ReadSettingSampleXmlString());
                         MessageBox.Show("Setting file load error.see log file for sample of setting.xml");
                         break;
                     default:
@@ -94,10 +100,12 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
 
         }
+        /*
         public static void Dialog(string message)
         {
             MessageBoxResult res = MessageBox.Show(message, "Confirmation", MessageBoxButton.OK);
         }
+        */
         private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
@@ -154,8 +162,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         }
         private void OpenSettingFile_Click(object sender, RoutedEventArgs e)
         {
-            string settingfile = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "setting.xml");
-            var psi = new System.Diagnostics.ProcessStartInfo() { FileName = settingfile, UseShellExecute = true };
+            var psi = new System.Diagnostics.ProcessStartInfo() { FileName = settingFilePath, UseShellExecute = true };
             System.Diagnostics.Process.Start(psi);
         }
     }
