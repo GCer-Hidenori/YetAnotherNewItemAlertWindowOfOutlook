@@ -17,6 +17,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
     internal class MainViewModel
     {
         public ObservableCollection<OutlookMailItem> OutlookMailItemCollection { get; set; }
+    
+
         public Dictionary<string, OutlookMailItem> DicOutlookMailItem = new();
         private Timer timer;
         private int timer_count = 0;

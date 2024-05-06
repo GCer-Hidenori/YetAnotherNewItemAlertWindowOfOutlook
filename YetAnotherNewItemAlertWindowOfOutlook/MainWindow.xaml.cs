@@ -57,6 +57,7 @@ ${Body}</body>
 </Setting>"; 
         MainViewModel context;
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private bool ready = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -66,6 +67,7 @@ ${Body}</body>
                 Setting setting = Setting.Load(Logger);
                 context = new MainViewModel(setting, outlook, this,Logger);
                 this.DataContext = context;
+                ready = true;
             }
             catch (YError e)
             {
@@ -88,8 +90,20 @@ ${Body}</body>
                         Logger.Error(e.Message);
                         break;
                 }
+                try
+                {
+                    if (context != null)
+                    {
+                        context.PauseTimer();
+                    }
+                }
+                catch (System.Exception)
+                {
+
+                }
+                
           
-                this.Close();
+                //this.Close();
             }
 
         }
@@ -117,15 +131,15 @@ ${Body}</body>
 
         private void RefreshNow_Click(object sender, RoutedEventArgs e)
         {
-            context.RefreshOutlookMailItem(true);
+            if(ready)context.RefreshOutlookMailItem(true);
         }
         private void PauseTimer_Click(object sender, RoutedEventArgs e)
         {
-            context.PauseTimer();
+            if (ready) context.PauseTimer();
         }
         private void StartTimer_Click(object sender, RoutedEventArgs e)
         {
-            context.StartTimer();
+            if (ready) context.StartTimer();
         }
 
         private void DataGridRow_KeyDown(object sender, KeyEventArgs e)
