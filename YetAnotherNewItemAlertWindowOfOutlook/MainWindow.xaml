@@ -30,7 +30,7 @@
         <DataGrid ItemsSource="{Binding OutlookMailItemCollection}"  AutoGenerateColumns="False" Margin="0,22,0,0" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Sender Name" Binding="{Binding SenderName}" IsReadOnly="True"  />
-                <DataGridTextColumn Header="Sender Email" Binding="{Binding SenderEmailAddress}"  IsReadOnly="True" />
+                <!--DataGridTextColumn Header="Sender Email" Binding="{Binding SenderEmailAddress}"  IsReadOnly="True" /-->
                 <DataGridTextColumn Header="CC" Binding="{Binding Cc}"  IsReadOnly="True" />
                 <DataGridTextColumn Header="Received Time" Binding="{Binding ReceivedTime, StringFormat=yyyy/MM/dd HH:mm}"  IsReadOnly="True" />
                 <DataGridTextColumn Header="Subject" Binding="{Binding Subject}" IsReadOnly="True"  />
@@ -38,7 +38,7 @@
                 <DataGridTextColumn Header="Categories" Binding="{Binding Categories}"  IsReadOnly="True" />
                 <DataGridTextColumn Header="Flag" Binding="{Binding FlagIcon}"  IsReadOnly="True"  />
                 <DataGridTextColumn Header="Recipient Names" Binding="{Binding RecipientNames}"  IsReadOnly="True" />
-                <DataGridTextColumn Header="Recipient Emails" Binding="{Binding RecipientEmails}"  IsReadOnly="True" />
+                <!--DataGridTextColumn Header="Recipient Emails" Binding="{Binding RecipientEmails}"  IsReadOnly="True" /-->
                 <DataGridTextColumn Header="Reminder Time" Binding="{Binding ReminderTime, StringFormat=yyyy/MM/dd HH:mm}" IsReadOnly="True"  />
                 <DataGridTextColumn Header="To" Binding="{Binding To}" IsReadOnly="True"  />
                 <DataGridTextColumn Header="Unread" Binding="{Binding Unread}" IsReadOnly="True"  />

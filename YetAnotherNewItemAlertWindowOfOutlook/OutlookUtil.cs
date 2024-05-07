@@ -1,4 +1,4 @@
-﻿using Microsoft.Office.Interop.Outlook;
+using Microsoft.Office.Interop.Outlook;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,7 +56,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     return GetNormalFolder(folder, child_folder_names);
                 }
             }
-            throw new NoFolderFoundException();
+            throw new YError(ErrorType.NoFolderFoundError,parentFolder.FullFolderPath + "/" + child_folder_names[0]);
         }
         public static MAPIFolder GetNormalFolder(string path)
         {
@@ -79,7 +79,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
             catch (System.Runtime.InteropServices.COMException)
             {
-                throw new NoFolderFoundException("store not found " + pathParts[0]);
+                throw new YError(ErrorType.NoFolderFoundError,"store not found " + pathParts[0]);
             }
             pathParts.RemoveAt(0);
             return GetNormalFolder(store.GetRootFolder(), pathParts);
@@ -126,17 +126,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     logger.Info(folder.FullFolderPath);
                 }
             }
-        }
-    }
-    public class NoFolderFoundException : System.Exception
-    {
-        public NoFolderFoundException() : base()
-        {
-
-        }
-        public NoFolderFoundException(string message) : base(message)
-        {
-
         }
     }
 
