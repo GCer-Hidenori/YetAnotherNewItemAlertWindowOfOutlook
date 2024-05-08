@@ -92,8 +92,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         {
             lock (lockObj)
             {
-                System.Diagnostics.Debug.WriteLine("RefreshOutlookMailItem");
-                logger.Info("start RefreshOutlookMailItem");
+                //System.Diagnostics.Debug.WriteLine("RefreshOutlookMailItem");
+                
                 bool activateWindow = false;
 
                 List<string> list_entryid_of_target_processing = new();
@@ -102,6 +102,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 {
                     if (forceRefresh || ( target_processing.Target.IntervalMin > 0 && timer_count % target_processing.Target.IntervalMin == 0))
                     {
+                        logger.Info($"start RefreshOutlookMailItem.Folder:{target_processing.Target?.Path}");
                         var result = target_processing.RefreshOutlookMailItem();
                         if(!activateWindow && result.ActivateWindow) activateWindow = true;
                         foreach (string entryID in result.List_new_entry_id)
@@ -112,6 +113,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                                 actionCreateFile.CreateFile(mailItem);
                             }
                         }
+                        logger.Info($"end RefreshOutlookMailItem.Folder:{target_processing.Target?.Path}");
                     }
                     
                     foreach (string mail_entryID in target_processing.List_OutlookMailEntryID)
