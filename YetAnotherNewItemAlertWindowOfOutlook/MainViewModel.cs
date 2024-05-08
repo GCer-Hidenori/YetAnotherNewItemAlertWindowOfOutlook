@@ -92,7 +92,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         {
             lock (lockObj)
             {
-                //System.Diagnostics.Debug.WriteLine("RefreshOutlookMailItem");
+                System.Diagnostics.Debug.WriteLine("RefreshOutlookMailItem start");
                 
                 bool activateWindow = false;
 
@@ -102,6 +102,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 {
                     if (forceRefresh || ( target_processing.Target.IntervalMin > 0 && timer_count % target_processing.Target.IntervalMin == 0))
                     {
+                        System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString()} start RefreshOutlookMailItem.Folder:{target_processing.Target?.Path}");
                         logger.Info($"start RefreshOutlookMailItem.Folder:{target_processing.Target?.Path}");
                         var result = target_processing.RefreshOutlookMailItem();
                         if(!activateWindow && result.ActivateWindow) activateWindow = true;

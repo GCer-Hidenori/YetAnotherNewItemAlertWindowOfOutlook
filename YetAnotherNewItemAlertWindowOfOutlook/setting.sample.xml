@@ -1,4 +1,5 @@
 <Setting>
+  <Timer interval_sec="60"/>
     <Targets>
         <Target>
             <TargetFolderType>NormalFolder</TargetFolderType>
