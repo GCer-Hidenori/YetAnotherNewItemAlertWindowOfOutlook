@@ -111,7 +111,12 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             e.Handled = true;
             var outlook = new Microsoft.Office.Interop.Outlook.Application();
             var ns = outlook.GetNamespace("MAPI");
-            ns.GetItemFromID(((OutlookMailItem)((DataGridRow)sender).Item).EntryID).Display();
+            var mailItem = ns.GetItemFromID(((OutlookMailItem)((DataGridRow)sender).Item).EntryID);
+            if (mailItem != null)
+            {
+                //mailItem.Display();
+                mailItem.GetInspector.Display(false);
+            }
         }
 
         private void Window_Deactivated(object sender, EventArgs e)
