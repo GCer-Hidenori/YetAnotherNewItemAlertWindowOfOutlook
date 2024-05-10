@@ -114,7 +114,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             var mailItem = ns.GetItemFromID(((OutlookMailItem)((DataGridRow)sender).Item).EntryID);
             if (mailItem != null)
             {
-                //mailItem.Display();
+                mailItem.Display();
                 mailItem.GetInspector.Display(false);
             }
         }
