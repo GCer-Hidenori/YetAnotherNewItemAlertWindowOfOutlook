@@ -15,17 +15,13 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private Target target;
         private MAPIFolder target_folder;
         private List<string> list_outlookmaili_entryID = new();
-        private NLog.Logger logger;
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         public Target Target { get => target; set => target = value; }
         public MAPIFolder Target_folder { get => target_folder; set => target_folder = value; }
 
         public List<string> List_OutlookMailEntryID {get => list_outlookmaili_entryID; set => list_outlookmaili_entryID = value; }
 
-        public TargetProcessing(NLog.Logger logger)
-        {
-            this.logger = logger;
-        }
 
         public ResultOfTargetProcessing RefreshOutlookMailItem()
         {
@@ -41,13 +37,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                          continue; 
                     }else if(target.FilterNode != null)
                     {
-                        /*
-                        logger.Debug($"Subject: {mailItem.Subject}");
-                        logger.Debug($"to: {mailItem.To}");
-                        logger.Debug($"cc: {mailItem.CC}");
-                        logger.Debug($"SenderName: {mailItem.SenderName}");
-                        logger.Debug($"SenderEmailAddress: {mailItem.SenderEmailAddress}");
-                        */
                         if(!target.Filtering(mailItem))
                         {
                             continue;

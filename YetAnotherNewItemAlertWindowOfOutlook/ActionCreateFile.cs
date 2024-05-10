@@ -13,15 +13,11 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
     {
         private string fileName;
         private string body = "";
-        private NLog.Logger logger;
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         public string FileName { get => fileName; set => fileName = value; }
         public string Body { get => body; set => body = value; }
 
-        public ActionCreateFile(NLog.Logger logger)
-        {
-            this.logger = logger;
-        }
         private string ReplaceWords(string source,MailItem mailItem)
         {
             
@@ -47,7 +43,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             {
                 writer.WriteLine(valBody);
             }
-            logger.Info($"file create or updated {valfileName}");
+            Logger.Info($"file create or updated {valfileName}");
         }
     }
 }

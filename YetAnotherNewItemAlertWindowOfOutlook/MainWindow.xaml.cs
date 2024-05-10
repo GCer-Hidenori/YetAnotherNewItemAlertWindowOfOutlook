@@ -24,7 +24,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
     /// </summary>
     public partial class MainWindow : Window
     {
-        MainViewModel context;
+        MainViewModel? context;
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private bool ready = false;
         string settingFilePath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "setting.xml");
@@ -36,8 +36,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             var outlook = new Microsoft.Office.Interop.Outlook.Application();
             try
             {
-                Setting setting = Setting.Load(Logger);
-                context = new MainViewModel(setting, outlook, this,Logger);
+                Setting setting = Setting.Load();
+                context = new MainViewModel(setting, outlook,this);
                 this.DataContext = context;
                 ready = true;
             }
@@ -55,7 +55,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                         {
                             try
                             {
-                                Util.CreateSettingFile(outlook,settingFilePath,Logger);
+                                Util.CreateSettingFile(outlook,settingFilePath);
                                 Logger.Info("Setting file created.");
                                 MessageBox.Show("Setting file created.\nExit the application. Restart the application manually.");
                                 this.Close();
@@ -131,15 +131,15 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
         private void RefreshNow_Click(object sender, RoutedEventArgs e)
         {
-            if(ready)context.RefreshOutlookMailItem(true);
+            if(ready)context?.RefreshOutlookMailItem(true);
         }
         private void PauseTimer_Click(object sender, RoutedEventArgs e)
         {
-            if (ready) context.PauseTimer();
+            if (ready) context?.PauseTimer();
         }
         private void StartTimer_Click(object sender, RoutedEventArgs e)
         {
-            if (ready) context.StartTimer();
+            if (ready) context?.StartTimer();
         }
 
         private void DataGridRow_KeyDown(object sender, KeyEventArgs e)
@@ -150,7 +150,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 OutlookMailItem outlookMailItem = (OutlookMailItem)((DataGridRow)sender).Item;
                 string entryID = outlookMailItem.EntryID;
                 IgnoreFile.Add(entryID,outlookMailItem,Logger);
-                context.HideMail(entryID);
+                context?.HideMail(entryID);
             }
         }
 

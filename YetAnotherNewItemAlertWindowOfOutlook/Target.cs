@@ -19,11 +19,11 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             SearchFolder
         }
 
-        private XmlNode filterNode = null;
+        private XmlNode? filterNode = null;
         private int interval_min;
         private FolderType folderType;
         private string? path;
-        private NLog.Logger logger;
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         public FolderType TargetFolderType
         {
             get { return folderType; }
@@ -43,19 +43,25 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private List<ActionCreateFile> actionCreateFiles = new();
         public bool ActivateWindow { get => activateWindow; set => activateWindow = value; }
 
-        public XmlNode FilterNode { get => filterNode; set => filterNode = value; }
+        public XmlNode? FilterNode { get => filterNode; set => filterNode = value; }
 
-        public Logger Logger { get => logger; set => logger = value; }
         internal List<ActionCreateFile> ActionCreateFiles { get => actionCreateFiles; set => actionCreateFiles = value; }
 
         public bool Filtering(MailItem mailItem)
         {
-            var element = filterNode.FirstChild;
+            var element = filterNode?.FirstChild;
+            if (element == null)
+            {
+                return true;
+            }
             return Filtering(mailItem, element);
         }
-        public bool Filtering(MailItem mailItem, XmlNode element)
+        public bool Filtering(MailItem mailItem, XmlNode? element)
         {
-            if (element.Name.ToUpper() == "AND")
+            if(element == null)
+            {
+                return true;
+            }else  if (element.Name.ToUpper() == "AND")
             {
                 return element.ChildNodes.Cast<XmlNode>().Where(x => x.NodeType == XmlNodeType.Element).All(x => Filtering(mailItem, x));
             }
@@ -105,7 +111,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
             else
             {
-                logger.Error($"Invalid Filter Element Name: {element.Name}");
+                Logger.Error($"Invalid Filter Element Name: {element.Name}");
                 throw new YError(ErrorType.InvalidFilterElementName,element.Name);
             }
         }

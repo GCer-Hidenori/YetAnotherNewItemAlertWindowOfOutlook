@@ -11,7 +11,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 {
     public class Util
     {
-        private static System.Xml.XmlDocument ReadSettingSampleXml(NLog.Logger logger)
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static System.Xml.XmlDocument ReadSettingSampleXml()
         {
             System.Xml.XmlDocument xdoc = new System.Xml.XmlDocument();
             string xmlString = ReadSettingSampleXmlString();
@@ -51,9 +52,9 @@ xml:{xmlString}
             }
             return null;
         }
-        public static void CreateSettingFile(Microsoft.Office.Interop.Outlook.Application outlook, string settingFilePath,NLog.Logger logger)
+        public static void CreateSettingFile(Microsoft.Office.Interop.Outlook.Application outlook, string settingFilePath)
         {
-            var xdoc = ReadSettingSampleXml(logger);
+            var xdoc = ReadSettingSampleXml();
             var xTarget_NormalFolder = xdoc.SelectSingleNode("//Target[TargetFolderType='NormalFolder']");
             var inboxFolder = outlook.GetNamespace("MAPI").GetDefaultFolder(OlDefaultFolders.olFolderInbox);
             xTarget_NormalFolder.SelectSingleNode(".//Path").InnerText = inboxFolder.FolderPath;

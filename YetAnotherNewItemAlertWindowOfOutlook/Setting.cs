@@ -16,6 +16,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private List<Target> targets = new();
         private static readonly string fileName = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "setting.xml");
         private int timer_interval_sec = 60;
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         public List<Target> Targets
         {
@@ -48,7 +49,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         }
         */
 
-        public static Setting Load(NLog.Logger logger)
+        public static Setting Load()
         {
             XmlDocument xdoc = new();
             if (File.Exists(fileName))
@@ -58,7 +59,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     xdoc.Load(fileName);
                     var setting = new Setting();
                     XmlNode x;
-                    if((x=xdoc.SelectSingleNode("/Setting/Timer[@interval_sec!='']")) != null)
+                    if ((x = xdoc.SelectSingleNode("/Setting/Timer[@interval_sec!='']")) != null)
                     {
                         setting.TimerIntervalSec = int.Parse(x.Attributes["interval_sec"].Value);
                     }
@@ -66,7 +67,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     xdoc.SelectNodes("/Setting/Targets/Target").Cast<XmlNode>().ToList().ForEach(x =>
                     {
                         var target = new Target();
-                        target.Logger = logger;
                         target.IntervalMin = int.Parse(x.SelectSingleNode("IntervalMin").InnerText);
                         target.TargetFolderType = (Target.FolderType)Enum.Parse(typeof(Target.FolderType), x.SelectSingleNode("TargetFolderType").InnerText);
                         target.Path = x.SelectSingleNode("Path").InnerText;
@@ -80,7 +80,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                         }
                         foreach (XmlNode xCreateFile in x.SelectNodes("Actions/Create_File"))
                         {
-                            var createFile = new ActionCreateFile(logger);
+                            var createFile = new ActionCreateFile();
                             if (xCreateFile.Attributes["fileName"] != null)
                             {
                                 createFile.FileName = xCreateFile.Attributes["fileName"].Value;

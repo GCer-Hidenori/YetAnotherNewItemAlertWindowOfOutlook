@@ -21,19 +21,19 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
         }
 
-        private string cc;
-        private string categories;
-        private string entry_id;
-        private string flag_icon;
-        private string recipient_names;
-        private string recipient_emails;
+        private string cc = "";
+        private string categories = "";
+        private string entry_id = "";
+        private string flag_icon = "";
+        private string recipient_names = "";
+        private string recipient_emails = "";
         private DateTime? reminder_time;
         private DateTime? receive_time;
-        private string sender_email_address;
-        private string sender_name;
+        private string sender_email_address = "";
+        private string sender_name = "";
         private DateTime? sent_on;
-        private string subject;
-        private string to;
+        private string subject = "";
+        private string to = "";
         private Boolean unread;
 
         public string Cc 

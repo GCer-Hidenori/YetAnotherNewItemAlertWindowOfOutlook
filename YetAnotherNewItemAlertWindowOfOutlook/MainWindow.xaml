@@ -7,18 +7,26 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" Deactivated="Window_Deactivated">
     <Grid>
-        <Menu>
-            <MenuItem Header="Refresh">
-                <MenuItem Header="Now" Click="RefreshNow_Click"/>
-                <MenuItem Header="Pause"  Click="PauseTimer_Click"/>
-                <MenuItem Header="Start"  Click="StartTimer_Click"/>
-            </MenuItem>
-            <MenuItem Header="Util">
-                <MenuItem Header="List folders to log file" Click="ListFolders_Click"/>
-                <MenuItem Header="Open log folder" Click="OpenLogFolder_Click"/>
-                <MenuItem Header="Open setting file" Click="OpenSettingFile_Click"/>
-            </MenuItem>
-            <!--MenuItem Header="Cache">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20" />
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Menu Grid.Row="0">
+                <MenuItem Header="Refresh">
+                    <MenuItem Header="Now" Click="RefreshNow_Click"/>
+                    <MenuItem Header="Pause"  Click="PauseTimer_Click"/>
+                    <MenuItem Header="Start"  Click="StartTimer_Click"/>
+                </MenuItem>
+                <MenuItem Header="Util">
+                    <MenuItem Header="List folders to log file" Click="ListFolders_Click"/>
+                    <MenuItem Header="Open log folder" Click="OpenLogFolder_Click"/>
+                    <MenuItem Header="Open setting file" Click="OpenSettingFile_Click"/>
+                </MenuItem>
+
+                <!--MenuItem Header="Cache">
                 <MenuItem Header="Open cache folder"></MenuItem>
                 <MenuItem Header="Clear cache(!)"></MenuItem>
                 <MenuItem Header="Delete old cache"></MenuItem>
@@ -27,7 +35,15 @@
                 <MenuItem Header="Open setting file"></MenuItem>
             </MenuItem-->
         </Menu>
-        <DataGrid ItemsSource="{Binding OutlookMailItemCollection}"  AutoGenerateColumns="False" Margin="0,22,0,0" IsReadOnly="True">
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="60"/>
+                </Grid.ColumnDefinitions>
+                 <TextBox TextWrapping="Wrap" Text="TextBox" Height="20" Grid.Column="0"/>
+                <Button Content="Search" Grid.Column="1" />
+         </Grid>
+            <DataGrid ItemsSource="{Binding OutlookMailItemCollection}"  AutoGenerateColumns="False" IsReadOnly="True" Grid.Row="2" >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Sender Name" Binding="{Binding SenderName}" IsReadOnly="True"  />
                 <!--DataGridTextColumn Header="Sender Email" Binding="{Binding SenderEmailAddress}"  IsReadOnly="True" /-->
@@ -51,7 +67,7 @@
             </DataGrid.RowStyle>
 
         </DataGrid>
-
+        </Grid>
 
     </Grid>
 </Window>
