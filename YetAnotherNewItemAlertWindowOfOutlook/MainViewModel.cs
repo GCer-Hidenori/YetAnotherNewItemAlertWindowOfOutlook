@@ -72,18 +72,27 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             list_target_processing = MainViewModel.GetTargetProcessings(setting,logger);
 
             RefreshOutlookMailItem();
+
+            SetTimer();
             StartTimer();
             
         }
-        public void StartTimer()
+        private void SetTimer()
         {
- 
             int timer_interval_millisec = setting.TimerIntervalSec * 1000;
-            timer = new Timer(timer_interval_millisec); 
+            timer = new Timer(timer_interval_millisec);
             timer.Elapsed += (sender, e) =>
             {
                 RefreshOutlookMailItem();
             };
+            timer.AutoReset = true;
+            
+        }
+
+
+        public void StartTimer()
+        {
+            logger.Info("start timer.");
             timer.Start();
         }
         object lockObj = new();
@@ -171,6 +180,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         }
         public void PauseTimer()
         {
+            logger.Info("pause timer.");
             timer.Stop();
         }
         public void HideMail(string entryID)
