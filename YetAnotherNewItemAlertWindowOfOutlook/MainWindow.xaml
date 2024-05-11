@@ -41,7 +41,7 @@
                     <!-- <ColumnDefinition Width="60"/-->
                     <!--ColumnDefinition Width="60"/-->
                 </Grid.ColumnDefinitions>
-                <TextBox TextWrapping="Wrap" Text="Search Box" Height="20" Grid.Column="0" x:Name="SearchTextBox" TextChanged = "SearchTextBox_TextChanged" KeyDown="SearchTextBox_KeyDown" Foreground="#FFC8C8C8"/>
+                <TextBox TextWrapping="Wrap" Text="Search Box" Height="20" Grid.Column="0" x:Name="SearchTextBox" TextChanged = "SearchTextBox_TextChanged" KeyDown="SearchTextBox_KeyDown" Foreground="#FFC8C8C8" GotFocus="SearchTextBox_GotFocus" />
                 <!-- <Button Content="Search" Grid.Column="1" Click="SearchButton_Click" />
                 <Button Content="Cancel" Grid.Column="2" Click="SearchCancelButton_Click"/>-->
             </Grid>

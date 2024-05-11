@@ -189,17 +189,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             view.Filter = null;
         }
 
-        /*
-        private void SearchButton_Click(object sender, RoutedEventArgs e)
-        {
-            Search();
-        }
-        private void SearchCancelButton_Click(object sender, RoutedEventArgs e)
-        {
-            SearchCancel();
-        }
-        */
-
         private void SearchTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)
@@ -219,16 +208,28 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 var textbox = (TextBox)this.FindName("SearchTextBox");
                 if (textbox.Text == "")
                 {
-                    textbox.Foreground = new SolidColorBrush(new Color() { A = 0xff, R = 0xc8, G = 0xc8, B = 0xc8 });
                     SearchCancel();
                 }
                 else
                 {
-                    textbox.Foreground = new SolidColorBrush(new Color() { A = 0xff, R = 0, G = 0, B = 0 });
                     Search();
                 }
             }
  
+        }
+
+        private void SearchTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (ready)
+            {
+                var textbox = (TextBox)this.FindName("SearchTextBox");
+                if(textbox.Foreground != new SolidColorBrush(Colors.Black))
+                {
+                    textbox.Text = "";
+                    textbox.Foreground = new SolidColorBrush(Colors.Black);
+                    textbox.GotFocus -= SearchTextBox_GotFocus;
+                }
+            }
         }
     }
 }
