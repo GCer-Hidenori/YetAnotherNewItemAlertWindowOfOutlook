@@ -5,6 +5,8 @@ using System.Printing;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Xml.Serialization;
+
 //using System.Xml;
 using Microsoft.Office.Interop.Outlook;
 using NLog;
@@ -19,9 +21,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             SearchFolder
         }
 
-        //private XmlNode? filterNode = null;   
-        private Condition? filter = null;
-        private int interval_min;
+        private Condition? condition = null;
+        private int timers_to_check_mail = 1;   //How many timers does it take to start?
         private FolderType folderType;
         private string? path;
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
@@ -30,32 +31,42 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             get { return folderType; }
             set { folderType = value; }
         }
-        public int IntervalMin
+        public int TimersToCheckMail
         {
-            get { return interval_min; }
-            set { interval_min = value; }
+            get { return timers_to_check_mail; }
+            set { timers_to_check_mail = value; }
         }
         public String? Path
         {
             get { return path; }
             set { path = value; }
         }
-        private bool activateWindow = false;
-        private List<ActionCreateFile> actionCreateFiles = new();
-        public bool ActivateWindow { get => activateWindow; set => activateWindow = value; }
+        //private bool activateWindow = false;
 
-        //public XmlNode? FilterNode { get => filterNode; set => filterNode = value; }
+     
+        private List<Action> actions = new();
+        
+        public bool ActivateWindow
+        {
+            get
+            {
+                return Actions.Any(x => x.ActionType == ActionType.ActivateWindow);
+            }
+        }
 
 
 
-        internal List<ActionCreateFile> ActionCreateFiles { get => actionCreateFiles; set => actionCreateFiles = value; }
-        public Condition? Filter { get => filter; set => filter = value; }
+
+        //internal List<Action> ActionCreateFiles { get => Actions; set => Actions = value; }
+        public Condition? Condition { get => condition; set => condition = value; }
+        [XmlElement("Actions")]
+        public List<Action> Actions { get => actions; set => actions = value; }
 
         public bool Filtering(MailItem mailItem)
         {
-            if(Filter != null)
+            if(Condition != null)
             {
-                return Filter.Evaluate(mailItem);
+                return Condition.Evaluate(mailItem);
             }
             else
             {
@@ -68,35 +79,35 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             if(element == null)
             {
                 return true;
-            }else  if (element.Name.ToUpper() == "AND")
+            }else  if (element.Name.ToUpper() == "And")
             {
                 return element.ChildNodes.Cast<XmlNode>().Where(x => x.NodeType == XmlNodeType.Element).All(x => Filtering(mailItem, x));
             }
-            else if (element.Name.ToUpper() == "OR")
+            else if (element.Name.ToUpper() == "Or")
             {
                 return element.ChildNodes.Cast<XmlNode>().Where(x => x.NodeType == XmlNodeType.Element).Any(x => Filtering(mailItem, x));
             }
-            else if (element.Name.ToUpper() == "NOT")
+            else if (element.Name.ToUpper() == "Not")
             {
                 return !Filtering(mailItem, element.FirstChild);
             }
-            else if (element.Name.ToUpper() == "SUBJECT")
+            else if (element.Name.ToUpper() == "Subject")
             {
                 return mailItem.Subject.Contains(element.InnerText);
             }
-            else if (element.Name.ToUpper() == "BODY")
+            else if (element.Name.ToUpper() == "Body")
             {
                 return mailItem.Body.Contains(element.InnerText);
             }
-            else if (element.Name.ToUpper() == "SENDEREMAILADDRESS")
+            else if (element.Name.ToUpper() == "SenderAddress")
             {
                 return mailItem.SenderEmailAddress.Contains(element.InnerText);
             }
-            else if (element.Name.ToUpper() == "SENDERNAME")
+            else if (element.Name.ToUpper() == "SenderName")
             {
                 return mailItem.SenderName.Contains(element.InnerText);
             }
-            else if (element.Name.ToUpper() == "RECIPIENTNAMES")
+            else if (element.Name.ToUpper() == "RecipientNames")
             {
                 return String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(recipient => recipient.Name)).Contains(element.InnerText);
             }
@@ -104,13 +115,13 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             {
                 return String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(recipient => recipient.Address)).Contains(element.InnerText);
             }
-            else if (element.Name.ToUpper() == "TO")
+            else if (element.Name.ToUpper() == "To")
             {
                 return mailItem.To.Contains(element.InnerText);
             }
-            else if (element.Name.ToUpper() == "CC")
+            else if (element.Name.ToUpper() == "Cc")
             {
-                return mailItem.CC.Contains(element.InnerText);
+                return mailItem.Cc.Contains(element.InnerText);
             }
             else if (element.Name.ToUpper() == "ATTACHMENT")
             {

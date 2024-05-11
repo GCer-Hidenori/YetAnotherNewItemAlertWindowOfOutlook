@@ -6,22 +6,37 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace YetAnotherNewItemAlertWindowOfOutlook
 {
-    internal class ActionCreateFile
+    public enum ActionType
     {
-        private string fileName;
-        private string body = "";
+        ActivateWindow,
+        CreateFile
+    }
+    [XmlRoot("Action")]
+    public class Action
+    {
+        private ActionType action_type;
+        private string? fileName = null;
+        private string? body = null;
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        
+        [XmlAttribute("fileName")]
+        public string? FileName { get => fileName; set => fileName = value; }
 
-        public string FileName { get => fileName; set => fileName = value; }
-        public string Body { get => body; set => body = value; }
+        [XmlElement("body")]
+        public string? Body { get => body; set => body = value; }
 
-        private string ReplaceWords(string source,MailItem mailItem)
+        [XmlAttribute("type")]
+        public ActionType ActionType { get => action_type; set => action_type = value; }
+
+
+        private string ReplaceWords(string? source,MailItem mailItem)
         {
             
-            source =  Regex.Replace(source, @"\${entryID}", mailItem.EntryID, RegexOptions.IgnoreCase);
+            source =  Regex.Replace(source ?? "", @"\${entryID}", mailItem.EntryID, RegexOptions.IgnoreCase);
             source =  Regex.Replace(source, @"\${Subject}", mailItem.Subject, RegexOptions.IgnoreCase);
             source =  Regex.Replace(source, @"\${ReceivedTime}", mailItem.ReceivedTime.ToString(), RegexOptions.IgnoreCase).Replace('/','-');
             source =  Regex.Replace(source, @"\${SenderName}", mailItem.SenderName ?? "", RegexOptions.IgnoreCase);

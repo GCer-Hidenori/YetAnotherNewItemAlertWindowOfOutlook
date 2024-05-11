@@ -108,7 +108,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 List<string> list_entryid_of_outlookmailitemcollection = new();
                 foreach (var target_processing in list_target_processing)
                 {
-                    if (forceRefresh || ( target_processing.Target?.IntervalMin > 0 && timer_count % target_processing.Target.IntervalMin == 0))
+                    if (forceRefresh || ( target_processing.Target?.TimersToCheckMail > 0 && timer_count % target_processing.Target.TimersToCheckMail == 0))
                     {
                         System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString()} start RefreshOutlookMailItem.Folder:{target_processing.Target?.Path}");
                         Logger.Info($"start RefreshOutlookMailItem.Folder:{target_processing.Target?.Path}");
@@ -119,8 +119,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                         {
                             if (target_processing.Target != null)
                             {
-                                foreach (ActionCreateFile actionCreateFile in target_processing.Target.ActionCreateFiles)
+                                foreach (Action actionCreateFile in target_processing.Target.Actions.Where(a=>a.ActionType==ActionType.CreateFile))
                                 {
+
                                     MailItem mailItem = OutlookUtil.GetMail(entryID, outlook);
                                     actionCreateFile.CreateFile(mailItem);
                                 }

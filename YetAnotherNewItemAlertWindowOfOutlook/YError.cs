@@ -9,7 +9,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 {
     public enum ErrorType
     {
-        SettingFileNotFound,
         SettingFileLoadError,
         InvalidFilterElementName,
         InvalidTargetFolderPath,

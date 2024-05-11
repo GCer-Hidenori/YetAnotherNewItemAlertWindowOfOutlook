@@ -34,9 +34,18 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         {
             InitializeComponent();
             var outlook = new Microsoft.Office.Interop.Outlook.Application();
+            Setting setting;
             try
             {
-                Setting setting = Setting.Load();
+                if(File.Exists(settingFilePath))
+                {
+                    setting = Setting.Load();
+                }
+                else
+                {
+                    setting = Util.CreateInitialSettingFile(outlook, settingFilePath);
+                }
+
                 context = new MainViewModel(setting, outlook,this);
                 this.DataContext = context;
                 ready = true;
@@ -45,33 +54,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             {
                 switch (e.ErrorType)
                 {
-                    case ErrorType.SettingFileNotFound:
-                        Logger.Error("Setting file not found.");
-                        Logger.Error(e.Message);
-                        Logger.Info("sample setting file:\n" + Util.ReadSettingSampleXmlString());
-                        MessageBox.Show("Setting file not found.see log file for sample of setting.xml");
-                        MessageBoxResult res = MessageBox.Show("Do you want to create a configuration file from your Outlook folder structure?", "Confirmation", MessageBoxButton.YesNo);
-                        if (res == MessageBoxResult.Yes)
-                        {
-                            try
-                            {
-                                Util.CreateSettingFile(outlook,settingFilePath);
-                                Logger.Info("Setting file created.");
-                                MessageBox.Show("Setting file created.\nExit the application. Restart the application manually.");
-                                this.Close();
-                            }
-                            catch (System.Exception ex)
-                            {
-                                Logger.Error("Setting file creation error.");
-                                Logger.Error(ex.Message);
-                                MessageBox.Show("Setting file creation error.");
-                            }
-                        }
-                        else
-                        {
-                            Logger.Info("User canceled.");
-                        }
-                        break;
                     case ErrorType.SettingFileLoadError:
                         Logger.Error("Setting file load error.");
                         Logger.Error(e.Message);

@@ -12,13 +12,13 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 {
     internal class TargetProcessing
     {
-        private Target target;
-        private MAPIFolder target_folder;
+        private Target? target;
+        private MAPIFolder? target_folder;
         private List<string> list_outlookmaili_entryID = new();
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public Target Target { get => target; set => target = value; }
-        public MAPIFolder Target_folder { get => target_folder; set => target_folder = value; }
+        public Target? Target { get => target; set => target = value; }
+        public MAPIFolder? Target_folder { get => target_folder; set => target_folder = value; }
 
         public List<string> List_OutlookMailEntryID {get => list_outlookmaili_entryID; set => list_outlookmaili_entryID = value; }
 

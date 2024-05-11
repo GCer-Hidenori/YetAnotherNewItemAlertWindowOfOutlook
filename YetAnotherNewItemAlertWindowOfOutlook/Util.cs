@@ -5,33 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Office.Interop.Outlook;
-using System.Xml;
 
 namespace YetAnotherNewItemAlertWindowOfOutlook
 {
     public class Util
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-        private static System.Xml.XmlDocument ReadSettingSampleXml()
-        {
-            System.Xml.XmlDocument xdoc = new System.Xml.XmlDocument();
-            string xmlString = ReadSettingSampleXmlString();
-            try
-            {
-                xdoc.LoadXml(xmlString);
-            }
-            catch (XmlException e)
-            {
-                    string message = $@"source:{e.Source}
-Message:{e.Message}
-Line number:{e.LineNumber}
-Line position:{e.LinePosition}
-xml:{xmlString}
-";
-                    throw new YError(ErrorType.SampleSettingFileLoadError,message);
-            }
-            return xdoc;
-        }
+      
         public static string ReadSettingSampleXmlString()
         {
             System.Xml.XmlDocument xdoc = new System.Xml.XmlDocument();
@@ -41,7 +21,7 @@ xml:{xmlString}
                 return sr.ReadToEnd();
             }
         }
-        private static MAPIFolder GetSingleSearchFolder(Microsoft.Office.Interop.Outlook.Application outlook)
+        private static MAPIFolder? GetSingleSearchFolder(Microsoft.Office.Interop.Outlook.Application outlook)
         {   
             foreach(Store store in outlook.Session.Stores)
             {
@@ -52,25 +32,58 @@ xml:{xmlString}
             }
             return null;
         }
-        public static void CreateSettingFile(Microsoft.Office.Interop.Outlook.Application outlook, string settingFilePath)
+     
+        public static Setting CreateInitialSettingFile(Microsoft.Office.Interop.Outlook.Application outlook, string settingFilePath)
         {
-            var xdoc = ReadSettingSampleXml();
-            var xTarget_NormalFolder = xdoc.SelectSingleNode("//Target[TargetFolderType='NormalFolder']");
-            var inboxFolder = outlook.GetNamespace("MAPI").GetDefaultFolder(OlDefaultFolders.olFolderInbox);
-            xTarget_NormalFolder.SelectSingleNode(".//Path").InnerText = inboxFolder.FolderPath;
-
+            Setting setting = new();
+            
             var searchFolder = GetSingleSearchFolder(outlook);
-            if(searchFolder != null)
+            if (searchFolder != null)
             {
-                var xTarget_SearchFolder = xdoc.SelectSingleNode("//Target[TargetFolderType='SearchFolder']");
-                xTarget_SearchFolder.SelectSingleNode(".//Path").InnerText = searchFolder.FolderPath;
+                var target_search_folder = new Target();
+                target_search_folder.TargetFolderType = Target.FolderType.SearchFolder;
+                target_search_folder.Path = searchFolder.FolderPath;
+                setting.Targets.Add(target_search_folder);
             }
-            else
+            var target_normal_folder = new Target();
+            var inboxFolder = outlook.GetNamespace("MAPI").GetDefaultFolder(OlDefaultFolders.olFolderInbox);
+            target_normal_folder.TargetFolderType = Target.FolderType.NormalFolder;
+            target_normal_folder.Path = inboxFolder.FolderPath;
+            setting.Targets.Add(target_normal_folder);
+ 
+            var action1 = new Action()
             {
-                xdoc.SelectSingleNode("//Targets").RemoveChild(xdoc.SelectSingleNode("//Target[TargetFolderType='SearchFolder']"));
-            }
+                ActionType = ActionType.ActivateWindow
+            };
+            var action2 = new Action()
+            {
+                ActionType = ActionType.CreateFile,
+                FileName = @"c:\temp\a.txt",
+                Body = "aaaaaaaa"
+            };
+            var filter_condition = new Condition()
+            {
+                Type = ConditionType.And,
+                Conditions = new List<Condition>()
+                {
+                    new Condition()
+                    {
+                        Type = ConditionType.Subject,
+                        Value = "test"
+                    },
+                    new Condition()
+                    {
+                        Type=ConditionType.SenderName,
+                        Value = "test"
+                    }
+                }
+            };
+            target_normal_folder.Condition = filter_condition;
 
-            xdoc.Save(settingFilePath);
+            target_normal_folder.Actions.Add(action1);
+            target_normal_folder.Actions.Add(action2);
+            setting.Save();
+            return setting;
         }
     }
 }

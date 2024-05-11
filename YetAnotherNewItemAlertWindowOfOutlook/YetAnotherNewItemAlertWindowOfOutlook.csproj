@@ -8,10 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="setting.sample.xml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <COMReference Include="Microsoft.Office.Interop.Outlook">
       <WrapperTool>tlbimp</WrapperTool>
       <VersionMinor>6</VersionMinor>
@@ -25,10 +21,6 @@
 
   <ItemGroup>
     <PackageReference Include="NLog.Config" Version="4.7.15" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="setting.sample.xml" />
   </ItemGroup>
 
   <ItemGroup>
