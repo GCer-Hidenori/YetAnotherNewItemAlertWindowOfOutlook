@@ -1,4 +1,4 @@
-﻿<Window x:Class="YetAnotherNewItemAlertWindowOfOutlook.MainWindow"
+<Window x:Class="YetAnotherNewItemAlertWindowOfOutlook.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -56,7 +56,7 @@
                     <DataGridTextColumn Header="Categories" Binding="{Binding Categories}"  IsReadOnly="True" />
                     <DataGridTextColumn Header="Flag" Binding="{Binding FlagIcon}"  IsReadOnly="True"  />
                     <DataGridTextColumn Header="Recipient Names" Binding="{Binding RecipientNames}"  IsReadOnly="True" />
-                    <!--DataGridTextColumn Header="Recipient Emails" Binding="{Binding RecipientEmails}"  IsReadOnly="True" /-->
+                    <!--DataGridTextColumn Header="Recipient Emails" Binding="{Binding RecipientAddresses}"  IsReadOnly="True" /-->
                     <DataGridTextColumn Header="Reminder Time" Binding="{Binding ReminderTime, StringFormat=yyyy/MM/dd HH:mm}" IsReadOnly="True"  />
                     <DataGridTextColumn Header="To" Binding="{Binding To}" IsReadOnly="True"  />
                     <DataGridTextColumn Header="Unread" Binding="{Binding Unread}" IsReadOnly="True"  />

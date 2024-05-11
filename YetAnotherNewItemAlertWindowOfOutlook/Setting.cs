@@ -7,7 +7,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using YetAnotherNewItemAlertWindowOfOutlook.Properties;
-using System.Xml;
+//using System.Xml;
+using System.Xml.Serialization;
 
 namespace YetAnotherNewItemAlertWindowOfOutlook
 {
@@ -49,6 +50,19 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         }
         */
 
+        public static Setting Load()
+        {
+            Setting setting = null;
+            XmlSerializer serializer = new XmlSerializer(typeof(Setting));
+            using (var sr = new StreamReader(fileName))
+            {
+                setting = (Setting)serializer.Deserialize(sr);
+            }
+            return setting;
+        }
+
+
+        /*
         public static Setting Load()
         {
             XmlDocument xdoc = new();
@@ -121,6 +135,7 @@ Line position:{e.LinePosition}
                 throw new YError(ErrorType.SettingFileNotFound,fileName);
             }
         }
+        */
         /*
         public static Setting Init(){
             if (System.IO.File.Exists(fileName))

@@ -35,7 +35,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     if(IgnoreFile.Exists(mailItem.EntryID))
                     {
                          continue; 
-                    }else if(target.FilterNode != null)
+                    }else 
                     {
                         if(!target.Filtering(mailItem))
                         {

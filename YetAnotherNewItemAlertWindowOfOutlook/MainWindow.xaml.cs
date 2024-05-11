@@ -108,11 +108,17 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             e.Handled = true;
             var outlook = new Microsoft.Office.Interop.Outlook.Application();
             var ns = outlook.GetNamespace("MAPI");
-            var mailItem = ns.GetItemFromID(((OutlookMailItem)((DataGridRow)sender).Item).EntryID);
-            if (mailItem != null)
+            try
             {
-                mailItem.Display();
-                mailItem.GetInspector.Display(false);
+                var mailItem = ns.GetItemFromID(((OutlookMailItem)((DataGridRow)sender).Item).EntryID);
+                if (mailItem != null)
+                {
+                    mailItem.Display();
+                    mailItem.GetInspector.Display(false);
+                }
+            } catch (System.Runtime.InteropServices.COMException e2) {
+                MessageBox.Show("Can't open mail.");
+                Logger.Warn(e2);
             }
         }
 

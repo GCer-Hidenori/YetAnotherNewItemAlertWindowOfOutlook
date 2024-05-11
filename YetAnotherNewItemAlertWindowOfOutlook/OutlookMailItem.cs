@@ -26,7 +26,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private string entry_id = "";
         private string flag_icon = "";
         private string recipient_names = "";
-        private string recipient_emails = "";
+        private string recipient_addresses = "";
         private DateTime? reminder_time;
         private DateTime? receive_time;
         private string sender_email_address = "";
@@ -94,13 +94,13 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 }
             }
         }
-        public string RecipientEmails { 
-            get => recipient_emails;
+        public string RecipientAddresses { 
+            get => recipient_addresses;
             set
             {
-                if(recipient_emails != value)
+                if(recipient_addresses != value)
                 {
-                    recipient_emails = value;
+                    recipient_addresses = value;
                     RaisePropertyChanged();
                 }
             }
@@ -231,7 +231,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             };
 
          
-            outlookmailitem.recipient_emails = String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(recipient => recipient.Address));
+            outlookmailitem.recipient_addresses = String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(recipient => recipient.Address));
             outlookmailitem.recipient_names = String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(recipient => recipient.Name));
 
             if (mailItem.ReminderTime > DateTime.Now.AddYears(100))

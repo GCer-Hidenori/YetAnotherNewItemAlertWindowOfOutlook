@@ -5,7 +5,7 @@ using System.Printing;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Xml;
+//using System.Xml;
 using Microsoft.Office.Interop.Outlook;
 using NLog;
 
@@ -19,7 +19,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             SearchFolder
         }
 
-        private XmlNode? filterNode = null;
+        //private XmlNode? filterNode = null;   
+        private Condition? filter = null;
         private int interval_min;
         private FolderType folderType;
         private string? path;
@@ -43,19 +44,25 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private List<ActionCreateFile> actionCreateFiles = new();
         public bool ActivateWindow { get => activateWindow; set => activateWindow = value; }
 
-        public XmlNode? FilterNode { get => filterNode; set => filterNode = value; }
+        //public XmlNode? FilterNode { get => filterNode; set => filterNode = value; }
+
+
 
         internal List<ActionCreateFile> ActionCreateFiles { get => actionCreateFiles; set => actionCreateFiles = value; }
+        public Condition? Filter { get => filter; set => filter = value; }
 
         public bool Filtering(MailItem mailItem)
         {
-            var element = filterNode?.FirstChild;
-            if (element == null)
+            if(Filter != null)
+            {
+                return Filter.Evaluate(mailItem);
+            }
+            else
             {
                 return true;
             }
-            return Filtering(mailItem, element);
         }
+        /*
         public bool Filtering(MailItem mailItem, XmlNode? element)
         {
             if(element == null)
@@ -89,11 +96,11 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             {
                 return mailItem.SenderName.Contains(element.InnerText);
             }
-            else if (element.Name.ToUpper() == "RECIPIENTNAME")
+            else if (element.Name.ToUpper() == "RECIPIENTNAMES")
             {
                 return String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(recipient => recipient.Name)).Contains(element.InnerText);
             }
-            else if (element.Name.ToUpper() == "RECIPIENTEMAILS")
+            else if (element.Name.ToUpper() == "RECIPIENTADDRESSES")
             {
                 return String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(recipient => recipient.Address)).Contains(element.InnerText);
             }
@@ -115,5 +122,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 throw new YError(ErrorType.InvalidFilterElementName,element.Name);
             }
         }
+        */
     }
+        
 }
