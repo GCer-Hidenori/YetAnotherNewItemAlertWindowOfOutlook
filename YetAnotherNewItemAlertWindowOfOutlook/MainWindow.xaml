@@ -17,7 +17,7 @@
             <Menu Grid.Row="0">
                 <MenuItem Header="Refresh">
                     <MenuItem Header="Now" Click="RefreshNow_Click"/>
-                    <MenuItem Header="Pause"  Click="PauseTimer_Click"/>
+                    <MenuItem Header="Stop"  Click="StopTimer_Click"/>
                     <MenuItem Header="Start"  Click="StartTimer_Click"/>
                 </MenuItem>
                 <MenuItem Header="Util">

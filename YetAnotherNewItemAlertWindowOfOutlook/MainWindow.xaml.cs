@@ -87,7 +87,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 {
                     if (context != null)
                     {
-                        context.PauseTimer();
+                        context.StopTimer();
                     }
                 }
                 catch (System.Exception)
@@ -130,9 +130,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         {
             if(ready)context?.RefreshOutlookMailItem(true);
         }
-        private void PauseTimer_Click(object sender, RoutedEventArgs e)
+        private void StopTimer_Click(object sender, RoutedEventArgs e)
         {
-            if (ready) context?.PauseTimer();
+            if (ready) context?.StopTimer();
         }
         private void StartTimer_Click(object sender, RoutedEventArgs e)
         {

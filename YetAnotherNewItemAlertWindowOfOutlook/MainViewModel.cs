@@ -1,4 +1,4 @@
-﻿using Microsoft.Office.Interop.Outlook;
+using Microsoft.Office.Interop.Outlook;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -114,9 +114,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                         Logger.Info($"start RefreshOutlookMailItem.Folder:{target_processing.Target?.Path}");
                         var result = target_processing.RefreshOutlookMailItem();
 
-                        //debug
-                        Logger.Info($"number of new item is {result.List_new_entry_id.Count.ToString()}");
-
                         if(!activateWindow && result.ActivateWindow) activateWindow = true;
                         foreach (string entryID in result.List_new_entry_id)
                         {
@@ -152,7 +149,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 // only OutlookMailItemCollection / delete from OutlookMailItemCollection
                 List<string> list_deleted_entry_id = list_entryid_of_outlookmailitemcollection.Except(list_entryid_of_target_processing).ToList();
 
-                Logger.Info($"num of list_new_entry_id {list_new_entry_id.Count}");
+                Logger.Info($"new item  count  {list_new_entry_id.Count}");
 
                 foreach (string entryID in list_duplication_entryid)
                 {
@@ -160,13 +157,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 }
                 foreach (string entryID in list_new_entry_id)
                 {
-                    Logger.Info($"new item! {entryID}");
                     var outlookmailitem = OutlookMailItem.CreateNew(entryID, outlook);
-                    Logger.Info($"new item subject is {outlookmailitem.Subject}");
                     DicOutlookMailItem.Add(entryID, outlookmailitem);
-                    Logger.Info("new item added to dictionary");
                     OutlookMailItemCollection.Add(outlookmailitem);
-                    Logger.Info("new item added to OutlookMailItemCollection.finish!");
                 }
                 foreach (string entryID in list_deleted_entry_id)
                 {
@@ -189,9 +182,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
 
         }
-        public void PauseTimer()
+        public void StopTimer()
         {
-            Logger.Info("pause timer.");
+            Logger.Info("stop timer.");
             timer?.Stop();
         }
         public void HideMail(string entryID)
