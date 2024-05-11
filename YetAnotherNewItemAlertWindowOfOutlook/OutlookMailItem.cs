@@ -34,6 +34,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private DateTime? sent_on;
         private string subject = "";
         private string to = "";
+       // private string search_index = "";
         private Boolean unread;
 
         public string Cc 
@@ -194,6 +195,14 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     RaisePropertyChanged();
                 }
             }
+        }
+
+        public string SearchIndex 
+        {
+            get { 
+                return cc + categories + recipient_names + sender_name + subject;
+            }
+            //set => search_index = value; 
         }
 
         public static OutlookMailItem CreateNew(MailItem mailItem)

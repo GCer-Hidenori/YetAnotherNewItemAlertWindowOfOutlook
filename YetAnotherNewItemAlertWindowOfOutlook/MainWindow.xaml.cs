@@ -94,11 +94,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 {
 
                 }
-                
-          
                 //this.Close();
             }
-
         }
         /*
         public static void Dialog(string message)
@@ -146,7 +143,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         {
             if(e.Key == Key.Delete)
             {
-                System.Diagnostics.Debug.WriteLine("del key ");
+                //System.Diagnostics.Debug.WriteLine("del key ");
                 OutlookMailItem outlookMailItem = (OutlookMailItem)((DataGridRow)sender).Item;
                 string entryID = outlookMailItem.EntryID;
                 IgnoreFile.Add(entryID,outlookMailItem,Logger);
@@ -169,6 +166,69 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         {
             var psi = new System.Diagnostics.ProcessStartInfo() { FileName = settingFilePath, UseShellExecute = true };
             System.Diagnostics.Process.Start(psi);
+        }
+        public bool Contains(object de)
+        {
+            OutlookMailItem outlookMailItem = (OutlookMailItem)de;
+            var textbox = (TextBox)this.FindName("SearchTextBox");
+            return outlookMailItem.SearchIndex.Contains(textbox.Text);
+        }
+
+        private void Search()
+        {
+            var obj = (DataGrid)this.FindName("OutlookMailItemDataGrid");
+            var view = CollectionViewSource.GetDefaultView(context.OutlookMailItemCollection);
+            view.Filter = Contains;
+        }
+        private void SearchCancel()
+        {
+            var obj = (DataGrid)this.FindName("OutlookMailItemDataGrid");
+            var view = CollectionViewSource.GetDefaultView(context.OutlookMailItemCollection);
+            var textbox = (TextBox)this.FindName("SearchTextBox");
+            textbox.Text = "";
+            view.Filter = null;
+        }
+
+        /*
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            Search();
+        }
+        private void SearchCancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            SearchCancel();
+        }
+        */
+
+        private void SearchTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.Escape:
+                    SearchCancel();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (ready)
+            {
+                var textbox = (TextBox)this.FindName("SearchTextBox");
+                if (textbox.Text == "")
+                {
+                    textbox.Foreground = new SolidColorBrush(new Color() { A = 0xff, R = 0xc8, G = 0xc8, B = 0xc8 });
+                    SearchCancel();
+                }
+                else
+                {
+                    textbox.Foreground = new SolidColorBrush(new Color() { A = 0xff, R = 0, G = 0, B = 0 });
+                    Search();
+                }
+            }
+ 
         }
     }
 }

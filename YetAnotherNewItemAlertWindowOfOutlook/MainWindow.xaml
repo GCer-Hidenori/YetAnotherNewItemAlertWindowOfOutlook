@@ -31,42 +31,44 @@
                 <MenuItem Header="Clear cache(!)"></MenuItem>
                 <MenuItem Header="Delete old cache"></MenuItem>
             </MenuItem-->
-            <!--MenuItem Header="Setting">
+                <!--MenuItem Header="Setting">
                 <MenuItem Header="Open setting file"></MenuItem>
             </MenuItem-->
-        </Menu>
+            </Menu>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
-                    <ColumnDefinition Width="60"/>
+                    <!-- <ColumnDefinition Width="60"/-->
+                    <!--ColumnDefinition Width="60"/-->
                 </Grid.ColumnDefinitions>
-                 <TextBox TextWrapping="Wrap" Text="TextBox" Height="20" Grid.Column="0"/>
-                <Button Content="Search" Grid.Column="1" />
-         </Grid>
-            <DataGrid ItemsSource="{Binding OutlookMailItemCollection}"  AutoGenerateColumns="False" IsReadOnly="True" Grid.Row="2" >
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Sender Name" Binding="{Binding SenderName}" IsReadOnly="True"  />
-                <!--DataGridTextColumn Header="Sender Email" Binding="{Binding SenderEmailAddress}"  IsReadOnly="True" /-->
-                <DataGridTextColumn Header="CC" Binding="{Binding Cc}"  IsReadOnly="True" />
-                <DataGridTextColumn Header="Received Time" Binding="{Binding ReceivedTime, StringFormat=yyyy/MM/dd HH:mm}"  IsReadOnly="True" />
-                <DataGridTextColumn Header="Subject" Binding="{Binding Subject}" IsReadOnly="True"  />
-                <DataGridTextColumn Header="Sent On" Binding="{Binding SentOn, StringFormat=yyyy/MM/dd HH:mm}"  IsReadOnly="True" />
-                <DataGridTextColumn Header="Categories" Binding="{Binding Categories}"  IsReadOnly="True" />
-                <DataGridTextColumn Header="Flag" Binding="{Binding FlagIcon}"  IsReadOnly="True"  />
-                <DataGridTextColumn Header="Recipient Names" Binding="{Binding RecipientNames}"  IsReadOnly="True" />
-                <!--DataGridTextColumn Header="Recipient Emails" Binding="{Binding RecipientEmails}"  IsReadOnly="True" /-->
-                <DataGridTextColumn Header="Reminder Time" Binding="{Binding ReminderTime, StringFormat=yyyy/MM/dd HH:mm}" IsReadOnly="True"  />
-                <DataGridTextColumn Header="To" Binding="{Binding To}" IsReadOnly="True"  />
-                <DataGridTextColumn Header="Unread" Binding="{Binding Unread}" IsReadOnly="True"  />
-            </DataGrid.Columns>
-            <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow">
-                    <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_MouseDoubleClick"/>
-                    <EventSetter Event="KeyDown" Handler="DataGridRow_KeyDown"/>
-                </Style>
-            </DataGrid.RowStyle>
+                <TextBox TextWrapping="Wrap" Text="Search Box" Height="20" Grid.Column="0" x:Name="SearchTextBox" TextChanged = "SearchTextBox_TextChanged" KeyDown="SearchTextBox_KeyDown" Foreground="#FFC8C8C8"/>
+                <!-- <Button Content="Search" Grid.Column="1" Click="SearchButton_Click" />
+                <Button Content="Cancel" Grid.Column="2" Click="SearchCancelButton_Click"/>-->
+            </Grid>
+            <DataGrid ItemsSource="{Binding OutlookMailItemCollection}"  AutoGenerateColumns="False" IsReadOnly="True" Grid.Row="2" x:Name="OutlookMailItemDataGrid">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Sender Name" Binding="{Binding SenderName}" IsReadOnly="True"  />
+                    <!--DataGridTextColumn Header="Sender Email" Binding="{Binding SenderEmailAddress}"  IsReadOnly="True" /-->
+                    <DataGridTextColumn Header="CC" Binding="{Binding Cc}"  IsReadOnly="True" />
+                    <DataGridTextColumn Header="Received Time" Binding="{Binding ReceivedTime, StringFormat=yyyy/MM/dd HH:mm}"  IsReadOnly="True" />
+                    <DataGridTextColumn Header="Subject" Binding="{Binding Subject}" IsReadOnly="True"  />
+                    <DataGridTextColumn Header="Sent On" Binding="{Binding SentOn, StringFormat=yyyy/MM/dd HH:mm}"  IsReadOnly="True" />
+                    <DataGridTextColumn Header="Categories" Binding="{Binding Categories}"  IsReadOnly="True" />
+                    <DataGridTextColumn Header="Flag" Binding="{Binding FlagIcon}"  IsReadOnly="True"  />
+                    <DataGridTextColumn Header="Recipient Names" Binding="{Binding RecipientNames}"  IsReadOnly="True" />
+                    <!--DataGridTextColumn Header="Recipient Emails" Binding="{Binding RecipientEmails}"  IsReadOnly="True" /-->
+                    <DataGridTextColumn Header="Reminder Time" Binding="{Binding ReminderTime, StringFormat=yyyy/MM/dd HH:mm}" IsReadOnly="True"  />
+                    <DataGridTextColumn Header="To" Binding="{Binding To}" IsReadOnly="True"  />
+                    <DataGridTextColumn Header="Unread" Binding="{Binding Unread}" IsReadOnly="True"  />
+                </DataGrid.Columns>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_MouseDoubleClick"/>
+                        <EventSetter Event="KeyDown" Handler="DataGridRow_KeyDown"/>
+                    </Style>
+                </DataGrid.RowStyle>
 
-        </DataGrid>
+            </DataGrid>
         </Grid>
 
     </Grid>

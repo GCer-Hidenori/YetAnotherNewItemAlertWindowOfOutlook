@@ -38,7 +38,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     if (target.Path != null)
                     {
                         folder = OutlookUtil.GetSearchFolder(target.Path);
-                        
                     }
                 }
                 else
