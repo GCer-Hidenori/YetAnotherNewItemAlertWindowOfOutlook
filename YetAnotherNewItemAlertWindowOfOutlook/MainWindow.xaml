@@ -67,6 +67,13 @@
                         <EventSetter Event="KeyDown" Handler="DataGridRow_KeyDown"/>
                     </Style>
                 </DataGrid.RowStyle>
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Open" Click="OpenMenuItem_Click"/>
+                        <MenuItem Header="Hide" Click="HideMenuItem_Click"/>
+                        <MenuItem Header="Inspect" Click="InspectMenuItem_Click"/>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
 
             </DataGrid>
         </Grid>

@@ -110,7 +110,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             var ns = outlook.GetNamespace("MAPI");
             try
             {
-                var mailItem = ns.GetItemFromID(((OutlookMailItem)((DataGridRow)sender).Item).EntryID);
+                MailItem mailItem = ns.GetItemFromID(((OutlookMailItem)((DataGridRow)sender).Item).EntryID);
                 if (mailItem != null)
                 {
                     mailItem.Display();
@@ -145,15 +145,18 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             if (ready) context?.StartTimer();
         }
 
-        private void DataGridRow_KeyDown(object sender, KeyEventArgs e)
+        private void HideItemByEvent(object sender)
         {
-            if(e.Key == Key.Delete)
-            {
-                //System.Diagnostics.Debug.WriteLine("del key ");
                 OutlookMailItem outlookMailItem = (OutlookMailItem)((DataGridRow)sender).Item;
                 string entryID = outlookMailItem.EntryID;
                 IgnoreFile.Add(entryID,outlookMailItem,Logger);
                 context?.HideMail(entryID);
+        }
+        private void DataGridRow_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Delete)
+            {
+                HideItemByEvent(sender);
             }
         }
 
@@ -252,6 +255,51 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 setting.Columns.Add(new Column() { Name = column.Header.ToString(), Width = column.ActualWidth });
             }
             setting.Save();
+        }
+
+        private void OpenMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
+            var outlook = new Microsoft.Office.Interop.Outlook.Application();
+            var ns = outlook.GetNamespace("MAPI");
+            try
+            {
+                var datagrid = (DataGrid)this.FindName("OutlookMailItemDataGrid");
+                MailItem mailItem = ns.GetItemFromID(((OutlookMailItem)datagrid.SelectedItem).EntryID);
+                if (mailItem != null)
+                {
+                    mailItem.Display();
+                    mailItem.GetInspector.Display(false);
+                }
+            } catch (System.Runtime.InteropServices.COMException e2) {
+                MessageBox.Show("Can't open mail.");
+                Logger.Warn(e2);
+            }
+        }
+        private void HideMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
+            HideItemByEvent(sender);
+        }
+        private void InspectMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var outlook = new Microsoft.Office.Interop.Outlook.Application();
+            var ns = outlook.GetNamespace("MAPI");
+            var datagrid = (DataGrid)this.FindName("OutlookMailItemDataGrid");
+            MailItem mailItem = ns.GetItemFromID(((OutlookMailItem)datagrid.SelectedItem).EntryID);
+            e.Handled = true;
+            string recipientNames = String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(new Func<Recipient,string>(recipient => recipient.Name)));
+            string recipientAddresses = String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(new Func<Recipient,string>(recipient => recipient.Address)));
+
+            string message = $@"Subject:{mailItem.Subject}
+To:{mailItem.To}
+Cc:{mailItem.CC}
+SenderName:{mailItem.SenderName}
+SenderAddress:{mailItem.SenderEmailAddress}
+RecipientNames:{recipientNames}
+RecipientAddresses:{recipientAddresses}
+                ";
+            MessageBox.Show(message, "Inspect", MessageBoxButton.OK);
         }
     }
 }
