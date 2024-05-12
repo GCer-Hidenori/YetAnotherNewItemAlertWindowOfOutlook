@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:YetAnotherNewItemAlertWindowOfOutlook"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Deactivated="Window_Deactivated">
+        Title="MainWindow" Height="450" Width="800" Deactivated="Window_Deactivated" Closed="Window_Closed">
     <Grid>
 
         <Grid>
@@ -45,11 +45,11 @@
                 <!-- <Button Content="Search" Grid.Column="1" Click="SearchButton_Click" />
                 <Button Content="Cancel" Grid.Column="2" Click="SearchCancelButton_Click"/>-->
             </Grid>
-            <DataGrid ItemsSource="{Binding OutlookMailItemCollection}"  AutoGenerateColumns="False" IsReadOnly="True" Grid.Row="2" x:Name="OutlookMailItemDataGrid">
+            <DataGrid ItemsSource="{Binding OutlookMailItemCollection}"  AutoGenerateColumns="False" IsReadOnly="True" Grid.Row="2" x:Name="OutlookMailItemDataGrid"   >
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Sender Name" Binding="{Binding SenderName}" IsReadOnly="True"  />
+                    <DataGridTextColumn Header="Sender Name" Binding="{Binding SenderName}" IsReadOnly="True" />
                     <!--DataGridTextColumn Header="Sender Email" Binding="{Binding SenderEmailAddress}"  IsReadOnly="True" /-->
-                    <DataGridTextColumn Header="CC" Binding="{Binding Cc}"  IsReadOnly="True" />
+                    <DataGridTextColumn Header="CC" Binding="{Binding Cc}"  IsReadOnly="True" x:Name="Column_CC" />
                     <DataGridTextColumn Header="Received Time" Binding="{Binding ReceivedTime, StringFormat=yyyy/MM/dd HH:mm}"  IsReadOnly="True" />
                     <DataGridTextColumn Header="Subject" Binding="{Binding Subject}" IsReadOnly="True"  />
                     <DataGridTextColumn Header="Sent On" Binding="{Binding SentOn, StringFormat=yyyy/MM/dd HH:mm}"  IsReadOnly="True" />

@@ -18,6 +18,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private int timer_interval_sec = 60;
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
+        private List<Column> columns = new();
 
         public List<Target> Targets
         {
@@ -40,7 +41,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
         }
 
-        
+        public List<Column> Columns { get => columns; set => columns = value; }
+
         public void Save()
         {
             System.Xml.Serialization.XmlSerializer serializer = new(typeof(Setting));

@@ -28,13 +28,30 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private bool ready = false;
         string settingFilePath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "setting.xml");
+        Setting setting;
 
+        private void SortColumn()
+        {
+            var datagrid = (DataGrid)this.FindName("OutlookMailItemDataGrid");
+            foreach (var column in setting.Columns)
+            {
+                var targetColumn = datagrid.Columns.FirstOrDefault(c => c.Header.ToString() == column.Name);
+                if (targetColumn != null)
+                {
+                    targetColumn.DisplayIndex = setting.Columns.IndexOf(column);
+                    if (column.Width != null)
+                    {
+                        targetColumn.Width = new DataGridLength((double)column.Width);
+                    }
+                    
+                }
+            }
+        }
 
         public MainWindow()
         {
             InitializeComponent();
             var outlook = new Microsoft.Office.Interop.Outlook.Application();
-            Setting setting;
             try
             {
                 if(File.Exists(settingFilePath))
@@ -48,6 +65,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
                 context = new MainViewModel(setting, outlook,this);
                 this.DataContext = context;
+                SortColumn();
                 ready = true;
             }
             catch (YError e)
@@ -218,6 +236,22 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     textbox.GotFocus -= SearchTextBox_GotFocus;
                 }
             }
+        }
+
+        //private void OutlookMailItemDataGrid_ColumnHeaderDragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        //{
+
+        //}
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            var datagrid = (DataGrid)this.FindName("OutlookMailItemDataGrid");
+            setting.Columns.Clear();
+            foreach (var column in datagrid.Columns.OrderBy(c => c.DisplayIndex))
+            {
+                setting.Columns.Add(new Column() { Name = column.Header.ToString(), Width = column.ActualWidth });
+            }
+            setting.Save();
         }
     }
 }
