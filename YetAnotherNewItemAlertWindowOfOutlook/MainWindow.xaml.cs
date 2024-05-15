@@ -180,7 +180,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         {
             OutlookMailItem outlookMailItem = (OutlookMailItem)de;
             var textbox = (TextBox)this.FindName("SearchTextBox");
-            return outlookMailItem.SearchIndex.Contains(textbox.Text);
+            return outlookMailItem.SearchIndex.Contains(textbox.Text,StringComparison.CurrentCultureIgnoreCase);
         }
 
         private void Search()
