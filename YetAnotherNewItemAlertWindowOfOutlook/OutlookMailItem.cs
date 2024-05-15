@@ -45,7 +45,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 if(cc != value)
                 {
                     cc = value;
-                    RefreshSearchIndex();
                     RaisePropertyChanged();
                 }
             }
@@ -58,7 +57,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 if(categories != value)
                 {
                     categories = value;
-                    RefreshSearchIndex();
                     RaisePropertyChanged();
                 }
             }
@@ -92,7 +90,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 if(recipient_names != value)
                 {
                     recipient_names = value;
-                    RefreshSearchIndex();
                     RaisePropertyChanged();
                 }
             }
@@ -148,7 +145,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 if(sender_name != value)
                 {
                     sender_name = value;
-                    RefreshSearchIndex();
                     RaisePropertyChanged();
                 }
             }
@@ -172,7 +168,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 if(subject != value)
                 {
                     subject = value;
-                    RefreshSearchIndex();
                     RaisePropertyChanged();
                 }
             }
@@ -201,14 +196,11 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 }
             }
         }
-        private void RefreshSearchIndex()
-        {
-            search_index = cc.ToLower() + categories.ToLower() + recipient_names.ToLower() + sender_name.ToLower() + subject.ToLower();
-        }
+
         public string SearchIndex 
         {
             get { 
-                return search_index;
+                return cc + categories + recipient_names + sender_name + subject;
             }
             //set => search_index = value; 
         }
