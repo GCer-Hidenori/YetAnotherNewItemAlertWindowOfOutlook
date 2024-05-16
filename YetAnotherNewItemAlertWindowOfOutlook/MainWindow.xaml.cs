@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 using Microsoft.Office.Interop.Outlook;
 //using System.Windows.Forms;
 using System.Windows.Interop;
-
+using Microsoft.VisualBasic;
 namespace YetAnotherNewItemAlertWindowOfOutlook
 {
     /// <summary>
@@ -180,7 +180,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         {
             OutlookMailItem outlookMailItem = (OutlookMailItem)de;
             var textbox = (TextBox)this.FindName("SearchTextBox");
-            return outlookMailItem.SearchIndex.Contains(textbox.Text,StringComparison.CurrentCultureIgnoreCase);
+            return outlookMailItem.SearchIndex.Contains(Strings.StrConv(textbox.Text,VbStrConv.Wide) ,StringComparison.CurrentCultureIgnoreCase);
         }
 
         private void Search()

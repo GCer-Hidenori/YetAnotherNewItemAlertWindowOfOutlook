@@ -6,11 +6,16 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Office.Interop.Outlook;
+using Microsoft.VisualBasic;
 
 namespace YetAnotherNewItemAlertWindowOfOutlook
 {
     class OutlookMailItem : INotifyPropertyChanged
     {
+        public OutlookMailItem()
+        {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+        }
         public event PropertyChangedEventHandler? PropertyChanged;
         protected virtual void RaisePropertyChanged([CallerMemberName] string? propertyName = null)
         {
@@ -37,6 +42,11 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private string search_index = "";
         private Boolean unread;
 
+        public void RefreshSearchIndex()
+        {
+            search_index = Strings.StrConv(cc + categories + recipient_names + sender_name + subject, VbStrConv.Wide, 0);
+        }
+
         public string Cc 
         {
             get => cc;
@@ -45,6 +55,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 if(cc != value)
                 {
                     cc = value;
+                    RefreshSearchIndex();
                     RaisePropertyChanged();
                 }
             }
@@ -57,6 +68,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 if(categories != value)
                 {
                     categories = value;
+                    RefreshSearchIndex();
                     RaisePropertyChanged();
                 }
             }
@@ -90,6 +102,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 if(recipient_names != value)
                 {
                     recipient_names = value;
+                    RefreshSearchIndex();
                     RaisePropertyChanged();
                 }
             }
@@ -145,6 +158,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 if(sender_name != value)
                 {
                     sender_name = value;
+                    RefreshSearchIndex();
                     RaisePropertyChanged();
                 }
             }
@@ -168,6 +182,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 if(subject != value)
                 {
                     subject = value;
+                    RefreshSearchIndex();
                     RaisePropertyChanged();
                 }
             }
@@ -199,8 +214,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
         public string SearchIndex 
         {
-            get { 
-                return cc + categories + recipient_names + sender_name + subject;
+            get {
+                return search_index;
+                //return cc + categories + recipient_names + sender_name + subject;
             }
             //set => search_index = value; 
         }
@@ -229,6 +245,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 sender_email_address = mailItem.SenderEmailAddress,
                 sender_name = mailItem.SenderName
             };
+            outlookmailitem.RefreshSearchIndex();
 
          
             outlookmailitem.recipient_addresses = String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(recipient => recipient.Address));
