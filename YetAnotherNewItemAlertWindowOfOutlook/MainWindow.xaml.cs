@@ -1,22 +1,14 @@
+using Microsoft.Office.Interop.Outlook;
+//using System.Windows.Forms;
+using Microsoft.VisualBasic;
 using System;
 using System.IO;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Microsoft.Office.Interop.Outlook;
-//using System.Windows.Forms;
-using System.Windows.Interop;
-using Microsoft.VisualBasic;
 namespace YetAnotherNewItemAlertWindowOfOutlook
 {
     /// <summary>
@@ -43,7 +35,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     {
                         targetColumn.Width = new DataGridLength((double)column.Width);
                     }
-                    
+
                 }
             }
         }
@@ -54,7 +46,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             var outlook = new Microsoft.Office.Interop.Outlook.Application();
             try
             {
-                if(File.Exists(settingFilePath))
+                if (File.Exists(settingFilePath))
                 {
                     setting = Setting.Load();
                 }
@@ -63,7 +55,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     setting = Util.CreateInitialSettingFile(outlook, settingFilePath);
                 }
 
-                context = new MainViewModel(setting, outlook,this);
+                context = new MainViewModel(setting, outlook, this);
                 this.DataContext = context;
                 SortColumn();
                 ready = true;
@@ -116,7 +108,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     mailItem.Display();
                     mailItem.GetInspector.Display(false);
                 }
-            } catch (System.Runtime.InteropServices.COMException e2) {
+            }
+            catch (System.Runtime.InteropServices.COMException e2)
+            {
                 MessageBox.Show("Can't open mail.");
                 Logger.Warn(e2);
             }
@@ -134,7 +128,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
         private void RefreshNow_Click(object sender, RoutedEventArgs e)
         {
-            if(ready)context?.RefreshOutlookMailItem(true);
+            if (ready) context?.RefreshOutlookMailItem(true);
         }
         private void StopTimer_Click(object sender, RoutedEventArgs e)
         {
@@ -147,27 +141,27 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
         private void HideItemByEvent(object sender)
         {
-                OutlookMailItem outlookMailItem = (OutlookMailItem)((DataGridRow)sender).Item;
-                string entryID = outlookMailItem.EntryID;
-                IgnoreFile.Add(entryID,outlookMailItem,Logger);
-                context?.HideMail(entryID);
+            OutlookMailItem outlookMailItem = (OutlookMailItem)((DataGridRow)sender).Item;
+            string entryID = outlookMailItem.EntryID;
+            IgnoreFile.Add(entryID, outlookMailItem, Logger);
+            context?.HideMail(entryID);
         }
         private void DataGridRow_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Delete)
+            if (e.Key == Key.Delete)
             {
                 HideItemByEvent(sender);
             }
         }
 
-        private void ListFolders_Click(object sender,RoutedEventArgs e)
+        private void ListFolders_Click(object sender, RoutedEventArgs e)
         {
             OutlookUtil.ListAllFolders(Logger);
         }
         private void OpenLogFolder_Click(object sender, RoutedEventArgs e)
         {
             string logDir = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "log");
-            if(!Directory.Exists(logDir))Directory.CreateDirectory(logDir);
+            if (!Directory.Exists(logDir)) Directory.CreateDirectory(logDir);
             var psi = new System.Diagnostics.ProcessStartInfo() { FileName = logDir, UseShellExecute = true };
             System.Diagnostics.Process.Start(psi);
         }
@@ -180,7 +174,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         {
             OutlookMailItem outlookMailItem = (OutlookMailItem)de;
             var textbox = (TextBox)this.FindName("SearchTextBox");
-            return outlookMailItem.SearchIndex.Contains(Strings.StrConv(textbox.Text,VbStrConv.Wide) ,StringComparison.CurrentCultureIgnoreCase);
+            return outlookMailItem.SearchIndex.Contains(Strings.StrConv(textbox.Text, VbStrConv.Wide), StringComparison.CurrentCultureIgnoreCase);
         }
 
         private void Search()
@@ -224,7 +218,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     Search();
                 }
             }
- 
+
         }
 
         private void SearchTextBox_GotFocus(object sender, RoutedEventArgs e)
@@ -232,7 +226,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             if (ready)
             {
                 var textbox = (TextBox)this.FindName("SearchTextBox");
-                if(textbox.Foreground != new SolidColorBrush(Colors.Black))
+                if (textbox.Foreground != new SolidColorBrush(Colors.Black))
                 {
                     textbox.Text = "";
                     textbox.Foreground = new SolidColorBrush(Colors.Black);
@@ -271,7 +265,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     mailItem.Display();
                     mailItem.GetInspector.Display(false);
                 }
-            } catch (System.Runtime.InteropServices.COMException e2) {
+            }
+            catch (System.Runtime.InteropServices.COMException e2)
+            {
                 MessageBox.Show("Can't open mail.");
                 Logger.Warn(e2);
             }
@@ -288,8 +284,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             var datagrid = (DataGrid)this.FindName("OutlookMailItemDataGrid");
             MailItem mailItem = ns.GetItemFromID(((OutlookMailItem)datagrid.SelectedItem).EntryID);
             e.Handled = true;
-            string recipientNames = String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(new Func<Recipient,string>(recipient => recipient.Name)));
-            string recipientAddresses = String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(new Func<Recipient,string>(recipient => recipient.Address)));
+            string recipientNames = String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(new Func<Recipient, string>(recipient => recipient.Name)));
+            string recipientAddresses = String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(new Func<Recipient, string>(recipient => recipient.Address)));
 
             string message = $@"Subject:{mailItem.Subject}
 To:{mailItem.To}

@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.DirectoryServices.ActiveDirectory;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
+using System.Text;
 
 namespace YetAnotherNewItemAlertWindowOfOutlook
 {
@@ -20,14 +15,14 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
             return false;
         }
-        public static void Add(string entryID,OutlookMailItem outlookMailitem,NLog.Logger logger)
+        public static void Add(string entryID, OutlookMailItem outlookMailitem, NLog.Logger logger)
         {
             if (!Directory.Exists(ignoreDirPath))
             {
                 Directory.CreateDirectory(ignoreDirPath);
             }
             string fileName = Path.Combine(ignoreDirPath, entryID);
-            string body = "subject: " + outlookMailitem.Subject + "\n" + "receivedTime: " + outlookMailitem.ReceivedTime + "\n" + "from: " + outlookMailitem.SenderName + "<" + outlookMailitem.SenderEmailAddress + ">"; 
+            string body = "subject: " + outlookMailitem.Subject + "\n" + "receivedTime: " + outlookMailitem.ReceivedTime + "\n" + "from: " + outlookMailitem.SenderName + "<" + outlookMailitem.SenderEmailAddress + ">";
 
             Encoding enc = Encoding.UTF8;
             using (StreamWriter writer = new StreamWriter(fileName, false, enc))

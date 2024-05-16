@@ -1,12 +1,9 @@
+using Microsoft.Office.Interop.Outlook;
+using Microsoft.VisualBasic;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Office.Interop.Outlook;
-using Microsoft.VisualBasic;
 
 namespace YetAnotherNewItemAlertWindowOfOutlook
 {
@@ -47,12 +44,12 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             search_index = Strings.StrConv(cc + categories + recipient_names + sender_name + subject, VbStrConv.Wide, 0);
         }
 
-        public string Cc 
+        public string Cc
         {
             get => cc;
             set
             {
-                if(cc != value)
+                if (cc != value)
                 {
                     cc = value;
                     RefreshSearchIndex();
@@ -65,7 +62,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             get => categories;
             set
             {
-                if(categories != value)
+                if (categories != value)
                 {
                     categories = value;
                     RefreshSearchIndex();
@@ -73,33 +70,36 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 }
             }
         }
-        public string EntryID {
-            get => entry_id; 
+        public string EntryID
+        {
+            get => entry_id;
             set
             {
-                if(entry_id != value)
+                if (entry_id != value)
                 {
                     entry_id = value;
                     RaisePropertyChanged();
                 }
             }
         }
-        public string FlagIcon {
+        public string FlagIcon
+        {
             get => flag_icon;
             set
             {
-                if(flag_icon != value)
+                if (flag_icon != value)
                 {
                     flag_icon = value;
                     RaisePropertyChanged();
                 }
             }
         }
-        public string RecipientNames {
-            get => recipient_names; 
+        public string RecipientNames
+        {
+            get => recipient_names;
             set
             {
-                if(recipient_names != value)
+                if (recipient_names != value)
                 {
                     recipient_names = value;
                     RefreshSearchIndex();
@@ -107,55 +107,60 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 }
             }
         }
-        public string RecipientAddresses { 
+        public string RecipientAddresses
+        {
             get => recipient_addresses;
             set
             {
-                if(recipient_addresses != value)
+                if (recipient_addresses != value)
                 {
                     recipient_addresses = value;
                     RaisePropertyChanged();
                 }
             }
         }
-        public DateTime? ReminderTime {
+        public DateTime? ReminderTime
+        {
             get => reminder_time;
             set
             {
-                if(reminder_time != value)
+                if (reminder_time != value)
                 {
                     reminder_time = value;
                     RaisePropertyChanged();
                 }
             }
         }
-        public DateTime? ReceivedTime {
+        public DateTime? ReceivedTime
+        {
             get => receive_time;
             set
             {
-                if(receive_time != value)
+                if (receive_time != value)
                 {
                     receive_time = value;
                     RaisePropertyChanged();
                 }
             }
         }
-        public string SenderEmailAddress {
-            get => sender_email_address; 
+        public string SenderEmailAddress
+        {
+            get => sender_email_address;
             set
             {
-                if(sender_email_address != value)
+                if (sender_email_address != value)
                 {
                     sender_email_address = value;
                     RaisePropertyChanged();
                 }
             }
         }
-        public string SenderName {
+        public string SenderName
+        {
             get => sender_name;
             set
             {
-                if(sender_name != value)
+                if (sender_name != value)
                 {
                     sender_name = value;
                     RefreshSearchIndex();
@@ -163,23 +168,24 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 }
             }
         }
-        public DateTime? SentOn {
+        public DateTime? SentOn
+        {
             get => sent_on;
             set
             {
-                if(sent_on != value)
+                if (sent_on != value)
                 {
                     sent_on = value;
                     RaisePropertyChanged();
                 }
             }
         }
-        public string Subject 
+        public string Subject
         {
             get => subject;
             set
             {
-                if(subject != value)
+                if (subject != value)
                 {
                     subject = value;
                     RefreshSearchIndex();
@@ -188,11 +194,12 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
         }
 
-        public string To {
+        public string To
+        {
             get => to;
             set
             {
-                if(to != value)
+                if (to != value)
                 {
                     to = value;
                     RaisePropertyChanged();
@@ -200,11 +207,12 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
 
         }
-        public bool Unread {
-            get => unread; 
+        public bool Unread
+        {
+            get => unread;
             set
             {
-                if(unread != value)
+                if (unread != value)
                 {
                     unread = value;
                     RaisePropertyChanged();
@@ -212,9 +220,10 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
         }
 
-        public string SearchIndex 
+        public string SearchIndex
         {
-            get {
+            get
+            {
                 return search_index;
                 //return cc + categories + recipient_names + sender_name + subject;
             }
@@ -247,7 +256,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             };
             outlookmailitem.RefreshSearchIndex();
 
-         
+
             outlookmailitem.recipient_addresses = String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(recipient => recipient.Address));
             outlookmailitem.recipient_names = String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(recipient => recipient.Name));
 

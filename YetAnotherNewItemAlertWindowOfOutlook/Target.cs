@@ -1,15 +1,9 @@
+//using System.Xml;
+using Microsoft.Office.Interop.Outlook;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Printing;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Xml.Serialization;
-
-//using System.Xml;
-using Microsoft.Office.Interop.Outlook;
-using NLog;
 
 namespace YetAnotherNewItemAlertWindowOfOutlook
 {
@@ -43,9 +37,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         }
         //private bool activateWindow = false;
 
-     
+
         private List<Action> actions = new();
-        
+
         public bool ActivateWindow
         {
             get
@@ -64,7 +58,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
         public bool Filtering(MailItem mailItem)
         {
-            if(Condition != null)
+            if (Condition != null)
             {
                 return Condition.Evaluate(mailItem);
             }
@@ -135,5 +129,5 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         }
         */
     }
-        
+
 }

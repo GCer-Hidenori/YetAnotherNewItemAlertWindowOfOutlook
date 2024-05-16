@@ -1,11 +1,7 @@
-using System;
+using Microsoft.Office.Interop.Outlook;
 using System.Collections.Generic;
 using System.Linq;
-using System.Printing;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
-using Microsoft.Office.Interop.Outlook;
 
 namespace YetAnotherNewItemAlertWindowOfOutlook
 {

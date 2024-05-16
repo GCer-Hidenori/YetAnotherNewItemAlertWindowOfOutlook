@@ -2,8 +2,6 @@ using Microsoft.Office.Interop.Outlook;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace YetAnotherNewItemAlertWindowOfOutlook
 {
@@ -30,7 +28,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
             catch (System.Runtime.InteropServices.COMException)
             {
-                throw new YError(ErrorType.StoreNotFound,$"path:{path}");
+                throw new YError(ErrorType.StoreNotFound, $"path:{path}");
             }
             foreach (MAPIFolder search_folder in store.GetSearchFolders())
             {
@@ -42,7 +40,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             throw new YError(ErrorType.NoFolderFoundError, path);
 
         }
-        private static MAPIFolder GetNormalFolder(MAPIFolder parentFolder,List<string> child_folder_names)
+        private static MAPIFolder GetNormalFolder(MAPIFolder parentFolder, List<string> child_folder_names)
         {
             if (child_folder_names.Count == 0)
             {
@@ -56,7 +54,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     return GetNormalFolder(folder, child_folder_names);
                 }
             }
-            throw new YError(ErrorType.NoFolderFoundError,parentFolder.FullFolderPath + "/" + child_folder_names[0]);
+            throw new YError(ErrorType.NoFolderFoundError, parentFolder.FullFolderPath + "/" + child_folder_names[0]);
         }
         public static MAPIFolder GetNormalFolder(string path)
         {
@@ -79,7 +77,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
             catch (System.Runtime.InteropServices.COMException)
             {
-                throw new YError(ErrorType.NoFolderFoundError,"store not found " + pathParts[0]);
+                throw new YError(ErrorType.NoFolderFoundError, "store not found " + pathParts[0]);
             }
             pathParts.RemoveAt(0);
             return GetNormalFolder(store.GetRootFolder(), pathParts);
@@ -103,25 +101,25 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             var ns = outlook.GetNamespace("MAPI");
             foreach (var folder in ns.Folders)
             {
-                GetFolders((MAPIFolder)folder,logger);
+                GetFolders((MAPIFolder)folder, logger);
             }
         }
-        public static void GetFolders(MAPIFolder folder,NLog.Logger logger)
+        public static void GetFolders(MAPIFolder folder, NLog.Logger logger)
         {
             logger.Info(folder.FullFolderPath);
             foreach (MAPIFolder subFolder in folder.Folders)
             {
                 GetFolders(subFolder, logger);
-            }  
+            }
         }
-        static void ListSearchFolders(NLog.Logger logger) 
+        static void ListSearchFolders(NLog.Logger logger)
         {
             var outlook = new Application();
-            
-            foreach(Store store in outlook.Session.Stores)
+
+            foreach (Store store in outlook.Session.Stores)
             {
                 logger.Info(store.DisplayName);
-                foreach(MAPIFolder folder in store.GetSearchFolders())
+                foreach (MAPIFolder folder in store.GetSearchFolders())
                 {
                     logger.Info(folder.FullFolderPath);
                 }

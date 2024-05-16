@@ -3,14 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Input;
-using YetAnotherNewItemAlertWindowOfOutlook.Properties;
 using System.Timers;
-using System.Net;
-using System.DirectoryServices.ActiveDirectory;
+using System.Windows;
 using System.Windows.Data;
 
 namespace YetAnotherNewItemAlertWindowOfOutlook
@@ -61,7 +55,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             return list_target_processing;
         }
 
-        public MainViewModel(Setting setting, Microsoft.Office.Interop.Outlook.Application outlook,Window window)
+        public MainViewModel(Setting setting, Microsoft.Office.Interop.Outlook.Application outlook, Window window)
         {
             this.outlook = outlook;
             this.window = window;
@@ -74,7 +68,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
             SetTimer();
             StartTimer();
-            
+
         }
         private void SetTimer()
         {
@@ -85,7 +79,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 RefreshOutlookMailItem();
             };
             timer.AutoReset = true;
-            
+
         }
 
 
@@ -96,30 +90,30 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         }
         object lockObj = new();
 
-        public void RefreshOutlookMailItem(bool forceRefresh=false)
+        public void RefreshOutlookMailItem(bool forceRefresh = false)
         {
             lock (lockObj)
             {
                 System.Diagnostics.Debug.WriteLine("RefreshOutlookMailItem start");
-                
+
                 bool activateWindow = false;
 
                 List<string> list_entryid_of_target_processing = new();
                 List<string> list_entryid_of_outlookmailitemcollection = new();
                 foreach (var target_processing in list_target_processing)
                 {
-                    if (forceRefresh || ( target_processing.Target?.TimersToCheckMail > 0 && timer_count % target_processing.Target.TimersToCheckMail == 0))
+                    if (forceRefresh || (target_processing.Target?.TimersToCheckMail > 0 && timer_count % target_processing.Target.TimersToCheckMail == 0))
                     {
                         System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString()} start RefreshOutlookMailItem.Folder:{target_processing.Target?.Path}");
                         Logger.Info($"start RefreshOutlookMailItem.Folder:{target_processing.Target?.Path}");
                         var result = target_processing.RefreshOutlookMailItem();
 
-                        if(!activateWindow && result.ActivateWindow) activateWindow = true;
+                        if (!activateWindow && result.ActivateWindow) activateWindow = true;
                         foreach (string entryID in result.List_new_entry_id)
                         {
                             if (target_processing.Target != null)
                             {
-                                foreach (Action actionCreateFile in target_processing.Target.Actions.Where(a=>a.ActionType==ActionType.CreateFile))
+                                foreach (Action actionCreateFile in target_processing.Target.Actions.Where(a => a.ActionType == ActionType.CreateFile))
                                 {
 
                                     MailItem mailItem = OutlookUtil.GetMail(entryID, outlook);
@@ -129,19 +123,19 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                         }
                         Logger.Info($"end RefreshOutlookMailItem.Folder:{target_processing.Target?.Path}");
                     }
-                    
+
                     foreach (string mail_entryID in target_processing.List_OutlookMailEntryID)
                     {
                         list_entryid_of_target_processing.Add(mail_entryID);
                     }
-                    
+
                 }
-                
+
                 foreach (OutlookMailItem outlookmailitem in OutlookMailItemCollection)
                 {
                     list_entryid_of_outlookmailitemcollection.Add(outlookmailitem.EntryID);
                 }
-                
+
 
                 // duplicate / for update
                 List<string> list_duplication_entryid = list_entryid_of_target_processing.Intersect(list_entryid_of_outlookmailitemcollection).ToList();
@@ -172,10 +166,11 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     }
                 }
                 timer_count++;
-                if(activateWindow)
+                if (activateWindow)
                 {
                     Logger.Info("activate window.");
-                    window.Dispatcher.Invoke(() => {
+                    window.Dispatcher.Invoke(() =>
+                    {
                         window.Activate();
                         window.WindowState = WindowState.Normal;
                     });

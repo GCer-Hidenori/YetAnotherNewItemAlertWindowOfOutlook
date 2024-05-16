@@ -1,9 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace YetAnotherNewItemAlertWindowOfOutlook
 {
@@ -30,14 +25,14 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             : base(message)
         {
         }
-        public YError(ErrorType errorType):base(errorType.ToString())
+        public YError(ErrorType errorType) : base(errorType.ToString())
         {
             this.ErrorType = errorType;
         }
-        public YError(ErrorType errorType,string message):base(errorType.ToString()+message)
+        public YError(ErrorType errorType, string message) : base(errorType.ToString() + message)
         {
             this.ErrorType = errorType;
         }
-        
+
     }
 }

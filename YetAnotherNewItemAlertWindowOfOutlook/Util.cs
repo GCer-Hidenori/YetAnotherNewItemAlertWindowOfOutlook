@@ -1,17 +1,14 @@
+using Microsoft.Office.Interop.Outlook;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Office.Interop.Outlook;
 
 namespace YetAnotherNewItemAlertWindowOfOutlook
 {
     public class Util
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-      
+
         public static string ReadSettingSampleXmlString()
         {
             System.Xml.XmlDocument xdoc = new System.Xml.XmlDocument();
@@ -22,21 +19,21 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
         }
         private static MAPIFolder? GetSingleSearchFolder(Microsoft.Office.Interop.Outlook.Application outlook)
-        {   
-            foreach(Store store in outlook.Session.Stores)
+        {
+            foreach (Store store in outlook.Session.Stores)
             {
-                foreach(MAPIFolder folder in store.GetSearchFolders())
+                foreach (MAPIFolder folder in store.GetSearchFolders())
                 {
                     return folder;
                 }
             }
             return null;
         }
-     
+
         public static Setting CreateInitialSettingFile(Microsoft.Office.Interop.Outlook.Application outlook, string settingFilePath)
         {
             Setting setting = new();
-            
+
             var searchFolder = GetSingleSearchFolder(outlook);
             if (searchFolder != null)
             {
@@ -50,7 +47,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             target_normal_folder.TargetFolderType = Target.FolderType.NormalFolder;
             target_normal_folder.Path = inboxFolder.FolderPath;
             setting.Targets.Add(target_normal_folder);
- 
+
             var action1 = new Action()
             {
                 ActionType = ActionType.ActivateWindow

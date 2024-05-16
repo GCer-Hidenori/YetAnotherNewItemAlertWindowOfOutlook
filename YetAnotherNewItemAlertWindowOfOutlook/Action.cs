@@ -1,11 +1,7 @@
 using Microsoft.Office.Interop.Outlook;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace YetAnotherNewItemAlertWindowOfOutlook
@@ -22,7 +18,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private string? fileName = null;
         private string? body = null;
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-        
+
         [XmlAttribute("fileName")]
         public string? FileName { get => fileName; set => fileName = value; }
 
@@ -33,19 +29,19 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         public ActionType ActionType { get => action_type; set => action_type = value; }
 
 
-        private string ReplaceWords(string? source,MailItem mailItem)
+        private string ReplaceWords(string? source, MailItem mailItem)
         {
-            
-            source =  Regex.Replace(source ?? "", @"\${entryID}", mailItem.EntryID, RegexOptions.IgnoreCase);
-            source =  Regex.Replace(source, @"\${Subject}", mailItem.Subject, RegexOptions.IgnoreCase);
-            source =  Regex.Replace(source, @"\${ReceivedTime}", mailItem.ReceivedTime.ToString(), RegexOptions.IgnoreCase).Replace('/','-');
-            source =  Regex.Replace(source, @"\${SenderName}", mailItem.SenderName ?? "", RegexOptions.IgnoreCase);
-            source =  Regex.Replace(source, @"\${SenderEmailAddress}", mailItem.SenderEmailAddress ?? "", RegexOptions.IgnoreCase);
-            source =  Regex.Replace(source, @"\${Body}", mailItem.Body, RegexOptions.IgnoreCase);
-            source =  Regex.Replace(source, @"\${To}", mailItem.To ?? "", RegexOptions.IgnoreCase);
-            source =  Regex.Replace(source, @"\${Cc}", mailItem.CC ?? "", RegexOptions.IgnoreCase);
-            source =  Regex.Replace(source, @"\${Categories}", mailItem.Categories ?? "", RegexOptions.IgnoreCase);
-            source =  Regex.Replace(source, @"\${SentOn}", mailItem.SentOn.ToString(), RegexOptions.IgnoreCase).Replace('/', '-');
+
+            source = Regex.Replace(source ?? "", @"\${entryID}", mailItem.EntryID, RegexOptions.IgnoreCase);
+            source = Regex.Replace(source, @"\${Subject}", mailItem.Subject, RegexOptions.IgnoreCase);
+            source = Regex.Replace(source, @"\${ReceivedTime}", mailItem.ReceivedTime.ToString(), RegexOptions.IgnoreCase).Replace('/', '-');
+            source = Regex.Replace(source, @"\${SenderName}", mailItem.SenderName ?? "", RegexOptions.IgnoreCase);
+            source = Regex.Replace(source, @"\${SenderEmailAddress}", mailItem.SenderEmailAddress ?? "", RegexOptions.IgnoreCase);
+            source = Regex.Replace(source, @"\${Body}", mailItem.Body, RegexOptions.IgnoreCase);
+            source = Regex.Replace(source, @"\${To}", mailItem.To ?? "", RegexOptions.IgnoreCase);
+            source = Regex.Replace(source, @"\${Cc}", mailItem.CC ?? "", RegexOptions.IgnoreCase);
+            source = Regex.Replace(source, @"\${Categories}", mailItem.Categories ?? "", RegexOptions.IgnoreCase);
+            source = Regex.Replace(source, @"\${SentOn}", mailItem.SentOn.ToString(), RegexOptions.IgnoreCase).Replace('/', '-');
             return source;
         }
         public void CreateFile(MailItem mailItem)

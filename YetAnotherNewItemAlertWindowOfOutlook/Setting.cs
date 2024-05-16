@@ -1,12 +1,5 @@
-using Microsoft.Win32;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using YetAnotherNewItemAlertWindowOfOutlook.Properties;
 using System.Xml.Serialization;
 
 namespace YetAnotherNewItemAlertWindowOfOutlook
@@ -26,8 +19,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             set { targets = value; }
         }
 
-        public int TimerIntervalSec {
-            get => timer_interval_sec; 
+        public int TimerIntervalSec
+        {
+            get => timer_interval_sec;
             set
             {
                 if (value > 0)
@@ -46,11 +40,12 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         public void Save()
         {
             System.Xml.Serialization.XmlSerializer serializer = new(typeof(Setting));
-            using(System.IO.StreamWriter sw = new(fileName, false, new System.Text.UTF8Encoding(false))){
-	            serializer.Serialize(sw, this);
+            using (System.IO.StreamWriter sw = new(fileName, false, new System.Text.UTF8Encoding(false)))
+            {
+                serializer.Serialize(sw, this);
             }
         }
-        
+
 
         public static Setting Load()
         {
@@ -64,6 +59,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         }
 
 
-      
+
     }
 }
