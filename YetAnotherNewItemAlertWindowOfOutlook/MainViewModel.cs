@@ -92,89 +92,96 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
         public void RefreshOutlookMailItem(bool forceRefresh = false)
         {
-            lock (lockObj)
+            try
             {
-                System.Diagnostics.Debug.WriteLine("RefreshOutlookMailItem start");
-
-                bool activateWindow = false;
-
-                List<string> list_entryid_of_target_processing = new();
-                List<string> list_entryid_of_outlookmailitemcollection = new();
-                foreach (var target_processing in list_target_processing)
+                lock (lockObj)
                 {
-                    if (forceRefresh || (target_processing.Target?.TimersToCheckMail > 0 && timer_count % target_processing.Target.TimersToCheckMail == 0))
+                    System.Diagnostics.Debug.WriteLine("RefreshOutlookMailItem start");
+
+                    bool activateWindow = false;
+
+                    List<string> list_entryid_of_target_processing = new();
+                    List<string> list_entryid_of_outlookmailitemcollection = new();
+                    foreach (var target_processing in list_target_processing)
                     {
-                        System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString()} start RefreshOutlookMailItem.Folder:{target_processing.Target?.Path}");
-                        Logger.Info($"start RefreshOutlookMailItem.Folder:{target_processing.Target?.Path}");
-                        var result = target_processing.RefreshOutlookMailItem();
-
-                        if (!activateWindow && result.ActivateWindow) activateWindow = true;
-                        foreach (string entryID in result.List_new_entry_id)
+                        if (forceRefresh || (target_processing.Target?.TimersToCheckMail > 0 && timer_count % target_processing.Target.TimersToCheckMail == 0))
                         {
-                            if (target_processing.Target != null)
-                            {
-                                foreach (Action actionCreateFile in target_processing.Target.Actions.Where(a => a.ActionType == ActionType.CreateFile))
-                                {
+                            System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString()} start RefreshOutlookMailItem.Folder:{target_processing.Target?.Path}");
+                            Logger.Info($"start RefreshOutlookMailItem.Folder:{target_processing.Target?.Path}");
+                            var result = target_processing.RefreshOutlookMailItem();
 
-                                    MailItem mailItem = OutlookUtil.GetMail(entryID, outlook);
-                                    actionCreateFile.CreateFile(mailItem);
+                            if (!activateWindow && result.ActivateWindow) activateWindow = true;
+                            foreach (string entryID in result.List_new_entry_id)
+                            {
+                                if (target_processing.Target != null)
+                                {
+                                    foreach (Action actionCreateFile in target_processing.Target.Actions.Where(a => a.ActionType == ActionType.CreateFile))
+                                    {
+
+                                        MailItem mailItem = OutlookUtil.GetMail(entryID, outlook);
+                                        actionCreateFile.CreateFile(mailItem);
+                                    }
                                 }
                             }
+                            Logger.Info($"end RefreshOutlookMailItem.Folder:{target_processing.Target?.Path}");
                         }
-                        Logger.Info($"end RefreshOutlookMailItem.Folder:{target_processing.Target?.Path}");
+
+                        foreach (string mail_entryID in target_processing.List_OutlookMailEntryID)
+                        {
+                            list_entryid_of_target_processing.Add(mail_entryID);
+                        }
+
                     }
 
-                    foreach (string mail_entryID in target_processing.List_OutlookMailEntryID)
+                    foreach (OutlookMailItem outlookmailitem in OutlookMailItemCollection)
                     {
-                        list_entryid_of_target_processing.Add(mail_entryID);
+                        list_entryid_of_outlookmailitemcollection.Add(outlookmailitem.EntryID);
                     }
 
-                }
 
-                foreach (OutlookMailItem outlookmailitem in OutlookMailItemCollection)
-                {
-                    list_entryid_of_outlookmailitemcollection.Add(outlookmailitem.EntryID);
-                }
+                    // duplicate / for update
+                    List<string> list_duplication_entryid = list_entryid_of_target_processing.Intersect(list_entryid_of_outlookmailitemcollection).ToList();
+                    // only target_processing / add to OutlookMailItemCollection
+                    List<string> list_new_entry_id = list_entryid_of_target_processing.Except(list_entryid_of_outlookmailitemcollection).ToList();
+                    // only OutlookMailItemCollection / delete from OutlookMailItemCollection
+                    List<string> list_deleted_entry_id = list_entryid_of_outlookmailitemcollection.Except(list_entryid_of_target_processing).ToList();
 
+                    Logger.Info($"new item  count  {list_new_entry_id.Count}");
 
-                // duplicate / for update
-                List<string> list_duplication_entryid = list_entryid_of_target_processing.Intersect(list_entryid_of_outlookmailitemcollection).ToList();
-                // only target_processing / add to OutlookMailItemCollection
-                List<string> list_new_entry_id = list_entryid_of_target_processing.Except(list_entryid_of_outlookmailitemcollection).ToList();
-                // only OutlookMailItemCollection / delete from OutlookMailItemCollection
-                List<string> list_deleted_entry_id = list_entryid_of_outlookmailitemcollection.Except(list_entryid_of_target_processing).ToList();
-
-                Logger.Info($"new item  count  {list_new_entry_id.Count}");
-
-                foreach (string entryID in list_duplication_entryid)
-                {
-                    OutlookMailItem.Reload(DicOutlookMailItem[entryID], outlook);
-                }
-                foreach (string entryID in list_new_entry_id)
-                {
-                    var outlookmailitem = OutlookMailItem.CreateNew(entryID, outlook);
-                    DicOutlookMailItem.Add(entryID, outlookmailitem);
-                    OutlookMailItemCollection.Add(outlookmailitem);
-                }
-                foreach (string entryID in list_deleted_entry_id)
-                {
-                    var outlookmailitem = DicOutlookMailItem[entryID];
-                    DicOutlookMailItem.Remove(entryID);
-                    if (!OutlookMailItemCollection.Remove(outlookmailitem))
+                    foreach (string entryID in list_duplication_entryid)
                     {
-                        throw new ArgumentException();
+                        OutlookMailItem.Reload(DicOutlookMailItem[entryID], outlook);
+                    }
+                    foreach (string entryID in list_new_entry_id)
+                    {
+                        var outlookmailitem = OutlookMailItem.CreateNew(entryID, outlook);
+                        DicOutlookMailItem.Add(entryID, outlookmailitem);
+                        OutlookMailItemCollection.Add(outlookmailitem);
+                    }
+                    foreach (string entryID in list_deleted_entry_id)
+                    {
+                        var outlookmailitem = DicOutlookMailItem[entryID];
+                        DicOutlookMailItem.Remove(entryID);
+                        if (!OutlookMailItemCollection.Remove(outlookmailitem))
+                        {
+                            throw new ArgumentException();
+                        }
+                    }
+                    timer_count++;
+                    if (activateWindow)
+                    {
+                        Logger.Info("activate window.");
+                        window.Dispatcher.Invoke(() =>
+                        {
+                            window.Activate();
+                            window.WindowState = WindowState.Normal;
+                        });
                     }
                 }
-                timer_count++;
-                if (activateWindow)
-                {
-                    Logger.Info("activate window.");
-                    window.Dispatcher.Invoke(() =>
-                    {
-                        window.Activate();
-                        window.WindowState = WindowState.Normal;
-                    });
-                }
+            }
+            catch (System.Exception e)
+            {
+                Logger.Error(e);
             }
 
         }
