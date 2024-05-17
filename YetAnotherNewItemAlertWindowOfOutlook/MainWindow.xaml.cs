@@ -175,7 +175,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             OutlookMailItem outlookMailItem = (OutlookMailItem)de;
             var textbox = (TextBox)this.FindName("SearchTextBox");
             return textbox.Text.Split(' ').All(word => outlookMailItem.SearchIndex.Contains(Strings.StrConv(word, VbStrConv.Wide), StringComparison.CurrentCultureIgnoreCase));
-            //return outlookMailItem.SearchIndex.Contains(Strings.StrConv(textbox.Text, VbStrConv.Wide), StringComparison.CurrentCultureIgnoreCase);
         }
 
         private void Search()

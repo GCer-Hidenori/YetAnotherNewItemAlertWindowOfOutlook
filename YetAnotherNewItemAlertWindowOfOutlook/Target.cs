@@ -53,7 +53,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
         //internal List<Action> ActionCreateFiles { get => Actions; set => Actions = value; }
         public Condition? Condition { get => condition; set => condition = value; }
-        [XmlElement("Actions")]
+        [XmlArray("Actions")]
         public List<Action> Actions { get => actions; set => actions = value; }
 
         public bool Filtering(MailItem mailItem)
