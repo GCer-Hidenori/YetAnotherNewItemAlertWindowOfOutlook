@@ -72,6 +72,7 @@
                         <MenuItem Header="Open" Click="OpenMenuItem_Click"/>
                         <MenuItem Header="Hide" Click="HideMenuItem_Click"/>
                         <MenuItem Header="Inspect" Click="InspectMenuItem_Click"/>
+                        <MenuItem Header="Moved to the same folder as the emails in the same thread" Click="MoveToSameFolderSameThres_Click"/>
                     </ContextMenu>
                 </DataGrid.ContextMenu>
 

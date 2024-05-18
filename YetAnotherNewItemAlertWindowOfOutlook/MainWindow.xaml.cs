@@ -22,13 +22,13 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         string settingFilePath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "setting.xml");
         Setting setting;
         DataGrid? datagrid;
-        Microsoft.Office.Interop.Outlook.Application? outlook;
+        //Microsoft.Office.Interop.Outlook.Application? outlook;
 
         private void SortColumn()
         {
             foreach (var column in setting.Columns)
             {
-                var targetColumn = datagrid.Columns.FirstOrDefault(c => c.Header.ToString() == column.Name);
+                var targetColumn = datagrid?.Columns.FirstOrDefault(c => c.Header.ToString() == column.Name);
                 if (targetColumn != null)
                 {
                     targetColumn.DisplayIndex = setting.Columns.IndexOf(column);
@@ -46,7 +46,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             InitializeComponent();
             datagrid = (DataGrid)this.FindName("OutlookMailItemDataGrid");
 
-            outlook = new Microsoft.Office.Interop.Outlook.Application();
+            var outlook = new Microsoft.Office.Interop.Outlook.Application();
             try
             {
                 if (File.Exists(settingFilePath))
@@ -102,7 +102,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
-            outlook = new Microsoft.Office.Interop.Outlook.Application();
+            var outlook = new Microsoft.Office.Interop.Outlook.Application();
             var ns = outlook.GetNamespace("MAPI");
             try
             {
@@ -183,12 +183,12 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
         private void Search()
         {
-            var view = CollectionViewSource.GetDefaultView(context.OutlookMailItemCollection);
+            var view = CollectionViewSource.GetDefaultView(context?.OutlookMailItemCollection);
             view.Filter = Contains;
         }
         private void SearchCancel()
         {
-            var view = CollectionViewSource.GetDefaultView(context.OutlookMailItemCollection);
+            var view = CollectionViewSource.GetDefaultView(context?.OutlookMailItemCollection);
             var textbox = (TextBox)this.FindName("SearchTextBox");
             textbox.Text = "";
             view.Filter = null;
@@ -255,11 +255,11 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private void OpenMenuItem_Click(object sender, RoutedEventArgs e)
         {
             e.Handled = true;
-            outlook = new Microsoft.Office.Interop.Outlook.Application();
+            var outlook = new Microsoft.Office.Interop.Outlook.Application();
             var ns = outlook.GetNamespace("MAPI");
             try
             {
-                MailItem mailItem = ns.GetItemFromID(((OutlookMailItem)datagrid.SelectedItem).EntryID);
+                MailItem mailItem = ns.GetItemFromID(((OutlookMailItem?)datagrid?.SelectedItem)?.EntryID);
                 if (mailItem != null)
                 {
                     mailItem.Display();
@@ -279,9 +279,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         }
         private void InspectMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            outlook = new Microsoft.Office.Interop.Outlook.Application();
+            var outlook = new Microsoft.Office.Interop.Outlook.Application();
             var ns = outlook.GetNamespace("MAPI");
-            MailItem mailItem = ns.GetItemFromID(((OutlookMailItem)datagrid.SelectedItem).EntryID);
+            MailItem mailItem = ns.GetItemFromID(((OutlookMailItem?)datagrid?.SelectedItem)?.EntryID);
             e.Handled = true;
             string recipientNames = String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(new Func<Recipient, string>(recipient => recipient.Name)));
             string recipientAddresses = String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(new Func<Recipient, string>(recipient => recipient.Address)));
@@ -297,6 +297,74 @@ EntryID:{mailItem.EntryID}
 ConversationID:{mailItem.ConversationID}
                 ";
             MessageBox.Show(message, "Inspect", MessageBoxButton.OK);
+        }
+
+
+        private MAPIFolder? GetSameThreadMailFolder(MailItem mailItem)
+        {
+            var outlook = new Microsoft.Office.Interop.Outlook.Application();
+            var ns = outlook.GetNamespace("MAPI");
+
+            string folder_path = mailItem.Parent.FolderPath;
+            string sent_folder_path = ns.GetDefaultFolder(OlDefaultFolders.olFolderSentMail).FolderPath;
+            string draft_folder_path = ns.GetDefaultFolder(OlDefaultFolders.olFolderDrafts).FolderPath;
+            string conflicts_folder_path = "";
+            try
+            {
+                conflicts_folder_path = ns.GetDefaultFolder(OlDefaultFolders.olFolderConflicts).FolderPath;
+            }catch(System.Runtime.InteropServices.COMException e)
+            {
+                //
+            }
+            Conversation conversation = mailItem.GetConversation();
+            MailItem? sameThreadMailItem = conversation.GetRootItems().Cast<MailItem>().FirstOrDefault(m => (m.Parent.FolderPath != folder_path && m.Parent.FolderPath != sent_folder_path && m.Parent.FolderPath != draft_folder_path && m.Parent.FolderPath != conflicts_folder_path));
+            if (sameThreadMailItem != null)
+            {
+                return sameThreadMailItem.Parent;
+            }
+            else
+            {
+                foreach (MailItem samethread_root_mailItem in conversation.GetRootItems())
+                {
+                    sameThreadMailItem = conversation.GetChildren(samethread_root_mailItem).Cast<MailItem>().FirstOrDefault(m => (m.Parent.FolderPath != folder_path && m.Parent.FolderPath != sent_folder_path && m.Parent.FolderPath != draft_folder_path && m.Parent.FolderPath != conflicts_folder_path));
+                    if (sameThreadMailItem != null)
+                    {
+                        return sameThreadMailItem.Parent;
+                    }
+
+                }
+            }
+            return null;
+        }
+
+        private void MoveToSameFolderSameThres_Click(object sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
+            var outlook = new Microsoft.Office.Interop.Outlook.Application();
+            var ns = outlook.GetNamespace("MAPI");
+            var entryID = ((OutlookMailItem?)datagrid?.SelectedItem)?.EntryID;
+            if (entryID == null) return;
+            MailItem mailItem = ns.GetItemFromID(entryID);
+
+            MAPIFolder? sameThreadMailFolder = GetSameThreadMailFolder(mailItem);
+            if (sameThreadMailFolder != null)
+            {
+                MessageBoxResult res = MessageBox.Show($"Would you like to move this mail to here?\n{sameThreadMailFolder.FullFolderPath}", "Confirmation", MessageBoxButton.OKCancel);
+                if (res == MessageBoxResult.OK)
+                {
+
+                    mailItem.Move(sameThreadMailFolder);
+                    context.HideMail(entryID);
+                }
+                else
+                {
+                    MessageBox.Show("Canceled.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("No same thread mail in other folder.");
+            }
         }
 
         /*
