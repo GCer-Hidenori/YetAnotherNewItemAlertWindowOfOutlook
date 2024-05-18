@@ -39,13 +39,13 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             {
                 var target_search_folder = new Target();
                 target_search_folder.TargetFolderType = Target.FolderType.SearchFolder;
-                target_search_folder.Path = searchFolder.FolderPath;
+                target_search_folder.Path = searchFolder.FullFolderPath;
                 setting.Targets.Add(target_search_folder);
             }
             var target_normal_folder = new Target();
             var inboxFolder = outlook.GetNamespace("MAPI").GetDefaultFolder(OlDefaultFolders.olFolderInbox);
             target_normal_folder.TargetFolderType = Target.FolderType.NormalFolder;
-            target_normal_folder.Path = inboxFolder.FolderPath;
+            target_normal_folder.Path = inboxFolder.FullFolderPath;
             setting.Targets.Add(target_normal_folder);
 
             var action1 = new Action()
