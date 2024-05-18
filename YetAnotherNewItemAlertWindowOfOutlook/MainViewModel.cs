@@ -18,7 +18,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private int timer_count = 0;
         List<TargetProcessing> list_target_processing = new();
         private Window window;
-        Microsoft.Office.Interop.Outlook.Application outlook;
+        //Microsoft.Office.Interop.Outlook.Application outlook;
         private Setting setting;
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         static List<TargetProcessing> GetTargetProcessings(Setting setting)
@@ -55,9 +55,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             return list_target_processing;
         }
 
-        public MainViewModel(Setting setting, Microsoft.Office.Interop.Outlook.Application outlook, Window window)
+        public MainViewModel(Setting setting,Window window)
         {
-            this.outlook = outlook;
+            //this.outlook = outlook;
             this.window = window;
             this.setting = setting;
             OutlookMailItemCollection = new ObservableCollection<OutlookMailItem>();
@@ -94,6 +94,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         {
             try
             {
+                var outlook = new Microsoft.Office.Interop.Outlook.Application();
                 lock (lockObj)
                 {
                     System.Diagnostics.Debug.WriteLine("RefreshOutlookMailItem start");

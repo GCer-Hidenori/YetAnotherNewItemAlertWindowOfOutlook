@@ -21,10 +21,11 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private bool ready = false;
         string settingFilePath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "setting.xml");
         Setting setting;
+        DataGrid? datagrid;
+        Microsoft.Office.Interop.Outlook.Application? outlook;
 
         private void SortColumn()
         {
-            var datagrid = (DataGrid)this.FindName("OutlookMailItemDataGrid");
             foreach (var column in setting.Columns)
             {
                 var targetColumn = datagrid.Columns.FirstOrDefault(c => c.Header.ToString() == column.Name);
@@ -43,7 +44,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         public MainWindow()
         {
             InitializeComponent();
-            var outlook = new Microsoft.Office.Interop.Outlook.Application();
+            datagrid = (DataGrid)this.FindName("OutlookMailItemDataGrid");
+
+            outlook = new Microsoft.Office.Interop.Outlook.Application();
             try
             {
                 if (File.Exists(settingFilePath))
@@ -55,7 +58,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     setting = Util.CreateInitialSettingFile(outlook, settingFilePath);
                 }
 
-                context = new MainViewModel(setting, outlook, this);
+                context = new MainViewModel(setting, this);
                 this.DataContext = context;
                 SortColumn();
                 ready = true;
@@ -98,7 +101,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
-            var outlook = new Microsoft.Office.Interop.Outlook.Application();
+            outlook = new Microsoft.Office.Interop.Outlook.Application();
             var ns = outlook.GetNamespace("MAPI");
             try
             {
@@ -179,13 +182,11 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
         private void Search()
         {
-            var obj = (DataGrid)this.FindName("OutlookMailItemDataGrid");
             var view = CollectionViewSource.GetDefaultView(context.OutlookMailItemCollection);
             view.Filter = Contains;
         }
         private void SearchCancel()
         {
-            var obj = (DataGrid)this.FindName("OutlookMailItemDataGrid");
             var view = CollectionViewSource.GetDefaultView(context.OutlookMailItemCollection);
             var textbox = (TextBox)this.FindName("SearchTextBox");
             textbox.Text = "";
@@ -242,7 +243,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            var datagrid = (DataGrid)this.FindName("OutlookMailItemDataGrid");
             setting.Columns.Clear();
             foreach (var column in datagrid.Columns.OrderBy(c => c.DisplayIndex))
             {
@@ -254,11 +254,10 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private void OpenMenuItem_Click(object sender, RoutedEventArgs e)
         {
             e.Handled = true;
-            var outlook = new Microsoft.Office.Interop.Outlook.Application();
+            outlook = new Microsoft.Office.Interop.Outlook.Application();
             var ns = outlook.GetNamespace("MAPI");
             try
             {
-                var datagrid = (DataGrid)this.FindName("OutlookMailItemDataGrid");
                 MailItem mailItem = ns.GetItemFromID(((OutlookMailItem)datagrid.SelectedItem).EntryID);
                 if (mailItem != null)
                 {
@@ -279,9 +278,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         }
         private void InspectMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            var outlook = new Microsoft.Office.Interop.Outlook.Application();
+            outlook = new Microsoft.Office.Interop.Outlook.Application();
             var ns = outlook.GetNamespace("MAPI");
-            var datagrid = (DataGrid)this.FindName("OutlookMailItemDataGrid");
             MailItem mailItem = ns.GetItemFromID(((OutlookMailItem)datagrid.SelectedItem).EntryID);
             e.Handled = true;
             string recipientNames = String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(new Func<Recipient, string>(recipient => recipient.Name)));
