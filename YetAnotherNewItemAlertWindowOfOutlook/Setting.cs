@@ -49,13 +49,20 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
         public static Setting Load()
         {
-            Setting setting = null;
+            Setting? setting;
             XmlSerializer serializer = new XmlSerializer(typeof(Setting));
             using (var sr = new StreamReader(fileName))
             {
-                setting = (Setting)serializer.Deserialize(sr);
+                setting = (Setting?)serializer.Deserialize(sr);
             }
-            return setting;
+            if (setting != null)
+            {
+                return setting;
+            }
+            else
+            {
+                throw new YError(ErrorType.SettingFileLoadError);
+            }
         }
 
 

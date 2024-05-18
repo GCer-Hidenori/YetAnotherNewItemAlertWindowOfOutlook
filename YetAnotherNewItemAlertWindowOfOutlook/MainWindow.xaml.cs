@@ -21,7 +21,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private bool ready = false;
         string settingFilePath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "setting.xml");
         Setting setting;
-        DataGrid? datagrid;
+        DataGrid datagrid;
         //Microsoft.Office.Interop.Outlook.Application? outlook;
 
         private void SortColumn()
@@ -41,7 +41,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
         }
 
+#pragma warning disable CS8618 // null 非許容のフィールドには、コンストラクターの終了時に null 以外の値が入っていなければなりません。Null 許容として宣言することをご検討ください。
         public MainWindow()
+#pragma warning restore CS8618 // null 非許容のフィールドには、コンストラクターの終了時に null 以外の値が入っていなければなりません。Null 許容として宣言することをご検討ください。
         {
             InitializeComponent();
             datagrid = (DataGrid)this.FindName("OutlookMailItemDataGrid");
@@ -178,7 +180,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         {
             OutlookMailItem outlookMailItem = (OutlookMailItem)de;
             var textbox = (TextBox)this.FindName("SearchTextBox");
-            return textbox.Text.Split(' ').All(word => outlookMailItem.SearchIndex.Contains(Strings.StrConv(word, VbStrConv.Wide), StringComparison.CurrentCultureIgnoreCase));
+            return textbox.Text.Split(' ').All(word => outlookMailItem.SearchIndex.Contains(Strings.StrConv(word, VbStrConv.Wide) ?? "", StringComparison.CurrentCultureIgnoreCase));
         }
 
         private void Search()
@@ -247,7 +249,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             setting.Columns.Clear();
             foreach (var column in datagrid.Columns.OrderBy(c => c.DisplayIndex))
             {
-                setting.Columns.Add(new Column() { Name = column.Header.ToString(), Width = column.ActualWidth });
+                setting.Columns.Add(new Column() { Name = column.Header.ToString() ?? "", Width = column.ActualWidth });
             }
             setting.Save();
         }
@@ -312,7 +314,7 @@ ConversationID:{mailItem.ConversationID}
             try
             {
                 conflicts_folder_path = ns.GetDefaultFolder(OlDefaultFolders.olFolderConflicts).FolderPath;
-            }catch(System.Runtime.InteropServices.COMException e)
+            }catch(System.Runtime.InteropServices.COMException)
             {
                 //
             }
@@ -354,7 +356,9 @@ ConversationID:{mailItem.ConversationID}
                 {
 
                     mailItem.Move(sameThreadMailFolder);
+#pragma warning disable CS8602 // null 参照の可能性があるものの逆参照です。
                     context.HideMail(entryID);
+#pragma warning restore CS8602 // null 参照の可能性があるものの逆参照です。
                 }
                 else
                 {

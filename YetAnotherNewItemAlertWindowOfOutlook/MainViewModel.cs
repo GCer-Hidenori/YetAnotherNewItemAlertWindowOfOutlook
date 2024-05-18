@@ -44,11 +44,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 }
                 if (folder != null)
                 {
-                    var target_processing = new TargetProcessing()
-                    {
-                        Target = target,
-                        Target_folder = folder
-                    };
+                    var target_processing = new TargetProcessing(target, folder);
+                 
                     list_target_processing.Add(target_processing);
                 }
             }

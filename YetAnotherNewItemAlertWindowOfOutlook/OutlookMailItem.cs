@@ -42,7 +42,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
         public void RefreshSearchIndex()
         {
-            search_index = Strings.StrConv(cc + categories + recipient_names + sender_name + subject, VbStrConv.Wide, 0);
+            search_index = Strings.StrConv(cc + categories + recipient_names + sender_name + subject, VbStrConv.Wide, 0) ?? "";
         }
 
         public string Cc
