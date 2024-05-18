@@ -293,6 +293,8 @@ SenderName:{mailItem.SenderName}
 SenderAddress:{mailItem.SenderEmailAddress}
 RecipientNames:{recipientNames}
 RecipientAddresses:{recipientAddresses}
+EntryID:{mailItem.EntryID}
+ConversationID:{mailItem.ConversationID}
                 ";
             MessageBox.Show(message, "Inspect", MessageBoxButton.OK);
         }
