@@ -61,6 +61,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 context = new MainViewModel(setting, this);
                 this.DataContext = context;
                 SortColumn();
+
                 ready = true;
             }
             catch (YError e)
@@ -295,5 +296,51 @@ RecipientAddresses:{recipientAddresses}
                 ";
             MessageBox.Show(message, "Inspect", MessageBoxButton.OK);
         }
+
+        /*
+        private void OutlookMailItemDataGrid_Sorting(object sender, DataGridSortingEventArgs e)
+        {
+            e.Handled = true;
+            
+            if(e.Column.SortDirection == System.ComponentModel.ListSortDirection.Ascending)
+            {
+                e.Column.SortDirection = System.ComponentModel.ListSortDirection.Descending;
+            }
+            else
+            {
+                e.Column.SortDirection = System.ComponentModel.ListSortDirection.Ascending;
+            }
+
+
+            var view = CollectionViewSource.GetDefaultView(context.OutlookMailItemCollection);
+            view.SortDescriptions.Clear();
+            switch (e.Column.SortMemberPath)
+            {
+                case "ReceivedTime":
+                    view.SortDescriptions.Add(new System.ComponentModel.SortDescription("ReceivedTime", e.Column.SortDirection ?? System.ComponentModel.ListSortDirection.Ascending));
+                    break;
+                case "Subject":
+                    
+                    //view.SortDescriptions.Add(new System.ComponentModel.SortDescription("Subject", e.Column.SortDirection ?? System.ComponentModel.ListSortDirection.Ascending));
+                    break;
+                case "SenderName":
+                    view.SortDescriptions.Add(new System.ComponentModel.SortDescription("SenderName", e.Column.SortDirection ?? System.ComponentModel.ListSortDirection.Ascending));
+                    break;
+                case "To":
+                    view.SortDescriptions.Add(new System.ComponentModel.SortDescription("To", e.Column.SortDirection ?? System.ComponentModel.ListSortDirection.Ascending));
+                    break;
+                case "Cc":
+                    view.SortDescriptions.Add(new System.ComponentModel.SortDescription("Cc", e.Column.SortDirection ?? System.ComponentModel.ListSortDirection.Ascending));
+                    break;
+                case "EntryID":
+                    view.SortDescriptions.Add(new System.ComponentModel.SortDescription("EntryID", e.Column.SortDirection ?? System.ComponentModel.ListSortDirection.Ascending));
+                    break;
+                default:
+                    break;
+
+            }
+            view.SortDescriptions.Add(new System.ComponentModel.SortDescription(e.Column.SortMemberPath, e.Column.SortDirection ?? System.ComponentModel.ListSortDirection.Ascending));
+        }
+        */
     }
 }

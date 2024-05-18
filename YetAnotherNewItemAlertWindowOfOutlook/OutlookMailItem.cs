@@ -38,6 +38,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private string to = "";
         private string search_index = "";
         private Boolean unread;
+        private string conversation_id = "";
 
         public void RefreshSearchIndex()
         {
@@ -230,6 +231,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             //set => search_index = value; 
         }
 
+        public string ConversationId { get => conversation_id; set => conversation_id = value; }
+
         public static OutlookMailItem CreateNew(MailItem mailItem)
         {
             var outlookmailitem = new OutlookMailItem()
@@ -252,7 +255,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 to = mailItem.To,
                 unread = mailItem.UnRead,
                 sender_email_address = mailItem.SenderEmailAddress,
-                sender_name = mailItem.SenderName
+                sender_name = mailItem.SenderName,
+                ConversationId = mailItem.ConversationID
             };
             outlookmailitem.RefreshSearchIndex();
 

@@ -51,7 +51,7 @@
                     <!--DataGridTextColumn Header="Sender Email" Binding="{Binding SenderEmailAddress}"  IsReadOnly="True" /-->
                     <DataGridTextColumn Header="CC" Binding="{Binding Cc}"  IsReadOnly="True" x:Name="Column_CC" />
                     <DataGridTextColumn Header="Received Time" Binding="{Binding ReceivedTime, StringFormat=yyyy/MM/dd HH:mm}"  IsReadOnly="True" />
-                    <DataGridTextColumn Header="Subject" Binding="{Binding Subject}" IsReadOnly="True"  />
+                    <DataGridTextColumn Header="Subject" Binding="{Binding Subject}" IsReadOnly="True" SortMemberPath="ConversationId" />
                     <DataGridTextColumn Header="Sent On" Binding="{Binding SentOn, StringFormat=yyyy/MM/dd HH:mm}"  IsReadOnly="True" />
                     <DataGridTextColumn Header="Categories" Binding="{Binding Categories}"  IsReadOnly="True" />
                     <DataGridTextColumn Header="Flag" Binding="{Binding FlagIcon}"  IsReadOnly="True"  />
