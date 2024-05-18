@@ -55,7 +55,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             return list_target_processing;
         }
 
-        public MainViewModel(Setting setting,Window window)
+        public MainViewModel(Setting setting, Window window)
         {
             //this.outlook = outlook;
             this.window = window;
