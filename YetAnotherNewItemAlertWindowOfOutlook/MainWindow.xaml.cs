@@ -314,7 +314,8 @@ ConversationID:{mailItem.ConversationID}
             try
             {
                 conflicts_folder_path = ns.GetDefaultFolder(OlDefaultFolders.olFolderConflicts).FolderPath;
-            }catch(System.Runtime.InteropServices.COMException)
+            }
+            catch (System.Runtime.InteropServices.COMException)
             {
                 //
             }

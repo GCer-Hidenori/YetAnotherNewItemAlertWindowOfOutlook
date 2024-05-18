@@ -28,7 +28,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             var result = new ResultOfTargetProcessing();
             List<string> original_list_outlookmaili_entryID = new(list_outlookmaili_entryID);
             list_outlookmaili_entryID.Clear();
-            foreach (object item in (target_folder?.Items) ?? (new Items())   )
+            foreach (object item in (target_folder?.Items) ?? (new Items()))
             {
                 if (item is MailItem mailItem)
                 {
