@@ -14,6 +14,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         Body,
         To,
         Cc,
+        Categories,
         SenderAddress,
         SenderName,
         RecipientNames,
@@ -54,6 +55,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     return (mailItem.To ?? "").Contains(Value ?? "");
                 case ConditionType.Cc:
                     return (mailItem.CC ?? "").Contains(Value ?? "");
+                case ConditionType.Categories:
+                    return (mailItem.Categories ?? "").Contains(Value ?? "");
                 case ConditionType.SenderAddress:
                     return (mailItem.SenderEmailAddress ?? "").Contains(Value ?? "");
                 case ConditionType.SenderName:
