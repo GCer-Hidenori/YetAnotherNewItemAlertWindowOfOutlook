@@ -148,7 +148,14 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
                     foreach (string entryID in list_duplication_entryid)
                     {
-                        OutlookMailItem.Reload(DicOutlookMailItem[entryID], outlook);
+                        try
+                        {
+                            OutlookMailItem.Reload(DicOutlookMailItem[entryID], outlook);
+                        }
+                        catch (System.Runtime.InteropServices.COMException e)
+                        {
+                            Logger.Warn(e);
+                        }
                     }
                     foreach (string entryID in list_new_entry_id)
                     {
