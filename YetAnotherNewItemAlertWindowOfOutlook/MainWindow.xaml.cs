@@ -2,6 +2,7 @@ using Microsoft.Office.Interop.Outlook;
 //using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -145,18 +146,65 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             if (ready) context?.StartTimer();
         }
 
-        private void HideItemByEvent(object sender)
+        private void HideItemByEvent()
         {
-            OutlookMailItem outlookMailItem = (OutlookMailItem)((DataGridRow)sender).Item;
-            string entryID = outlookMailItem.EntryID;
-            IgnoreFile.Add(entryID, outlookMailItem, Logger);
-            context?.HideMail(entryID);
+            if(datagrid.SelectedItems.Count > 10)
+            {
+                MessageBox.Show("Too many items selected.");
+                return;
+            }
+            List<OutlookMailItem> listSelectedItems = datagrid.SelectedItems.Cast<OutlookMailItem>().ToList();
+            foreach (OutlookMailItem outlookMailItem in listSelectedItems)
+            { 
+                string entryID = outlookMailItem.EntryID;
+                IgnoreFile.Add(entryID, outlookMailItem, Logger);
+                context?.HideMail(entryID);
+            }
+
+            //OutlookMailItem outlookMailItem = (OutlookMailItem)((DataGridRow)sender).Item;
+            //string entryID = outlookMailItem.EntryID;
+            //IgnoreFile.Add(entryID, outlookMailItem, Logger);
+            //context?.HideMail(entryID);
+        }
+        private void DeleteItemByEvent()
+        {
+            if(datagrid.SelectedItems.Count > 10)
+            {
+                MessageBox.Show("Too many items selected.");
+                return;
+            }
+            List<OutlookMailItem> listSelectedItems = datagrid.SelectedItems.Cast<OutlookMailItem>().ToList();
+            foreach (OutlookMailItem outlookMailItem in listSelectedItems)
+            {
+                string entryID = outlookMailItem.EntryID;
+                //IgnoreFile.Add(entryID, outlookMailItem, Logger);
+                context?.HideMail(entryID);
+            }
+
+            //OutlookMailItem outlookMailItem = (OutlookMailItem?)datagrid?.SelectedItem;
+            //string entryID = outlookMailItem.EntryID;
+            //context?.HideMail(entryID);
         }
         private void DataGridRow_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Delete)
+            switch (e.Key)
             {
-                HideItemByEvent(sender);
+                case Key.Insert:
+                    HideItemByEvent();
+                    break;
+                case Key.Delete:
+                    if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+                    {
+                        DeleteFromOutlook();    //delete from outlook
+                    }
+                    else
+                    {
+                        DeleteItemByEvent();    //only delete from this app
+                    }
+                    break;
+             
+                default:
+                    break;
             }
         }
 
@@ -259,25 +307,91 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             e.Handled = true;
             var outlook = new Microsoft.Office.Interop.Outlook.Application();
             var ns = outlook.GetNamespace("MAPI");
-            try
+            if(datagrid.SelectedItems.Count > 10)
             {
-                MailItem mailItem = ns.GetItemFromID(((OutlookMailItem?)datagrid?.SelectedItem)?.EntryID);
-                if (mailItem != null)
-                {
-                    mailItem.Display();
-                    mailItem.GetInspector.Display(false);
-                }
+                MessageBox.Show("Too many items selected.");
+                return;
             }
-            catch (System.Runtime.InteropServices.COMException e2)
+            List<OutlookMailItem> listSelectedItems = datagrid.SelectedItems.Cast<OutlookMailItem>().ToList();
+            foreach (OutlookMailItem outlookMailItem in listSelectedItems)
             {
-                MessageBox.Show("Can't open mail.");
-                Logger.Warn(e2);
+                try
+                {
+                    MailItem mailItem = ns.GetItemFromID(outlookMailItem.EntryID);
+                    if (mailItem != null)
+                    {
+                        mailItem.Display();
+                        mailItem.GetInspector.Display(false);
+                    }
+                }
+                catch (System.Runtime.InteropServices.COMException e2)
+                {
+                    MessageBox.Show("Can't open mail.");
+                    Logger.Warn(e2);
+                }
             }
         }
         private void HideMenuItem_Click(object sender, RoutedEventArgs e)
         {
             e.Handled = true;
-            HideItemByEvent(sender);
+            HideItemByEvent();
+        }
+        private void DeleteMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
+            DeleteItemByEvent();
+        }
+        private void DeleteFromOutlook()
+        {
+            var outlook = new Microsoft.Office.Interop.Outlook.Application();
+            var ns = outlook.GetNamespace("MAPI");
+
+            if(datagrid.SelectedItems.Count > 10)
+            {
+                MessageBox.Show("Too many items selected.");
+                return;
+            }
+            List<OutlookMailItem> listSelectedItems = datagrid.SelectedItems.Cast<OutlookMailItem>().ToList();
+            foreach (OutlookMailItem outlookMailItem in listSelectedItems)
+            {
+                MailItem mailItem;
+                try
+                {
+                    mailItem = ns.GetItemFromID(outlookMailItem.EntryID);
+                }
+                catch (System.Runtime.InteropServices.COMException e2)
+                {
+                    MessageBox.Show("Can't open mail.");
+                    Logger.Warn(e2);
+                    return;
+                }
+                MessageBoxResult res = MessageBox.Show($"Would you like to delete this mail from Outlook?", "Confirmation", MessageBoxButton.YesNoCancel);
+                switch (res)
+                {
+                    case MessageBoxResult.Yes:
+                        try
+                        {
+                            context?.HideMail(mailItem.EntryID);
+                            mailItem.Delete();
+                        }
+                        catch (System.Runtime.InteropServices.COMException e3)
+                        {
+                            MessageBox.Show("Can't delete mail.");
+                            Logger.Warn(e3);
+                        }
+                        break;
+                    case MessageBoxResult.Cancel:
+                        MessageBox.Show("Canceled.");
+                        return;
+                    default:
+                        break;
+                }
+            }
+        }
+        private void DeleteFromOutlookMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
+            DeleteFromOutlook();
         }
         private void InspectMenuItem_Click(object sender, RoutedEventArgs e)
         {
@@ -345,30 +459,55 @@ ConversationID:{mailItem.ConversationID}
             e.Handled = true;
             var outlook = new Microsoft.Office.Interop.Outlook.Application();
             var ns = outlook.GetNamespace("MAPI");
-            var entryID = ((OutlookMailItem?)datagrid?.SelectedItem)?.EntryID;
-            if (entryID == null) return;
-            MailItem mailItem = ns.GetItemFromID(entryID);
-
-            MAPIFolder? sameThreadMailFolder = GetSameThreadMailFolder(mailItem);
-            if (sameThreadMailFolder != null)
+            if(datagrid.SelectedItems.Count > 10)
             {
-                MessageBoxResult res = MessageBox.Show($"Would you like to move this mail to here?\n{sameThreadMailFolder.FullFolderPath}", "Confirmation", MessageBoxButton.OKCancel);
-                if (res == MessageBoxResult.OK)
+                MessageBox.Show("Too many items selected.");
+                return;
+            }
+            List<OutlookMailItem> listSelectedItems = datagrid.SelectedItems.Cast<OutlookMailItem>().ToList();
+            foreach (OutlookMailItem outlookMailItem in listSelectedItems)
+            {
+                string entryID = outlookMailItem.EntryID;
+                MailItem mailItem = ns.GetItemFromID(entryID);
+                MAPIFolder? sameThreadMailFolder = GetSameThreadMailFolder(mailItem);
+                if (sameThreadMailFolder != null)
                 {
+                    MessageBoxResult res = MessageBox.Show($"Would you like to move this mail to here?\n{sameThreadMailFolder.FullFolderPath}", "Confirmation", MessageBoxButton.YesNoCancel);
+                    switch (res)
+                    {
+                        case MessageBoxResult.Yes:
+                            mailItem.Move(sameThreadMailFolder);
+                            context?.HideMail(entryID);
+                            break;
+                        case MessageBoxResult.Cancel:
+                            MessageBox.Show("Canceled.");
+                            return;
+                        default:
+                            break;
+                    }
 
-                    mailItem.Move(sameThreadMailFolder);
-#pragma warning disable CS8602 // null 参照の可能性があるものの逆参照です。
-                    context.HideMail(entryID);
-#pragma warning restore CS8602 // null 参照の可能性があるものの逆参照です。
                 }
                 else
                 {
-                    MessageBox.Show("Canceled.");
+                    MessageBox.Show("No same thread mail in other folder.");
                 }
             }
-            else
+
+            //var entryID = ((OutlookMailItem?)datagrid?.SelectedItem)?.EntryID;
+            //if (entryID == null) return;
+            //MailItem mailItem = ns.GetItemFromID(entryID);
+
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch(e.Key)
             {
-                MessageBox.Show("No same thread mail in other folder.");
+                case Key.F5:
+                    if (ready) context?.RefreshOutlookMailItem(true);
+                    break;
+                default:
+                    break;
             }
         }
 

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:YetAnotherNewItemAlertWindowOfOutlook"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Deactivated="Window_Deactivated" Closed="Window_Closed">
+        Title="MainWindow" Height="450" Width="800" Deactivated="Window_Deactivated" Closed="Window_Closed" KeyDown="Window_KeyDown">
     <Grid>
 
         <Grid>
@@ -16,7 +16,7 @@
             </Grid.RowDefinitions>
             <Menu Grid.Row="0">
                 <MenuItem Header="Refresh">
-                    <MenuItem Header="Now" Click="RefreshNow_Click"/>
+                    <MenuItem Header="Now(F5)" Click="RefreshNow_Click"/>
                     <MenuItem Header="Stop"  Click="StopTimer_Click"/>
                     <MenuItem Header="Start"  Click="StartTimer_Click"/>
                 </MenuItem>
@@ -70,7 +70,9 @@
                 <DataGrid.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Open" Click="OpenMenuItem_Click"/>
-                        <MenuItem Header="Hide" Click="HideMenuItem_Click"/>
+                        <MenuItem Header="Delete from this app(Delete)" Click="DeleteMenuItem_Click"/>
+                        <MenuItem Header="Delete from Outlook(Shift-Delete)" Click="DeleteFromOutlookMenuItem_Click"/>
+                        <MenuItem Header="Add to ignore list(Insert)" Click="HideMenuItem_Click"/>
                         <MenuItem Header="Inspect" Click="InspectMenuItem_Click"/>
                         <MenuItem Header="Moved to the same folder as the emails in the same thread" Click="MoveToSameFolderSameThres_Click"/>
                     </ContextMenu>
