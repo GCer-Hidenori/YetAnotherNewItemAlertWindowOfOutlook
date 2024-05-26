@@ -23,6 +23,7 @@
                 <MenuItem Header="Util">
                     <MenuItem Header="List folders to log file" Click="ListFolders_Click"/>
                     <MenuItem Header="Open log folder" Click="OpenLogFolder_Click"/>
+                    <MenuItem Header="Open ignore list folder" Click="OpenIgnoreListFolder_Click"/>
                     <MenuItem Header="Open setting file" Click="OpenSettingFile_Click"/>
                 </MenuItem>
 

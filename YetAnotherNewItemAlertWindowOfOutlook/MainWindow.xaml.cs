@@ -211,6 +211,17 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         {
             OutlookUtil.ListAllFolders(Logger);
         }
+        private void OpenIgnoreListFolder_Click(object sender, RoutedEventArgs e)
+        {
+            string ignoreListDir = IgnoreFile.GetIgnoreListDir();
+            if (Directory.Exists(ignoreListDir))
+            {
+                var psi = new System.Diagnostics.ProcessStartInfo() { FileName = ignoreListDir, UseShellExecute = true };
+                System.Diagnostics.Process.Start(psi);
+            }else{
+                MessageBox.Show("There is no ignore list dir yet.");
+            }
+        }
         private void OpenLogFolder_Click(object sender, RoutedEventArgs e)
         {
             string logDir = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "log");

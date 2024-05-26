@@ -6,7 +6,10 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
     internal class IgnoreFile
     {
         private static readonly string ignoreDirPath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "excluded_ids");
-
+        public static string GetIgnoreListDir()
+        {
+            return ignoreDirPath;
+        }
         public static bool Exists(string entryID)
         {
             if (Directory.Exists(ignoreDirPath))
