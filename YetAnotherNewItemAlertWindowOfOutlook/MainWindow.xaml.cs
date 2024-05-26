@@ -218,7 +218,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             {
                 var psi = new System.Diagnostics.ProcessStartInfo() { FileName = ignoreListDir, UseShellExecute = true };
                 System.Diagnostics.Process.Start(psi);
-            }else{
+            }
+            else
+            {
                 MessageBox.Show("There is no ignore list dir yet.");
             }
         }
