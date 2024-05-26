@@ -23,7 +23,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         string settingFilePath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "setting.xml");
         Setting setting;
         DataGrid datagrid;
-        //Microsoft.Office.Interop.Outlook.Application? outlook;
 
         private void SortColumn()
         {
@@ -148,14 +147,14 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
         private void HideItemByEvent()
         {
-            if(datagrid.SelectedItems.Count > 10)
+            if (datagrid.SelectedItems.Count > 10)
             {
                 MessageBox.Show("Too many items selected.");
                 return;
             }
             List<OutlookMailItem> listSelectedItems = datagrid.SelectedItems.Cast<OutlookMailItem>().ToList();
             foreach (OutlookMailItem outlookMailItem in listSelectedItems)
-            { 
+            {
                 string entryID = outlookMailItem.EntryID;
                 IgnoreFile.Add(entryID, outlookMailItem, Logger);
                 context?.HideMail(entryID);
@@ -168,7 +167,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         }
         private void DeleteItemByEvent()
         {
-            if(datagrid.SelectedItems.Count > 10)
+            if (datagrid.SelectedItems.Count > 10)
             {
                 MessageBox.Show("Too many items selected.");
                 return;
@@ -202,7 +201,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                         DeleteItemByEvent();    //only delete from this app
                     }
                     break;
-             
+
                 default:
                     break;
             }
@@ -307,7 +306,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             e.Handled = true;
             var outlook = new Microsoft.Office.Interop.Outlook.Application();
             var ns = outlook.GetNamespace("MAPI");
-            if(datagrid.SelectedItems.Count > 10)
+            if (datagrid.SelectedItems.Count > 10)
             {
                 MessageBox.Show("Too many items selected.");
                 return;
@@ -346,7 +345,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             var outlook = new Microsoft.Office.Interop.Outlook.Application();
             var ns = outlook.GetNamespace("MAPI");
 
-            if(datagrid.SelectedItems.Count > 10)
+            if (datagrid.SelectedItems.Count > 10)
             {
                 MessageBox.Show("Too many items selected.");
                 return;
@@ -459,7 +458,7 @@ ConversationID:{mailItem.ConversationID}
             e.Handled = true;
             var outlook = new Microsoft.Office.Interop.Outlook.Application();
             var ns = outlook.GetNamespace("MAPI");
-            if(datagrid.SelectedItems.Count > 10)
+            if (datagrid.SelectedItems.Count > 10)
             {
                 MessageBox.Show("Too many items selected.");
                 return;
@@ -501,7 +500,7 @@ ConversationID:{mailItem.ConversationID}
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            switch(e.Key)
+            switch (e.Key)
             {
                 case Key.F5:
                     if (ready) context?.RefreshOutlookMailItem(true);

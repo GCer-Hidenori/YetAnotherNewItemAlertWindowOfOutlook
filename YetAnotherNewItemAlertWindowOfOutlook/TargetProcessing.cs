@@ -7,18 +7,28 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
     internal class TargetProcessing
     {
         private Target target;
-        private MAPIFolder? target_folder;
         private List<string> list_outlookmaili_entryID = new();
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public TargetProcessing(Target target, MAPIFolder target_folder)
+        public TargetProcessing(Target target)
         {
             this.target = target;
-            this.target_folder = target_folder;
         }
 
         public Target Target { get => target; set => target = value; }
-        public MAPIFolder? Target_folder { get => target_folder; set => target_folder = value; }
+        //public MAPIFolder? Target_folder { get => target_folder; set => target_folder = value; }
+
+        public MAPIFolder GetTargetFolder()
+        {
+            if (target.TargetFolderType == Target.FolderType.SearchFolder)
+            {
+                return OutlookUtil.GetSearchFolder(target.Path);
+            }
+            else
+            {
+                return OutlookUtil.GetNormalFolder(target.Path);
+            }
+        }
 
         public List<string> List_OutlookMailEntryID { get => list_outlookmaili_entryID; set => list_outlookmaili_entryID = value; }
 
@@ -28,7 +38,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             var result = new ResultOfTargetProcessing();
             List<string> original_list_outlookmaili_entryID = new(list_outlookmaili_entryID);
             list_outlookmaili_entryID.Clear();
-            foreach (object item in (target_folder?.Items) ?? (new Items()))
+            foreach (object item in GetTargetFolder().Items)
             {
                 if (item is MailItem mailItem)
                 {

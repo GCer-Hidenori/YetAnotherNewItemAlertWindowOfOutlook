@@ -26,35 +26,14 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             List<TargetProcessing> list_target_processing = new();
             foreach (Target target in setting.Targets)
             {
-                MAPIFolder? folder = null;
-                if (target.TargetFolderType == Target.FolderType.SearchFolder)
-                {
-                    if (target.Path != null)
-                    {
-                        folder = OutlookUtil.GetSearchFolder(target.Path);
-                    }
-                }
-                else
-                {
-                    //TBW
-                    if (target.Path != null)
-                    {
-                        folder = OutlookUtil.GetNormalFolder(target.Path);
-                    }
-                }
-                if (folder != null)
-                {
-                    var target_processing = new TargetProcessing(target, folder);
-
-                    list_target_processing.Add(target_processing);
-                }
+                var target_processing = new TargetProcessing(target);
+                list_target_processing.Add(target_processing);
             }
             return list_target_processing;
         }
 
         public MainViewModel(Setting setting, Window window)
         {
-            //this.outlook = outlook;
             this.window = window;
             this.setting = setting;
             OutlookMailItemCollection = new ObservableCollection<OutlookMailItem>();
