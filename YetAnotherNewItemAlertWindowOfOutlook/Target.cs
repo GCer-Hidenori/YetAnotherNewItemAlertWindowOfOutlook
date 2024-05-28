@@ -67,67 +67,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 return true;
             }
         }
-        /*
-        public bool Filtering(MailItem mailItem, XmlNode? element)
-        {
-            if(element == null)
-            {
-                return true;
-            }else  if (element.Name.ToUpper() == "And")
-            {
-                return element.ChildNodes.Cast<XmlNode>().Where(x => x.NodeType == XmlNodeType.Element).All(x => Filtering(mailItem, x));
-            }
-            else if (element.Name.ToUpper() == "Or")
-            {
-                return element.ChildNodes.Cast<XmlNode>().Where(x => x.NodeType == XmlNodeType.Element).Any(x => Filtering(mailItem, x));
-            }
-            else if (element.Name.ToUpper() == "Not")
-            {
-                return !Filtering(mailItem, element.FirstChild);
-            }
-            else if (element.Name.ToUpper() == "Subject")
-            {
-                return mailItem.Subject.Contains(element.InnerText);
-            }
-            else if (element.Name.ToUpper() == "Body")
-            {
-                return mailItem.Body.Contains(element.InnerText);
-            }
-            else if (element.Name.ToUpper() == "SenderAddress")
-            {
-                return mailItem.SenderEmailAddress.Contains(element.InnerText);
-            }
-            else if (element.Name.ToUpper() == "SenderName")
-            {
-                return mailItem.SenderName.Contains(element.InnerText);
-            }
-            else if (element.Name.ToUpper() == "RecipientNames")
-            {
-                return String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(recipient => recipient.Name)).Contains(element.InnerText);
-            }
-            else if (element.Name.ToUpper() == "RECIPIENTADDRESSES")
-            {
-                return String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(recipient => recipient.Address)).Contains(element.InnerText);
-            }
-            else if (element.Name.ToUpper() == "To")
-            {
-                return mailItem.To.Contains(element.InnerText);
-            }
-            else if (element.Name.ToUpper() == "Cc")
-            {
-                return mailItem.Cc.Contains(element.InnerText);
-            }
-            else if (element.Name.ToUpper() == "ATTACHMENT")
-            {
-                return mailItem.Attachments.Cast<Attachment>().Any(x => x.FileName.Contains(element.InnerText));
-            }
-            else
-            {
-                Logger.Error($"Invalid Filter Element Name: {element.Name}");
-                throw new YError(ErrorType.InvalidFilterElementName,element.Name);
-            }
-        }
-        */
     }
 
 }
