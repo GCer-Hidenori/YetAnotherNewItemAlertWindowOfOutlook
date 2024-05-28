@@ -88,7 +88,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                             var result = target_processing.RefreshOutlookMailItem(ignoreFileList);
 
                             if (!activateWindow && result.ActivateWindow) activateWindow = true;
-                            foreach (MailID mailID in result.List_new_entry_id)
+                            foreach (MailID mailID in result.List_new_mail_id)
                             {
                                 if (target_processing.Target != null)
                                 {
@@ -103,7 +103,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                             Logger.Info($"end RefreshOutlookMailItem.Folder:{target_processing.Target?.Path}");
                         }
 
-                        foreach (MailID mailID in target_processing.List_OutlookMailEntryID)
+                        foreach (MailID mailID in target_processing.List_OutlookMailID)
                         {
                             list_entryid_of_target_processing.Add(new MailID() { StoreID = mailID.StoreID, EntryID = mailID.EntryID });
                         }
@@ -179,9 +179,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             MailID mailID = new() { StoreID=storeID,EntryID= entryID };
             foreach (var target_processing in list_target_processing)
             {
-                if (target_processing.List_OutlookMailEntryID.Contains(mailID))
+                if (target_processing.List_OutlookMailID.Contains(mailID))
                 {
-                    target_processing.List_OutlookMailEntryID.Remove(mailID);
+                    target_processing.List_OutlookMailID.Remove(mailID);
                 }
             }
             var outlookmailitem = DicOutlookMailItem[mailID];

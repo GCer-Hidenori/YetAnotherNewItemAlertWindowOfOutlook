@@ -12,7 +12,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
     internal class TargetProcessing
     {
         private Target target;
-        private List<MailID> list_outlookmaili_entryID = new();
+        private List<MailID> list_outlookmail_mail_id = new();
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         public TargetProcessing(Target target)
@@ -35,14 +35,14 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
         }
 
-        public List<MailID> List_OutlookMailEntryID { get => list_outlookmaili_entryID; set => list_outlookmaili_entryID = value; }
+        public List<MailID> List_OutlookMailID { get => list_outlookmail_mail_id; set => list_outlookmail_mail_id = value; }
 
 
         public ResultOfTargetProcessing RefreshOutlookMailItem(IgnoreFileList ignoreFileList)
         {
             var result = new ResultOfTargetProcessing();
-            List<MailID> original_list_outlookmaili_entryID = new(list_outlookmaili_entryID);
-            list_outlookmaili_entryID.Clear();
+            List<MailID> original_list_outlookmail_mail_id = new(list_outlookmail_mail_id);
+            list_outlookmail_mail_id.Clear();
             var folder = GetTargetFolder();
             foreach (object item in folder.Items)
             {
@@ -60,14 +60,14 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                         }
                     }
                     MailID mailID = new() { StoreID = mailItem.Parent.StoreID, EntryID = mailItem.EntryID };
-                    List_OutlookMailEntryID.Add(mailID);
-                    if (result.ActivateWindow == false && target.ActivateWindow && !original_list_outlookmaili_entryID.Contains(mailID))
+                    List_OutlookMailID.Add(mailID);
+                    if (result.ActivateWindow == false && target.ActivateWindow && !original_list_outlookmail_mail_id.Contains(mailID))
                     {
                         result.ActivateWindow = true;
                     }
                 }
             }
-            result.List_new_entry_id = list_outlookmaili_entryID.Except(original_list_outlookmaili_entryID).ToList();
+            result.List_new_mail_id = list_outlookmail_mail_id.Except(original_list_outlookmail_mail_id).ToList();
             return result;
         }
     }
