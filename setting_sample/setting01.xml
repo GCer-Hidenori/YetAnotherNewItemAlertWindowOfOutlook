@@ -1,31 +1,31 @@
 <Setting>
-    <Targets>
-        <Target>
-            <TargetFolderType>NormalFolder</TargetFolderType>
-            <IntervalMin>1</IntervalMin>
-            <Path>\\yanaw@example.com\ImportantMails</Path>
-        </Target>
-        <Target>
-            <TargetFolderType>SearchFolder</TargetFolderType>
-            <IntervalMin>1</IntervalMin>
-            <Path>\\yanaw@example.com\search folder\search folder01</Path>
-		    <Filter>
-			    <And>
-				    <SenderEmailAddress>sender111@example.com</SenderEmailAddress>
-			    </And>
-		    </Filter>
-            <Actions>
-                <Activate_Window>true</Activate_Window>
-                <Create_File fileName="c:\work\inbox\${entryID}.md">
-                    <body>---
+  <TimerIntervalSec>60</TimerIntervalSec>
+  <Targets>
+    <Target>
+      <TargetFolderType>NormalFolder</TargetFolderType>
+      <IntervalMin>1</IntervalMin>
+      <Path>\\yanaw@example.com\ImportantMails</Path>
+    </Target>
+    <Target>
+      <TargetFolderType>SearchFolder</TargetFolderType>
+      <TimersToCheckMail>1</TimersToCheckMail>
+      <Path>\\yanaw@example.com\search folder\search folder01</Path>
+      <Condition type="And">
+        <Condition type="Subject" value="test" />
+        <Condition type="SenderName" value="test" />
+      </Condition>
+      <Actions>
+        <Action type="ActivateWindow" />
+        <Action fileName="c:\temp\a.txt" type="CreateFile">
+          <body>---
 Subject: ${Subject}
 ReceivedTime: ${ReceivedTime}
 From: ${SenderName}&lt;${SenderEmailAddress}&gt;
 ---
 # Body
 ${Body}</body>
-                </Create_File>
-            </Actions>
-        </Target>
-    </Targets>
+        </Action>
+      </Actions>
+    </Target>
+  </Targets>
 </Setting>
