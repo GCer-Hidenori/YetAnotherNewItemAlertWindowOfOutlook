@@ -25,6 +25,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
         private string cc = "";
         private string categories = "";
+        private string store_id = "";
         private string entry_id = "";
         private string flag_icon = "";
         private string recipient_names = "";
@@ -67,6 +68,18 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 {
                     categories = value;
                     RefreshSearchIndex();
+                    RaisePropertyChanged();
+                }
+            }
+        }
+        public string StoreID
+        {
+            get => store_id;
+            set
+            {
+                if (store_id != value)
+                {
+                    store_id = value;
                     RaisePropertyChanged();
                 }
             }
@@ -239,6 +252,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             {
                 cc = mailItem.CC,
                 categories = mailItem.Categories,
+                store_id = mailItem.Parent.StoreID,
                 entry_id = mailItem.EntryID,
                 flag_icon = (int)mailItem.FlagIcon switch
                 {
@@ -291,15 +305,15 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             return outlookmailitem;
 
         }
-        public static OutlookMailItem CreateNew(string entryID, Microsoft.Office.Interop.Outlook.Application outlook)
+        public static OutlookMailItem CreateNew(string storeID, string entryID, Microsoft.Office.Interop.Outlook.Application outlook)
         {
-            MailItem mailitem = OutlookUtil.GetMail(entryID, outlook);
+            MailItem mailitem = OutlookUtil.GetMail(storeID,entryID, outlook);
             return CreateNew(mailitem);
         }
 
         public static void Reload(OutlookMailItem outlookmailitem, Microsoft.Office.Interop.Outlook.Application outlook)
         {
-            MailItem mailitem = OutlookUtil.GetMail(outlookmailitem.EntryID, outlook);
+            MailItem mailitem = OutlookUtil.GetMail(outlookmailitem.StoreID, outlookmailitem.EntryID, outlook);
             outlookmailitem.Categories = mailitem.Categories;
             outlookmailitem.FlagIcon = (int)mailitem.FlagIcon switch
             {

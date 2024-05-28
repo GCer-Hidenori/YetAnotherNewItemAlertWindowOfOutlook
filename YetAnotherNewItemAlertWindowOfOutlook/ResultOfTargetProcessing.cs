@@ -9,7 +9,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private List<string> list_duplication_entryid = new();
         // only target_processing / add to OutlookMailItemCollection
         */
-        private List<string> list_new_entry_id = new();
+        private List<MailID> list_new_entry_id = new();
 
         /*
         // only OutlookMailItemCollection / delete from OutlookMailItemCollection
@@ -25,6 +25,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private bool activateWindow = false;
 
         public bool ActivateWindow { get => activateWindow; set => activateWindow = value; }
-        public List<string> List_new_entry_id { get => list_new_entry_id; set => list_new_entry_id = value; }
+        public List<MailID> List_new_entry_id { get => list_new_entry_id; set => list_new_entry_id = value; }
     }
 }

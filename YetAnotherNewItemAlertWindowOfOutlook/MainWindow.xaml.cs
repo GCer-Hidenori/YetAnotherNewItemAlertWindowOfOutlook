@@ -23,6 +23,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         string settingFilePath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "setting.xml");
         Setting setting;
         DataGrid datagrid;
+        IgnoreFileList ignoreFileList = IgnoreFileList.Init();
 
         private void SortColumn()
         {
@@ -60,7 +61,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     setting = Util.CreateInitialSettingFile(outlook, settingFilePath);
                 }
 
-                context = new MainViewModel(setting, this);
+                context = new MainViewModel(setting, this,ignoreFileList);
                 this.DataContext = context;
                 SortColumn();
 
@@ -134,7 +135,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
         private void RefreshNow_Click(object sender, RoutedEventArgs e)
         {
-            if (ready) context?.RefreshOutlookMailItem(true);
+            if (ready) context?.RefreshOutlookMailItem(ignoreFileList,true);
         }
         private void StopTimer_Click(object sender, RoutedEventArgs e)
         {
@@ -156,8 +157,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             foreach (OutlookMailItem outlookMailItem in listSelectedItems)
             {
                 string entryID = outlookMailItem.EntryID;
-                IgnoreFile.Add(entryID, outlookMailItem, Logger);
-                context?.HideMail(entryID);
+                ignoreFileList.Add(outlookMailItem.StoreID, entryID);
+                //IgnoreFile.Add(outlookMailItem.StoreID, entryID, outlookMailItem, Logger);
+                context?.HideMail(outlookMailItem.StoreID,entryID);
             }
 
             //OutlookMailItem outlookMailItem = (OutlookMailItem)((DataGridRow)sender).Item;
@@ -177,7 +179,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             {
                 string entryID = outlookMailItem.EntryID;
                 //IgnoreFile.Add(entryID, outlookMailItem, Logger);
-                context?.HideMail(entryID);
+                context?.HideMail(outlookMailItem.StoreID, entryID);
             }
 
             //OutlookMailItem outlookMailItem = (OutlookMailItem?)datagrid?.SelectedItem;
@@ -211,17 +213,17 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         {
             OutlookUtil.ListAllFolders(Logger);
         }
-        private void OpenIgnoreListFolder_Click(object sender, RoutedEventArgs e)
+        private void OpenIgnoreListFile_Click(object sender, RoutedEventArgs e)
         {
-            string ignoreListDir = IgnoreFile.GetIgnoreListDir();
-            if (Directory.Exists(ignoreListDir))
+            string ignoreListFilePath = IgnoreFileList.ignore_file_list_path;
+            if (File.Exists(ignoreListFilePath))
             {
-                var psi = new System.Diagnostics.ProcessStartInfo() { FileName = ignoreListDir, UseShellExecute = true };
+                var psi = new System.Diagnostics.ProcessStartInfo() { FileName = ignoreListFilePath, UseShellExecute = true };
                 System.Diagnostics.Process.Start(psi);
             }
             else
             {
-                MessageBox.Show("There is no ignore list dir yet.");
+                MessageBox.Show("There is no ignore list file yet.");
             }
         }
         private void OpenLogFolder_Click(object sender, RoutedEventArgs e)
@@ -230,6 +232,10 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             if (!Directory.Exists(logDir)) Directory.CreateDirectory(logDir);
             var psi = new System.Diagnostics.ProcessStartInfo() { FileName = logDir, UseShellExecute = true };
             System.Diagnostics.Process.Start(psi);
+        }
+        private void ClearIgnoreList_Click(object sender, RoutedEventArgs e)
+        {
+            ignoreFileList = new IgnoreFileList();
         }
         private void OpenSettingFile_Click(object sender, RoutedEventArgs e)
         {
@@ -312,6 +318,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 setting.Columns.Add(new Column() { Name = column.Header.ToString() ?? "", Width = column.ActualWidth });
             }
             setting.Save();
+            ignoreFileList.Save();
         }
 
         private void OpenMenuItem_Click(object sender, RoutedEventArgs e)
@@ -383,7 +390,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     case MessageBoxResult.Yes:
                         try
                         {
-                            context?.HideMail(mailItem.EntryID);
+                            context?.HideMail(outlookMailItem.StoreID, mailItem.EntryID);
                             mailItem.Delete();
                         }
                         catch (System.Runtime.InteropServices.COMException e3)
@@ -480,7 +487,7 @@ ConversationID:{mailItem.ConversationID}
             foreach (OutlookMailItem outlookMailItem in listSelectedItems)
             {
                 string entryID = outlookMailItem.EntryID;
-                MailItem mailItem = ns.GetItemFromID(entryID);
+                MailItem mailItem = ns.GetItemFromID(outlookMailItem.StoreID, entryID);
                 MAPIFolder? sameThreadMailFolder = GetSameThreadMailFolder(mailItem);
                 if (sameThreadMailFolder != null)
                 {
@@ -489,7 +496,7 @@ ConversationID:{mailItem.ConversationID}
                     {
                         case MessageBoxResult.Yes:
                             mailItem.Move(sameThreadMailFolder);
-                            context?.HideMail(entryID);
+                            context?.HideMail(outlookMailItem.StoreID, entryID);
                             break;
                         case MessageBoxResult.Cancel:
                             MessageBox.Show("Canceled.");
@@ -516,7 +523,7 @@ ConversationID:{mailItem.ConversationID}
             switch (e.Key)
             {
                 case Key.F5:
-                    if (ready) context?.RefreshOutlookMailItem(true);
+                    if (ready) context?.RefreshOutlookMailItem(ignoreFileList,true);
                     break;
                 default:
                     break;

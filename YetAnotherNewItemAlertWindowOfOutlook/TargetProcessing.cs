@@ -4,10 +4,15 @@ using System.Linq;
 
 namespace YetAnotherNewItemAlertWindowOfOutlook
 {
+    public struct MailID
+    {
+        public string StoreID;
+        public string EntryID;
+    }
     internal class TargetProcessing
     {
         private Target target;
-        private List<string> list_outlookmaili_entryID = new();
+        private List<MailID> list_outlookmaili_entryID = new();
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         public TargetProcessing(Target target)
@@ -30,19 +35,20 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
         }
 
-        public List<string> List_OutlookMailEntryID { get => list_outlookmaili_entryID; set => list_outlookmaili_entryID = value; }
+        public List<MailID> List_OutlookMailEntryID { get => list_outlookmaili_entryID; set => list_outlookmaili_entryID = value; }
 
 
-        public ResultOfTargetProcessing RefreshOutlookMailItem()
+        public ResultOfTargetProcessing RefreshOutlookMailItem(IgnoreFileList ignoreFileList)
         {
             var result = new ResultOfTargetProcessing();
-            List<string> original_list_outlookmaili_entryID = new(list_outlookmaili_entryID);
+            List<MailID> original_list_outlookmaili_entryID = new(list_outlookmaili_entryID);
             list_outlookmaili_entryID.Clear();
-            foreach (object item in GetTargetFolder().Items)
+            var folder = GetTargetFolder();
+            foreach (object item in folder.Items)
             {
                 if (item is MailItem mailItem)
                 {
-                    if (IgnoreFile.Exists(mailItem.EntryID))
+                    if (ignoreFileList.Exists(mailItem.Parent.StoreID,mailItem.EntryID))
                     {
                         continue;
                     }
@@ -53,9 +59,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                             continue;
                         }
                     }
-
-                    List_OutlookMailEntryID.Add(mailItem.EntryID);
-                    if (result.ActivateWindow == false && target.ActivateWindow && !original_list_outlookmaili_entryID.Contains(mailItem.EntryID))
+                    MailID mailID = new() { StoreID = mailItem.Parent.StoreID, EntryID = mailItem.EntryID };
+                    List_OutlookMailEntryID.Add(mailID);
+                    if (result.ActivateWindow == false && target.ActivateWindow && !original_list_outlookmaili_entryID.Contains(mailID))
                     {
                         result.ActivateWindow = true;
                     }

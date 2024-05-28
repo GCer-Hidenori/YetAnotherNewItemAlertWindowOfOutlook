@@ -82,10 +82,10 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             pathParts.RemoveAt(0);
             return GetNormalFolder(store.GetRootFolder(), pathParts);
         }
-        public static MailItem GetMail(string entryID, Microsoft.Office.Interop.Outlook.Application outlook)
+        public static MailItem GetMail(string storeID, string entryID, Microsoft.Office.Interop.Outlook.Application outlook)
         {
             var ns = outlook.GetNamespace("MAPI");
-            return ns.GetItemFromID(entryID);
+            return ns.GetItemFromID(entryID,storeID);
 
         }
         public static void ListAllFolders(NLog.Logger logger)
