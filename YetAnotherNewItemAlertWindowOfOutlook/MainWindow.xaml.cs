@@ -20,7 +20,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         MainViewModel? context;
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private bool ready = false;
-        string settingFilePath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "setting.xml");
         Setting setting;
         DataGrid datagrid;
         IgnoreFileList ignoreFileList = IgnoreFileList.Init();
@@ -42,25 +41,16 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
         }
 
-#pragma warning disable CS8618 // null 非許容のフィールドには、コンストラクターの終了時に null 以外の値が入っていなければなりません。Null 許容として宣言することをご検討ください。
         public MainWindow()
-#pragma warning restore CS8618 // null 非許容のフィールドには、コンストラクターの終了時に null 以外の値が入っていなければなりません。Null 許容として宣言することをご検討ください。
         {
             InitializeComponent();
+            
             datagrid = (DataGrid)this.FindName("OutlookMailItemDataGrid");
 
             var outlook = new Microsoft.Office.Interop.Outlook.Application();
             try
             {
-                if (File.Exists(settingFilePath))
-                {
-                    setting = Setting.Load();
-                }
-                else
-                {
-                    setting = Util.CreateInitialSettingFile(outlook, settingFilePath);
-                }
-
+                setting = Setting.Init();
                 context = new MainViewModel(setting, this, ignoreFileList);
                 this.DataContext = context;
                 SortColumn();
@@ -220,7 +210,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         }
         private void OpenSettingFile_Click(object sender, RoutedEventArgs e)
         {
-            var psi = new System.Diagnostics.ProcessStartInfo() { FileName = settingFilePath, UseShellExecute = true };
+            var psi = new System.Diagnostics.ProcessStartInfo() { FileName = Setting.fileName, UseShellExecute = true };
             System.Diagnostics.Process.Start(psi);
         }
         public bool Contains(object de)

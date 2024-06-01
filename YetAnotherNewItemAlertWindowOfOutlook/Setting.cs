@@ -7,17 +7,11 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
     public class Setting
     {
         private List<Target> targets = new();
-        private static readonly string fileName = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "setting.xml");
+        public static readonly string fileName = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "setting.xml");
         private int timer_interval_sec = 60;
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         private List<Column> columns = new();
-
-        public List<Target> Targets
-        {
-            get { return targets; }
-            set { targets = value; }
-        }
 
         public int TimerIntervalSec
         {
@@ -35,6 +29,13 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
         }
 
+        public List<Target> Targets
+        {
+            get { return targets; }
+            set { targets = value; }
+        }
+
+
         public List<Column> Columns { get => columns; set => columns = value; }
 
         public void Save()
@@ -46,8 +47,20 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
         }
 
+        public static Setting Init()
+        {
+            if(File.Exists(fileName))
+            {
+                return Load();
+            }
+            else
+            {
+                var outlook = new Microsoft.Office.Interop.Outlook.Application();
+                return Util.CreateInitialSettingFile(outlook, fileName);
+            }
+        }
 
-        public static Setting Load()
+        private static Setting Load()
         {
             Setting? setting;
             XmlSerializer serializer = new XmlSerializer(typeof(Setting));
