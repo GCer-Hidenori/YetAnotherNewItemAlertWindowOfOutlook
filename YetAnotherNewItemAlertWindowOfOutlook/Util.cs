@@ -72,6 +72,11 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     {
                         Type=ConditionType.SenderName,
                         Value = "test"
+                    },
+                    new Condition()
+                    {
+                        Type = ConditionType.SenderAddress,
+                        Value = "aaa@example.com"
                     }
                 }
             };

@@ -174,7 +174,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             Logger.Info("stop timer.");
             timer?.Stop();
         }
-        public void HideMail(string storeID,string entryID)
+        public void HideMail(string entryID, string storeID)
         {
             MailID mailID = new() { StoreID=storeID,EntryID= entryID };
             foreach (var target_processing in list_target_processing)

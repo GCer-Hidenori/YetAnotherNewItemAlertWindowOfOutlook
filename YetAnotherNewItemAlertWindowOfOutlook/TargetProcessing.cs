@@ -48,7 +48,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             {
                 if (item is MailItem mailItem)
                 {
-                    if (ignoreFileList.Exists(mailItem.Parent.StoreID,mailItem.EntryID))
+                    //if (ignoreFileList.Exists(mailItem.Parent.StoreID,mailItem.EntryID))    //here
+                    if (ignoreFileList.Exists(folder.StoreID, mailItem.EntryID))   
                     {
                         continue;
                     }
@@ -59,7 +60,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                             continue;
                         }
                     }
-                    MailID mailID = new() { StoreID = mailItem.Parent.StoreID, EntryID = mailItem.EntryID };
+                    //MailID mailID = new() { StoreID = mailItem.Parent.StoreID, EntryID = mailItem.EntryID };    //here
+                    MailID mailID = new() { StoreID = folder.StoreID, EntryID = mailItem.EntryID };    //here
                     List_OutlookMailID.Add(mailID);
                     if (result.ActivateWindow == false && target.ActivateWindow && !original_list_outlookmail_mail_id.Contains(mailID))
                     {

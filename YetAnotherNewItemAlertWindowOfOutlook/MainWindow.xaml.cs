@@ -109,7 +109,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             var ns = outlook.GetNamespace("MAPI");
             try
             {
-                MailItem mailItem = ns.GetItemFromID(((OutlookMailItem)((DataGridRow)sender).Item).EntryID);
+                var outlookMailItem = (OutlookMailItem)((DataGridRow)sender).Item;
+                MailItem mailItem = ns.GetItemFromID(outlookMailItem.EntryID,outlookMailItem.StoreID);
                 if (mailItem != null)
                 {
                     mailItem.Display();
@@ -159,7 +160,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 string entryID = outlookMailItem.EntryID;
                 ignoreFileList.Add(outlookMailItem.StoreID, entryID);
                 //IgnoreFile.Add(outlookMailItem.StoreID, entryID, outlookMailItem, Logger);
-                context?.HideMail(outlookMailItem.StoreID,entryID);
+                context?.HideMail(entryID,outlookMailItem.StoreID);
             }
 
             //OutlookMailItem outlookMailItem = (OutlookMailItem)((DataGridRow)sender).Item;
@@ -179,7 +180,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             {
                 string entryID = outlookMailItem.EntryID;
                 //IgnoreFile.Add(entryID, outlookMailItem, Logger);
-                context?.HideMail(outlookMailItem.StoreID, entryID);
+                context?.HideMail(entryID,outlookMailItem.StoreID);
             }
 
             //OutlookMailItem outlookMailItem = (OutlookMailItem?)datagrid?.SelectedItem;
@@ -336,7 +337,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             {
                 try
                 {
-                    MailItem mailItem = ns.GetItemFromID(outlookMailItem.EntryID);
+
+                    MailItem mailItem = ns.GetItemFromID(outlookMailItem.EntryID,outlookMailItem.StoreID);
                     if (mailItem != null)
                     {
                         mailItem.Display();
@@ -376,7 +378,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 MailItem mailItem;
                 try
                 {
-                    mailItem = ns.GetItemFromID(outlookMailItem.EntryID);
+                    mailItem = ns.GetItemFromID(outlookMailItem.EntryID,outlookMailItem.StoreID);
                 }
                 catch (System.Runtime.InteropServices.COMException e2)
                 {
@@ -390,7 +392,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     case MessageBoxResult.Yes:
                         try
                         {
-                            context?.HideMail(outlookMailItem.StoreID, mailItem.EntryID);
+                            context?.HideMail(mailItem.EntryID,outlookMailItem.StoreID);
                             mailItem.Delete();
                         }
                         catch (System.Runtime.InteropServices.COMException e3)
@@ -416,7 +418,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         {
             var outlook = new Microsoft.Office.Interop.Outlook.Application();
             var ns = outlook.GetNamespace("MAPI");
-            MailItem mailItem = ns.GetItemFromID(((OutlookMailItem?)datagrid?.SelectedItem)?.EntryID);
+            var outlookMailItem = (OutlookMailItem?)datagrid?.SelectedItem;
+            MailItem mailItem = ns.GetItemFromID(outlookMailItem.EntryID,outlookMailItem.StoreID);
             e.Handled = true;
             string recipientNames = String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(new Func<Recipient, string>(recipient => recipient.Name)));
             string recipientAddresses = String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(new Func<Recipient, string>(recipient => recipient.Address)));
@@ -453,6 +456,22 @@ ConversationID:{mailItem.ConversationID}
                 //
             }
             Conversation conversation = mailItem.GetConversation();
+            /*
+            foreach (Object samethread_root_mailItem in conversation.GetRootItems()) ‚±‚±
+            {
+                var a = samethread_root_mailItem.GetType();
+                */
+                /*
+                MAPIFolder? sameThreadMailFolder = conversation.GetChildren(samethread_root_mailItem).Cast<MailItem>().FirstOrDefault(m => (m.Parent.FolderPath != folder_path && m.Parent.FolderPath != sent_folder_path && m.Parent.FolderPath != draft_folder_path && m.Parent.FolderPath != conflicts_folder_path))?.Parent;
+                if (sameThreadMailFolder != null)
+                {
+                    return sameThreadMailFolder;
+                }
+                */
+            /*
+            }
+            */
+
             MailItem? sameThreadMailItem = conversation.GetRootItems().Cast<MailItem>().FirstOrDefault(m => (m.Parent.FolderPath != folder_path && m.Parent.FolderPath != sent_folder_path && m.Parent.FolderPath != draft_folder_path && m.Parent.FolderPath != conflicts_folder_path));
             if (sameThreadMailItem != null)
             {
@@ -486,8 +505,7 @@ ConversationID:{mailItem.ConversationID}
             List<OutlookMailItem> listSelectedItems = datagrid.SelectedItems.Cast<OutlookMailItem>().ToList();
             foreach (OutlookMailItem outlookMailItem in listSelectedItems)
             {
-                string entryID = outlookMailItem.EntryID;
-                MailItem mailItem = ns.GetItemFromID(outlookMailItem.StoreID, entryID);
+                MailItem mailItem = ns.GetItemFromID(outlookMailItem.EntryID,outlookMailItem.StoreID);
                 MAPIFolder? sameThreadMailFolder = GetSameThreadMailFolder(mailItem);
                 if (sameThreadMailFolder != null)
                 {
@@ -496,7 +514,7 @@ ConversationID:{mailItem.ConversationID}
                     {
                         case MessageBoxResult.Yes:
                             mailItem.Move(sameThreadMailFolder);
-                            context?.HideMail(outlookMailItem.StoreID, entryID);
+                            context?.HideMail(outlookMailItem.EntryID,outlookMailItem.StoreID);
                             break;
                         case MessageBoxResult.Cancel:
                             MessageBox.Show("Canceled.");

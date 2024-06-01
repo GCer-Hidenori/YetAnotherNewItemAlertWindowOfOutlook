@@ -246,13 +246,14 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
         public string ConversationId { get => conversation_id; set => conversation_id = value; }
 
-        public static OutlookMailItem CreateNew(MailItem mailItem)
+        public static OutlookMailItem CreateNew(MailItem mailItem,string storeID)
         {
             var outlookmailitem = new OutlookMailItem()
             {
                 cc = mailItem.CC,
                 categories = mailItem.Categories,
-                store_id = mailItem.Parent.StoreID,
+                //store_id = mailItem.Parent.StoreID, //here
+                store_id = storeID, //here
                 entry_id = mailItem.EntryID,
                 flag_icon = (int)mailItem.FlagIcon switch
                 {
@@ -308,7 +309,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         public static OutlookMailItem CreateNew(string storeID, string entryID, Microsoft.Office.Interop.Outlook.Application outlook)
         {
             MailItem mailitem = OutlookUtil.GetMail(storeID,entryID, outlook);
-            return CreateNew(mailitem);
+            return CreateNew(mailitem,storeID);
         }
 
         public static void Reload(OutlookMailItem outlookmailitem, Microsoft.Office.Interop.Outlook.Application outlook)
