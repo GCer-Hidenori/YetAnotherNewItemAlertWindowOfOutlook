@@ -18,7 +18,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private Condition? condition = null;
         private int timers_to_check_mail = 1;   //How many timers does it take to start?
         private FolderType folderType;
-        private string? path;
+        private string path = "";
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         public FolderType TargetFolderType
         {
@@ -30,7 +30,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             get { return timers_to_check_mail; }
             set { timers_to_check_mail = value; }
         }
-        public String? Path
+        public String Path
         {
             get { return path; }
             set { path = value; }

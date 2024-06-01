@@ -105,23 +105,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
-            var outlook = new Microsoft.Office.Interop.Outlook.Application();
-            var ns = outlook.GetNamespace("MAPI");
-            try
-            {
-                var outlookMailItem = (OutlookMailItem)((DataGridRow)sender).Item;
-                MailItem mailItem = ns.GetItemFromID(outlookMailItem.EntryID, outlookMailItem.StoreID);
-                if (mailItem != null)
-                {
-                    mailItem.Display();
-                    mailItem.GetInspector.Display(false);
-                }
-            }
-            catch (System.Runtime.InteropServices.COMException e2)
-            {
-                MessageBox.Show("Can't open mail.");
-                Logger.Warn(e2);
-            }
+            OpenMailItem();
         }
 
         private void Window_Deactivated(object sender, EventArgs e)
@@ -302,25 +286,92 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
         }
 
-        //private void OutlookMailItemDataGrid_ColumnHeaderDragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
-        //{
-
-        //}
-
-        private void Window_Closed(object sender, EventArgs e)
+        private void OpenMailItem1()
         {
-            setting.Columns.Clear();
-            foreach (var column in datagrid.Columns.OrderBy(c => c.DisplayIndex))
+            var outlook = new Microsoft.Office.Interop.Outlook.Application();
+            var ns = outlook.GetNamespace("MAPI");
+            if (datagrid.SelectedItems.Count > 10)
             {
-                setting.Columns.Add(new Column() { Name = column.Header.ToString() ?? "", Width = column.ActualWidth });
+                MessageBox.Show("Too many items selected.");
+                return;
             }
-            setting.Save();
-            ignoreFileList.Save();
-        }
+            List<OutlookMailItem> listSelectedItems = datagrid.SelectedItems.Cast<OutlookMailItem>().ToList();
+            foreach (OutlookMailItem outlookMailItem in listSelectedItems)
+            {
+                try
+                {
 
-        private void OpenMenuItem_Click(object sender, RoutedEventArgs e)
+                    MailItem mailItem = ns.GetItemFromID(outlookMailItem.EntryID, outlookMailItem.StoreID);
+                    if (mailItem != null)
+                    {
+                        mailItem.Display();
+                    }
+                }
+                catch (System.Runtime.InteropServices.COMException e2)
+                {
+                    MessageBox.Show("Can't open mail.");
+                    Logger.Warn(e2);
+                }
+            }
+        }
+        private void OpenMailItem2()
         {
-            e.Handled = true;
+            var outlook = new Microsoft.Office.Interop.Outlook.Application();
+            var ns = outlook.GetNamespace("MAPI");
+            if (datagrid.SelectedItems.Count > 10)
+            {
+                MessageBox.Show("Too many items selected.");
+                return;
+            }
+            List<OutlookMailItem> listSelectedItems = datagrid.SelectedItems.Cast<OutlookMailItem>().ToList();
+            foreach (OutlookMailItem outlookMailItem in listSelectedItems)
+            {
+                try
+                {
+
+                    MailItem mailItem = ns.GetItemFromID(outlookMailItem.EntryID, outlookMailItem.StoreID);
+                    if (mailItem != null)
+                    {
+                        mailItem.GetInspector.Display(false);
+                    }
+                }
+                catch (System.Runtime.InteropServices.COMException e2)
+                {
+                    MessageBox.Show("Can't open mail.");
+                    Logger.Warn(e2);
+                }
+            }
+        }
+        private void OpenMailItem3()
+        {
+            var outlook = new Microsoft.Office.Interop.Outlook.Application();
+            var ns = outlook.GetNamespace("MAPI");
+            if (datagrid.SelectedItems.Count > 10)
+            {
+                MessageBox.Show("Too many items selected.");
+                return;
+            }
+            List<OutlookMailItem> listSelectedItems = datagrid.SelectedItems.Cast<OutlookMailItem>().ToList();
+            foreach (OutlookMailItem outlookMailItem in listSelectedItems)
+            {
+                try
+                {
+
+                    MailItem mailItem = ns.GetItemFromID(outlookMailItem.EntryID, outlookMailItem.StoreID);
+                    if (mailItem != null)
+                    {
+                        mailItem.GetInspector.Activate();
+                    }
+                }
+                catch (System.Runtime.InteropServices.COMException e2)
+                {
+                    MessageBox.Show("Can't open mail.");
+                    Logger.Warn(e2);
+                }
+            }
+        }
+        private void OpenMailItem()
+        {
             var outlook = new Microsoft.Office.Interop.Outlook.Application();
             var ns = outlook.GetNamespace("MAPI");
             if (datagrid.SelectedItems.Count > 10)
@@ -339,6 +390,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     {
                         mailItem.Display();
                         mailItem.GetInspector.Display(false);
+                        mailItem.GetInspector.Activate();
                     }
                 }
                 catch (System.Runtime.InteropServices.COMException e2)
@@ -347,6 +399,38 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     Logger.Warn(e2);
                 }
             }
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            setting.Columns.Clear();
+            foreach (var column in datagrid.Columns.OrderBy(c => c.DisplayIndex))
+            {
+                setting.Columns.Add(new Column() { Name = column.Header.ToString() ?? "", Width = column.ActualWidth });
+            }
+            setting.Save();
+            ignoreFileList.Save();
+        }
+
+        private void OpenMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
+            OpenMailItem();
+        }
+        private void OpenMenuItem1_Click(object sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
+            OpenMailItem1();
+        }
+        private void OpenMenuItem2_Click(object sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
+            OpenMailItem2();
+        }
+        private void OpenMenuItem3_Click(object sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
+            OpenMailItem3();
         }
         private void HideMenuItem_Click(object sender, RoutedEventArgs e)
         {
@@ -415,12 +499,14 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             var outlook = new Microsoft.Office.Interop.Outlook.Application();
             var ns = outlook.GetNamespace("MAPI");
             var outlookMailItem = (OutlookMailItem?)datagrid?.SelectedItem;
-            MailItem mailItem = ns.GetItemFromID(outlookMailItem.EntryID, outlookMailItem.StoreID);
-            e.Handled = true;
-            string recipientNames = String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(new Func<Recipient, string>(recipient => recipient.Name)));
-            string recipientAddresses = String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(new Func<Recipient, string>(recipient => recipient.Address)));
+            if (outlookMailItem != null)
+            {
+                MailItem mailItem = ns.GetItemFromID(outlookMailItem.EntryID, outlookMailItem.StoreID);
+                e.Handled = true;
+                string recipientNames = String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(new Func<Recipient, string>(recipient => recipient.Name)));
+                string recipientAddresses = String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(new Func<Recipient, string>(recipient => recipient.Address)));
 
-            string message = $@"Subject:{mailItem.Subject}
+                string message = $@"Subject:{mailItem.Subject}
 To:{mailItem.To}
 Cc:{mailItem.CC}
 SenderName:{mailItem.SenderName}
@@ -430,7 +516,12 @@ RecipientAddresses:{recipientAddresses}
 EntryID:{mailItem.EntryID}
 ConversationID:{mailItem.ConversationID}
                 ";
-            MessageBox.Show(message, "Inspect", MessageBoxButton.OK);
+                MessageBox.Show(message, "Inspect", MessageBoxButton.OK);
+            }
+            else
+            {
+                MessageBox.Show("Can't open mail.");
+            }
         }
 
 
