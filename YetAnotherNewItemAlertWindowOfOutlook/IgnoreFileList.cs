@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.IO;
-using YetAnotherNewItemAlertWindowOfOutlook.Properties;
 using System.Runtime.Serialization;
-using System.Collections;
 
 
 namespace YetAnotherNewItemAlertWindowOfOutlook
 {
     [DataContract]
 
- 
+
     public class IgnoreFileList
     {
         [DataMember]
@@ -43,7 +37,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
         }
 
-        public bool Exists(string storeID,string entryID)
+        public bool Exists(string storeID, string entryID)
         {
             if (ignoreFileList.ContainsKey(storeID))
             {
@@ -68,7 +62,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
             return ignoreFileList;
         }
-        public void Add(string storeID,string entryID)
+        public void Add(string storeID, string entryID)
         {
             if (!ignoreFileList.ContainsKey(storeID))
             {

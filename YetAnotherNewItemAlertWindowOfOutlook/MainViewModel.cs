@@ -32,7 +32,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             return list_target_processing;
         }
 
-        public MainViewModel(Setting setting, Window window,IgnoreFileList ignoreFileList)
+        public MainViewModel(Setting setting, Window window, IgnoreFileList ignoreFileList)
         {
             this.window = window;
             this.setting = setting;
@@ -78,7 +78,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     bool activateWindow = false;
 
                     List<MailID> list_entryid_of_target_processing = new();
-                    List<MailID> list_entryid_of_outlookmailitemcollection = new();
+                    List<MailID> list_entryid_of_outlookMailItemcollection = new();
                     foreach (var target_processing in list_target_processing)
                     {
                         if (forceRefresh || (target_processing.Target?.TimersToCheckMail > 0 && timer_count % target_processing.Target.TimersToCheckMail == 0))
@@ -95,7 +95,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                                     foreach (Action actionCreateFile in target_processing.Target.Actions.Where(a => a.ActionType == ActionType.CreateFile))
                                     {
 
-                                        MailItem mailItem = OutlookUtil.GetMail(mailID.StoreID,mailID.EntryID, outlook);
+                                        MailItem mailItem = OutlookUtil.GetMail(mailID.StoreID, mailID.EntryID, outlook);
                                         actionCreateFile.CreateFile(mailItem);
                                     }
                                 }
@@ -110,18 +110,18 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
                     }
 
-                    foreach (OutlookMailItem outlookmailitem in OutlookMailItemCollection)
+                    foreach (OutlookMailItem outlookMailItem in OutlookMailItemCollection)
                     {
-                        list_entryid_of_outlookmailitemcollection.Add(new MailID() { StoreID=outlookmailitem.StoreID,EntryID=outlookmailitem.EntryID} );
+                        list_entryid_of_outlookMailItemcollection.Add(new MailID() { StoreID = outlookMailItem.StoreID, EntryID = outlookMailItem.EntryID });
                     }
 
 
                     // duplicate / for update
-                    List<MailID> list_duplication_entryid = list_entryid_of_target_processing.Intersect(list_entryid_of_outlookmailitemcollection).ToList();
+                    List<MailID> list_duplication_entryid = list_entryid_of_target_processing.Intersect(list_entryid_of_outlookMailItemcollection).ToList();
                     // only target_processing / add to OutlookMailItemCollection
-                    List<MailID> list_new_entry_id = list_entryid_of_target_processing.Except(list_entryid_of_outlookmailitemcollection).ToList();
+                    List<MailID> list_new_entry_id = list_entryid_of_target_processing.Except(list_entryid_of_outlookMailItemcollection).ToList();
                     // only OutlookMailItemCollection / delete from OutlookMailItemCollection
-                    List<MailID> list_deleted_entry_id = list_entryid_of_outlookmailitemcollection.Except(list_entryid_of_target_processing).ToList();
+                    List<MailID> list_deleted_entry_id = list_entryid_of_outlookMailItemcollection.Except(list_entryid_of_target_processing).ToList();
 
                     Logger.Info($"new item  count  {list_new_entry_id.Count}");
 
@@ -138,15 +138,15 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     }
                     foreach (MailID mailID in list_new_entry_id)
                     {
-                        var outlookmailitem = OutlookMailItem.CreateNew(mailID.StoreID,mailID.EntryID, outlook);
-                        DicOutlookMailItem.Add(mailID, outlookmailitem);
-                        OutlookMailItemCollection.Add(outlookmailitem);
+                        var outlookMailItem = OutlookMailItem.CreateNew(mailID.StoreID, mailID.EntryID, outlook);
+                        DicOutlookMailItem.Add(mailID, outlookMailItem);
+                        OutlookMailItemCollection.Add(outlookMailItem);
                     }
                     foreach (MailID mailID in list_deleted_entry_id)
                     {
-                        var outlookmailitem = DicOutlookMailItem[mailID];
+                        var outlookMailItem = DicOutlookMailItem[mailID];
                         DicOutlookMailItem.Remove(mailID);
-                        if (!OutlookMailItemCollection.Remove(outlookmailitem))
+                        if (!OutlookMailItemCollection.Remove(outlookMailItem))
                         {
                             throw new ArgumentException();
                         }
@@ -176,7 +176,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         }
         public void HideMail(string entryID, string storeID)
         {
-            MailID mailID = new() { StoreID=storeID,EntryID= entryID };
+            MailID mailID = new() { StoreID = storeID, EntryID = entryID };
             foreach (var target_processing in list_target_processing)
             {
                 if (target_processing.List_OutlookMailID.Contains(mailID))
@@ -184,9 +184,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     target_processing.List_OutlookMailID.Remove(mailID);
                 }
             }
-            var outlookmailitem = DicOutlookMailItem[mailID];
+            var outlookMailItem = DicOutlookMailItem[mailID];
             DicOutlookMailItem.Remove(mailID);
-            OutlookMailItemCollection.Remove(outlookmailitem);
+            OutlookMailItemCollection.Remove(outlookMailItem);
         }
     }
 }

@@ -246,9 +246,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
         public string ConversationId { get => conversation_id; set => conversation_id = value; }
 
-        public static OutlookMailItem CreateNew(MailItem mailItem,string storeID)
+        public static OutlookMailItem CreateNew(MailItem mailItem, string storeID)
         {
-            var outlookmailitem = new OutlookMailItem()
+            var outlookMailItem = new OutlookMailItem()
             {
                 cc = mailItem.CC,
                 categories = mailItem.Categories,
@@ -273,50 +273,50 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 sender_name = mailItem.SenderName,
                 ConversationId = mailItem.ConversationID
             };
-            outlookmailitem.RefreshSearchIndex();
+            outlookMailItem.RefreshSearchIndex();
 
 
-            outlookmailitem.recipient_addresses = String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(recipient => recipient.Address));
-            outlookmailitem.recipient_names = String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(recipient => recipient.Name));
+            outlookMailItem.recipient_addresses = String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(recipient => recipient.Address));
+            outlookMailItem.recipient_names = String.Join(";", mailItem.Recipients.Cast<Recipient>().ToList().Select(recipient => recipient.Name));
 
             if (mailItem.ReminderTime > DateTime.Now.AddYears(100))
             {
-                outlookmailitem.reminder_time = null;
+                outlookMailItem.reminder_time = null;
             }
             else
             {
-                outlookmailitem.reminder_time = mailItem.ReminderTime;
+                outlookMailItem.reminder_time = mailItem.ReminderTime;
             }
             if (mailItem.ReceivedTime > DateTime.Now.AddYears(100))
             {
-                outlookmailitem.receive_time = null;
+                outlookMailItem.receive_time = null;
             }
             else
             {
-                outlookmailitem.receive_time = mailItem.ReceivedTime;
+                outlookMailItem.receive_time = mailItem.ReceivedTime;
             }
             if (mailItem.SentOn > DateTime.Now.AddYears(100))
             {
-                outlookmailitem.sent_on = null;
+                outlookMailItem.sent_on = null;
             }
             else
             {
-                outlookmailitem.sent_on = mailItem.SentOn;
+                outlookMailItem.sent_on = mailItem.SentOn;
             }
-            return outlookmailitem;
+            return outlookMailItem;
 
         }
         public static OutlookMailItem CreateNew(string storeID, string entryID, Microsoft.Office.Interop.Outlook.Application outlook)
         {
-            MailItem mailitem = OutlookUtil.GetMail(storeID,entryID, outlook);
-            return CreateNew(mailitem,storeID);
+            MailItem mailitem = OutlookUtil.GetMail(storeID, entryID, outlook);
+            return CreateNew(mailitem, storeID);
         }
 
-        public static void Reload(OutlookMailItem outlookmailitem, Microsoft.Office.Interop.Outlook.Application outlook)
+        public static void Reload(OutlookMailItem outlookMailItem, Microsoft.Office.Interop.Outlook.Application outlook)
         {
-            MailItem mailitem = OutlookUtil.GetMail(outlookmailitem.StoreID, outlookmailitem.EntryID, outlook);
-            outlookmailitem.Categories = mailitem.Categories;
-            outlookmailitem.FlagIcon = (int)mailitem.FlagIcon switch
+            MailItem mailitem = OutlookUtil.GetMail(outlookMailItem.StoreID, outlookMailItem.EntryID, outlook);
+            outlookMailItem.Categories = mailitem.Categories;
+            outlookMailItem.FlagIcon = (int)mailitem.FlagIcon switch
             {
                 0 => "No",
                 1 => "Purple",
@@ -327,30 +327,30 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 6 => "Red",
                 _ => "",
             };
-            outlookmailitem.Unread = mailitem.UnRead;
+            outlookMailItem.Unread = mailitem.UnRead;
             if (mailitem.ReminderTime > DateTime.Now.AddYears(100))
             {
-                outlookmailitem.ReminderTime = null;
+                outlookMailItem.ReminderTime = null;
             }
             else
             {
-                outlookmailitem.ReminderTime = mailitem.ReminderTime;
+                outlookMailItem.ReminderTime = mailitem.ReminderTime;
             }
             if (mailitem.ReceivedTime > DateTime.Now.AddYears(100))
             {
-                outlookmailitem.ReceivedTime = null;
+                outlookMailItem.ReceivedTime = null;
             }
             else
             {
-                outlookmailitem.ReceivedTime = mailitem.ReceivedTime;
+                outlookMailItem.ReceivedTime = mailitem.ReceivedTime;
             }
             if (mailitem.SentOn > DateTime.Now.AddYears(100))
             {
-                outlookmailitem.SentOn = null;
+                outlookMailItem.SentOn = null;
             }
             else
             {
-                outlookmailitem.SentOn = mailitem.SentOn;
+                outlookMailItem.SentOn = mailitem.SentOn;
             }
         }
     }

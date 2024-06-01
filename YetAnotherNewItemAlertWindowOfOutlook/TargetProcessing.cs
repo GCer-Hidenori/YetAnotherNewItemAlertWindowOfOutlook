@@ -49,7 +49,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 if (item is MailItem mailItem)
                 {
                     //if (ignoreFileList.Exists(mailItem.Parent.StoreID,mailItem.EntryID))    //here
-                    if (ignoreFileList.Exists(folder.StoreID, mailItem.EntryID))   
+                    if (ignoreFileList.Exists(folder.StoreID, mailItem.EntryID))
                     {
                         continue;
                     }
