@@ -47,7 +47,7 @@
                 <!-- <Button Content="Search" Grid.Column="1" Click="SearchButton_Click" />
                 <Button Content="Cancel" Grid.Column="2" Click="SearchCancelButton_Click"/>-->
             </Grid>
-            <DataGrid ItemsSource="{Binding OutlookMailItemCollection}"  AutoGenerateColumns="False" IsReadOnly="True" Grid.Row="2" x:Name="OutlookMailItemDataGrid"   >
+            <DataGrid ItemsSource="{Binding OutlookMailItemCollection}"  AutoGenerateColumns="False" IsReadOnly="True" Grid.Row="2" x:Name="OutlookMailItemDataGrid"    >
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Sender Name" Binding="{Binding SenderName}" IsReadOnly="True" />
                     <!--DataGridTextColumn Header="Sender Email" Binding="{Binding SenderEmailAddress}"  IsReadOnly="True" /-->
@@ -77,6 +77,8 @@
                         <MenuItem Header="Add to ignore list(Insert)" Click="HideMenuItem_Click"/>
                         <MenuItem Header="Inspect" Click="InspectMenuItem_Click"/>
                         <MenuItem Header="Moved to the same folder as the emails in the same thread" Click="MoveToSameFolderSameThres_Click"/>
+                        <MenuItem Header="Moved to the same folder as the emails in the same thread2" Click="MoveToSameFolderSameThres_Click2"/>
+
                         <MenuItem Header="Open1" Click="OpenMenuItem1_Click"/>
                         <MenuItem Header="Open2" Click="OpenMenuItem2_Click"/>
                         <MenuItem Header="Open3" Click="OpenMenuItem3_Click"/>
