@@ -11,7 +11,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
     public class Filter
     {
         private List<Condition> conditions = new();
-        [XmlElement("Filter")]
+        [XmlElement("Condition")]
         public List<Condition> Conditions { get => conditions; set => conditions = value; }
 
         public bool Evaluate(MailItem mailItem)

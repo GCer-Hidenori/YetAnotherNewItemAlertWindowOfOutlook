@@ -1,6 +1,7 @@
 using Microsoft.Office.Interop.Outlook;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 
 namespace YetAnotherNewItemAlertWindowOfOutlook
 {
@@ -38,7 +39,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         public List<MailID> List_OutlookMailID { get => list_outlookmail_mail_id; set => list_outlookmail_mail_id = value; }
 
 
-        public ResultOfTargetProcessing RefreshOutlookMailItem(IgnoreFileList ignoreFileList)
+        public ResultOfTargetProcessing RefreshOutlookMailItem(IgnoreFileList ignoreFileList,Window window)
         {
             var result = new ResultOfTargetProcessing();
             List<MailID> original_list_outlookmail_mail_id = new(list_outlookmail_mail_id);
@@ -48,7 +49,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             {
                 if (item is MailItem mailItem)
                 {
-                    //if (ignoreFileList.Exists(mailItem.Parent.StoreID,mailItem.EntryID))    //here
                     if (ignoreFileList.Exists(folder.StoreID, mailItem.EntryID))
                     {
                         continue;
@@ -60,16 +60,37 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                             continue;
                         }
                     }
-                    //MailID mailID = new() { StoreID = mailItem.Parent.StoreID, EntryID = mailItem.EntryID };    //here
                     MailID mailID = new() { StoreID = folder.StoreID, EntryID = mailItem.EntryID };    //here
                     List_OutlookMailID.Add(mailID);
+                    /*
                     if (result.ActivateWindow == false && target.ActivateWindow && !original_list_outlookmail_mail_id.Contains(mailID))
                     {
                         result.ActivateWindow = true;
                     }
+                    */
                 }
             }
             result.List_new_mail_id = list_outlookmail_mail_id.Except(original_list_outlookmail_mail_id).ToList();
+            var outlook = new Microsoft.Office.Interop.Outlook.Application();
+            var ns = outlook.GetNamespace("MAPI");
+
+            foreach(MailID new_mail_id in result.List_new_mail_id)
+            {
+                foreach(Rule rule in target.Rules)
+                {
+                    MailItem mailItem = ns.GetItemFromID(new_mail_id.EntryID, new_mail_id.StoreID);
+                    if(rule.Condition != null && rule.Condition.Evaluate(mailItem))
+                    {
+                        foreach(Action action in rule.Actions)
+                        {
+                            action.Execute(mailItem,window);
+                        }
+                    }
+
+                }
+            }
+
+
             return result;
         }
     }

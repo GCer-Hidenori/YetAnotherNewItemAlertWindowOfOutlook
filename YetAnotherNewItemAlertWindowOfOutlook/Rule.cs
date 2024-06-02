@@ -1,0 +1,20 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Serialization;
+
+namespace YetAnotherNewItemAlertWindowOfOutlook
+{
+    public class Rule
+    {
+        private Condition condition = new();
+        public Condition? Condition { get => condition; set => condition = value; }
+
+        [XmlArray("Actions")]
+        private List<Action> actions = new();
+        public List<Action> Actions { get => actions; set => actions = value; }
+
+    }
+}

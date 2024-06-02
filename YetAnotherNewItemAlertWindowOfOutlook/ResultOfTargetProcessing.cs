@@ -12,9 +12,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private List<MailID> list_new_entry_id = new();
 
 
-        private bool activateWindow = false;
+        //private bool activateWindow = false;
 
-        public bool ActivateWindow { get => activateWindow; set => activateWindow = value; }
+        //public bool ActivateWindow { get => activateWindow; set => activateWindow = value; }
         public List<MailID> List_new_mail_id { get => list_new_entry_id; set => list_new_entry_id = value; }
     }
 }

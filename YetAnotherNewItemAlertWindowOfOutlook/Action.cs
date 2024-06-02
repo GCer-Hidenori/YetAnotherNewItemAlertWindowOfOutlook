@@ -2,6 +2,7 @@ using Microsoft.Office.Interop.Outlook;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Xml.Serialization;
 
 namespace YetAnotherNewItemAlertWindowOfOutlook
@@ -55,6 +56,24 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 writer.WriteLine(valBody);
             }
             Logger.Info($"file create or updated {valfileName}");
+        }
+
+        public void Execute(MailItem mailItem, Window window)
+        {
+            switch (action_type)
+            {
+                case ActionType.CreateFile:
+                    CreateFile(mailItem);
+                    break;
+                case ActionType.ActivateWindow:
+                    Logger.Info("activate window.");
+                    window.Dispatcher.Invoke(() =>
+                        {
+                            window.Activate();
+                            window.WindowState = WindowState.Normal;
+                        });
+                    break;
+            }
         }
     }
 }

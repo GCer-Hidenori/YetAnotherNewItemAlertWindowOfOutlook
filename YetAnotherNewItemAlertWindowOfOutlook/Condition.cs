@@ -7,6 +7,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 {
     public enum ConditionType
     {
+        True,
+        False,
         And,
         Or,
         Not,
@@ -41,6 +43,10 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         {
             switch (type)
             {
+                case ConditionType.True:
+                    return true;
+                case ConditionType.False:
+                    return false;
                 case ConditionType.And:
                     return conditions.All(c => c.Evaluate(mailItem));
                 case ConditionType.Or:

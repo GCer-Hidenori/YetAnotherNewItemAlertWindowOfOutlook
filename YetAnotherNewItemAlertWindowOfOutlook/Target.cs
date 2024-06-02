@@ -40,8 +40,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         //private bool activateWindow = false;
 
 
-        private List<Action> actions = new();
+        private List<Rule> rules = new();
 
+        /*
         public bool ActivateWindow
         {
             get
@@ -49,14 +50,15 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 return Actions.Any(x => x.ActionType == ActionType.ActivateWindow);
             }
         }
+        */
 
 
 
 
         //internal List<Action> ActionCreateFiles { get => Actions; set => Actions = value; }
         public Filter? Filter { get => filter; set => filter = value; }
-        [XmlArray("Actions")]
-        public List<Action> Actions { get => actions; set => actions = value; }
+        [XmlArray("Rules")]
+        public List<Rule> Rules { get => rules; set => rules = value; }
 
         public bool Filtering(MailItem mailItem)
         {

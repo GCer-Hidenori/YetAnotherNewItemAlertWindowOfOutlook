@@ -75,7 +75,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 {
                     System.Diagnostics.Debug.WriteLine("RefreshOutlookMailItem start");
 
-                    bool activateWindow = false;
+                    //bool activateWindow = false;
 
                     List<MailID> list_entryid_of_target_processing = new();
                     List<MailID> list_entryid_of_outlookMailItemcollection = new();
@@ -85,9 +85,10 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                         {
                             System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString()} start RefreshOutlookMailItem.Folder:{target_processing.Target?.Path}");
                             Logger.Info($"start RefreshOutlookMailItem.Folder:{target_processing.Target?.Path}");
-                            var result = target_processing.RefreshOutlookMailItem(ignoreFileList);
+                            var result = target_processing.RefreshOutlookMailItem(ignoreFileList, window);
 
-                            if (!activateWindow && result.ActivateWindow) activateWindow = true;
+                            //if (!activateWindow && result.ActivateWindow) activateWindow = true;
+                            /*
                             foreach (MailID mailID in result.List_new_mail_id)
                             {
                                 if (target_processing.Target != null)
@@ -100,6 +101,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                                     }
                                 }
                             }
+                            */
                             Logger.Info($"end RefreshOutlookMailItem.Folder:{target_processing.Target?.Path}");
                         }
 
@@ -152,6 +154,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                         }
                     }
                     timer_count++;
+                    /*
                     if (activateWindow)
                     {
                         Logger.Info("activate window.");
@@ -161,6 +164,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                             window.WindowState = WindowState.Normal;
                         });
                     }
+                    */
                 }
             }
             catch (System.Exception e)
