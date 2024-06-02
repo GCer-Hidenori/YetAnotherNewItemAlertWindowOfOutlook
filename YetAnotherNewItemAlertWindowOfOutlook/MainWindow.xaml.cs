@@ -58,6 +58,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 SortColumn();
 
 
+
                 ready = true;
             }
             catch (YError e)
