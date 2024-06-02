@@ -84,7 +84,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             };
             var rule1 = new Rule()
             {
-                Condition = rule_condition ,
+                Condition = rule_condition,
                 Actions = new List<Action>() { action1, action2 }
             };
 

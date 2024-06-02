@@ -22,7 +22,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         }
 
         public Target Target { get => target; set => target = value; }
-        //public MAPIFolder? Target_folder { get => target_folder; set => target_folder = value; }
 
         public MAPIFolder GetTargetFolder()
         {
@@ -39,7 +38,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         public List<MailID> List_OutlookMailID { get => list_outlookmail_mail_id; set => list_outlookmail_mail_id = value; }
 
 
-        public ResultOfTargetProcessing RefreshOutlookMailItem(IgnoreFileList ignoreFileList,Window window)
+        public ResultOfTargetProcessing RefreshOutlookMailItem(IgnoreFileList ignoreFileList, Window window)
         {
             var result = new ResultOfTargetProcessing();
             List<MailID> original_list_outlookmail_mail_id = new(list_outlookmail_mail_id);
@@ -62,28 +61,22 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     }
                     MailID mailID = new() { StoreID = folder.StoreID, EntryID = mailItem.EntryID };    //here
                     List_OutlookMailID.Add(mailID);
-                    /*
-                    if (result.ActivateWindow == false && target.ActivateWindow && !original_list_outlookmail_mail_id.Contains(mailID))
-                    {
-                        result.ActivateWindow = true;
-                    }
-                    */
                 }
             }
             result.List_new_mail_id = list_outlookmail_mail_id.Except(original_list_outlookmail_mail_id).ToList();
             var outlook = new Microsoft.Office.Interop.Outlook.Application();
             var ns = outlook.GetNamespace("MAPI");
 
-            foreach(MailID new_mail_id in result.List_new_mail_id)
+            foreach (MailID new_mail_id in result.List_new_mail_id)
             {
-                foreach(Rule rule in target.Rules)
+                foreach (Rule rule in target.Rules)
                 {
                     MailItem mailItem = ns.GetItemFromID(new_mail_id.EntryID, new_mail_id.StoreID);
-                    if(rule.Condition != null && rule.Condition.Evaluate(mailItem))
+                    if (rule.Condition != null && rule.Condition.Evaluate(mailItem))
                     {
-                        foreach(Action action in rule.Actions)
+                        foreach (Action action in rule.Actions)
                         {
-                            action.Execute(mailItem,window);
+                            action.Execute(mailItem, window);
                         }
                     }
 

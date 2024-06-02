@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Office.Interop.Outlook;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
-using Microsoft.Office.Interop.Outlook;
 
 
 namespace YetAnotherNewItemAlertWindowOfOutlook
@@ -89,8 +89,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     {
                         ignoreFileList[storeID].Remove(entryID);
                     }
-                    
-
                 }
             }
         }

@@ -49,7 +49,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
         public static Setting Init()
         {
-            if(File.Exists(fileName))
+            if (File.Exists(fileName))
             {
                 return Load();
             }

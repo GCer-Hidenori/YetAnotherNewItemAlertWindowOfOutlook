@@ -1,10 +1,7 @@
-using System;
+using Microsoft.Office.Interop.Outlook;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
-using Microsoft.Office.Interop.Outlook;
 
 namespace YetAnotherNewItemAlertWindowOfOutlook
 {
@@ -16,7 +13,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
         public bool Evaluate(MailItem mailItem)
         {
-            if(conditions.Count == 0)
+            if (conditions.Count == 0)
             {
                 return true;
             }

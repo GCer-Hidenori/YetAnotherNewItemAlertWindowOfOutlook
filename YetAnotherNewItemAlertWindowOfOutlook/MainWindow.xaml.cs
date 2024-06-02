@@ -2,7 +2,6 @@ using Microsoft.Office.Interop.Outlook;
 //using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -46,7 +45,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         public MainWindow()
         {
             InitializeComponent();
-            
+
             datagrid = (DataGrid)this.FindName("OutlookMailItemDataGrid");
 
             var outlook = new Microsoft.Office.Interop.Outlook.Application();
@@ -608,7 +607,7 @@ ConversationID:{mailItem.ConversationID}
                         return samethread_root_mailItem.Parent;
                     }
                 }
-                foreach(object object_samethread_mailItem in conversation.GetChildren(object_samethread_root_mailItem))
+                foreach (object object_samethread_mailItem in conversation.GetChildren(object_samethread_root_mailItem))
                 {
                     if (TypeDescriptor.GetProperties(object_samethread_mailItem)["MessageClass"].GetValue(object_samethread_mailItem).ToString() == "IPM.Note")
                     {

@@ -239,9 +239,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             get
             {
                 return search_index;
-                //return cc + categories + recipient_names + sender_name + subject;
             }
-            //set => search_index = value; 
         }
 
         public string ConversationId { get => conversation_id; set => conversation_id = value; }
@@ -252,8 +250,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             {
                 cc = mailItem.CC,
                 categories = mailItem.Categories,
-                //store_id = mailItem.Parent.StoreID, //here
-                store_id = storeID, //here
+                store_id = storeID,
                 entry_id = mailItem.EntryID,
                 flag_icon = (int)mailItem.FlagIcon switch
                 {

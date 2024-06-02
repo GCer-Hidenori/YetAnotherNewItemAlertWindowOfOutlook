@@ -1,4 +1,3 @@
-using Microsoft.Office.Interop.Outlook;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,7 +17,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private int timer_count = 0;
         List<TargetProcessing> list_target_processing = new();
         private Window window;
-        //Microsoft.Office.Interop.Outlook.Application outlook;
         private Setting setting;
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         static List<TargetProcessing> GetTargetProcessings(Setting setting)
@@ -44,7 +42,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
             SetTimer(ignoreFileList);
             StartTimer();
-
         }
         private void SetTimer(IgnoreFileList ignoreFileList)
         {
@@ -55,9 +52,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 RefreshOutlookMailItem(ignoreFileList);
             };
             timer.AutoReset = true;
-
         }
-
 
         public void StartTimer()
         {
@@ -75,8 +70,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 {
                     System.Diagnostics.Debug.WriteLine("RefreshOutlookMailItem start");
 
-                    //bool activateWindow = false;
-
                     List<MailID> list_entryid_of_target_processing = new();
                     List<MailID> list_entryid_of_outlookMailItemcollection = new();
                     foreach (var target_processing in list_target_processing)
@@ -86,22 +79,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                             System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString()} start RefreshOutlookMailItem.Folder:{target_processing.Target?.Path}");
                             Logger.Info($"start RefreshOutlookMailItem.Folder:{target_processing.Target?.Path}");
                             var result = target_processing.RefreshOutlookMailItem(ignoreFileList, window);
-
-                            //if (!activateWindow && result.ActivateWindow) activateWindow = true;
-                            /*
-                            foreach (MailID mailID in result.List_new_mail_id)
-                            {
-                                if (target_processing.Target != null)
-                                {
-                                    foreach (Action actionCreateFile in target_processing.Target.Actions.Where(a => a.ActionType == ActionType.CreateFile))
-                                    {
-
-                                        MailItem mailItem = OutlookUtil.GetMail(mailID.StoreID, mailID.EntryID, outlook);
-                                        actionCreateFile.CreateFile(mailItem);
-                                    }
-                                }
-                            }
-                            */
                             Logger.Info($"end RefreshOutlookMailItem.Folder:{target_processing.Target?.Path}");
                         }
 
@@ -154,17 +131,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                         }
                     }
                     timer_count++;
-                    /*
-                    if (activateWindow)
-                    {
-                        Logger.Info("activate window.");
-                        window.Dispatcher.Invoke(() =>
-                        {
-                            window.Activate();
-                            window.WindowState = WindowState.Normal;
-                        });
-                    }
-                    */
                 }
             }
             catch (System.Exception e)

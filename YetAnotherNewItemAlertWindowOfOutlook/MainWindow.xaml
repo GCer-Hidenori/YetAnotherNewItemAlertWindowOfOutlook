@@ -15,7 +15,6 @@
         </CollectionViewSource>
     </Window.Resources>
     <Grid>
-
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="20" />
@@ -32,36 +31,23 @@
                     <MenuItem Header="List folders to log file" Click="ListFolders_Click"/>
                     <MenuItem Header="Open log folder" Click="OpenLogFolder_Click"/>
                     <MenuItem Header="Open setting file" Click="OpenSettingFile_Click"/>
-
                 </MenuItem>
                 <MenuItem Header="Ignore list">
                     <MenuItem Header="Open ignore list file" Click="OpenIgnoreListFile_Click"/>
                     <MenuItem Header="Clear ignore list" Click="ClearIgnoreList_Click"/>
                     <MenuItem Header="Delete unwanted entries from the list" Click="DeleteUnwantedIgnoreList_Click"/>
                 </MenuItem>
-                <!--MenuItem Header="Cache">
-                <MenuItem Header="Open cache folder"></MenuItem>
-                <MenuItem Header="Clear cache(!)"></MenuItem>
-                <MenuItem Header="Delete old cache"></MenuItem>
-            </MenuItem-->
-                <!--MenuItem Header="Setting">
-                <MenuItem Header="Open setting file"></MenuItem>
-            </MenuItem-->
+
             </Menu>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
-                    <!-- <ColumnDefinition Width="60"/-->
-                    <!--ColumnDefinition Width="60"/-->
                 </Grid.ColumnDefinitions>
                 <TextBox TextWrapping="Wrap" Text="Search Box" Height="20" Grid.Column="0" x:Name="SearchTextBox" TextChanged = "SearchTextBox_TextChanged" KeyDown="SearchTextBox_KeyDown" Foreground="#FFC8C8C8" GotFocus="SearchTextBox_GotFocus" />
-                <!-- <Button Content="Search" Grid.Column="1" Click="SearchButton_Click" />
-                <Button Content="Cancel" Grid.Column="2" Click="SearchCancelButton_Click"/>-->
             </Grid>
             <DataGrid ItemsSource="{Binding Source={StaticResource OutlookMailItemCollectionViewSource}}"  AutoGenerateColumns="False" IsReadOnly="True" Grid.Row="2" x:Name="OutlookMailItemDataGrid"    >
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Sender Name" Binding="{Binding SenderName}" IsReadOnly="True" />
-                    <!--DataGridTextColumn Header="Sender Email" Binding="{Binding SenderEmailAddress}"  IsReadOnly="True" /-->
                     <DataGridTextColumn Header="CC" Binding="{Binding Cc}"  IsReadOnly="True" x:Name="Column_CC" />
                     <DataGridTextColumn Header="Received Time" Binding="{Binding ReceivedTime, StringFormat=yyyy/MM/dd HH:mm}"  IsReadOnly="True" />
                     <DataGridTextColumn Header="Subject" Binding="{Binding Subject}" IsReadOnly="True" SortMemberPath="ConversationId" />
@@ -69,7 +55,6 @@
                     <DataGridTextColumn Header="Categories" Binding="{Binding Categories}"  IsReadOnly="True" />
                     <DataGridTextColumn Header="Flag" Binding="{Binding FlagIcon}"  IsReadOnly="True"  />
                     <DataGridTextColumn Header="Recipient Names" Binding="{Binding RecipientNames}"  IsReadOnly="True" />
-                    <!--DataGridTextColumn Header="Recipient Emails" Binding="{Binding RecipientAddresses}"  IsReadOnly="True" /-->
                     <DataGridTextColumn Header="Reminder Time" Binding="{Binding ReminderTime, StringFormat=yyyy/MM/dd HH:mm}" IsReadOnly="True"  />
                     <DataGridTextColumn Header="To" Binding="{Binding To}" IsReadOnly="True"  />
                     <DataGridTextColumn Header="Unread" Binding="{Binding Unread}" IsReadOnly="True"  />
@@ -89,7 +74,6 @@
                         <MenuItem Header="Inspect" Click="InspectMenuItem_Click"/>
                         <MenuItem Header="Moved to the same folder as the emails in the same thread" Click="MoveToSameFolderSameThres_Click"/>
                         <MenuItem Header="Moved to the same folder as the emails in the same thread2" Click="MoveToSameFolderSameThres_Click2"/>
-
                         <MenuItem Header="Open1" Click="OpenMenuItem1_Click"/>
                         <MenuItem Header="Open2" Click="OpenMenuItem2_Click"/>
                         <MenuItem Header="Open3" Click="OpenMenuItem3_Click"/>
