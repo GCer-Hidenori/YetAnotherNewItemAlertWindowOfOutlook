@@ -31,7 +31,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         [XmlAttribute("type")]
         public ConditionType Type { get => type; set => type = value; }
 
-        [XmlElement("Condition")]
+        [XmlElement("Filter")]
         public List<Condition> Conditions { get => conditions; set => conditions = value; }
 
         [XmlAttribute("value")]

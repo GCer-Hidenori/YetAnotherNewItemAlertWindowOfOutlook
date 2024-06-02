@@ -80,7 +80,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     }
                 }
             };
-            target_normal_folder.Condition = filter_condition;
+            var filter = new Filter() { Conditions = new List<Condition>() { filter_condition } };
+            target_normal_folder.Filter = filter;
 
             target_normal_folder.Actions.Add(action1);
             target_normal_folder.Actions.Add(action2);

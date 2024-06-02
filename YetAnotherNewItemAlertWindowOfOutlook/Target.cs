@@ -16,8 +16,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             SearchFolder
         }
 
-        private NLog.Filters.Filter? filter = null;
-        private Condition? condition = null;
+        //private NLog.Filters.Filter? filter = null;
+        private Filter? filter = null;
         private int timers_to_check_mail = 1;   //How many timers does it take to start?
         private FolderType folderType;
         private string path = "";
@@ -54,15 +54,15 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
 
         //internal List<Action> ActionCreateFiles { get => Actions; set => Actions = value; }
-        public Condition? Condition { get => condition; set => condition = value; }
+        public Filter? Filter { get => filter; set => filter = value; }
         [XmlArray("Actions")]
         public List<Action> Actions { get => actions; set => actions = value; }
 
         public bool Filtering(MailItem mailItem)
         {
-            if (Condition != null)
+            if (Filter != null)
             {
-                return Condition.Evaluate(mailItem);
+                return Filter.Evaluate(mailItem);
             }
             else
             {
