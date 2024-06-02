@@ -1,5 +1,6 @@
 //using System.Xml;
 using Microsoft.Office.Interop.Outlook;
+using NLog.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             SearchFolder
         }
 
+        private NLog.Filters.Filter? filter = null;
         private Condition? condition = null;
         private int timers_to_check_mail = 1;   //How many timers does it take to start?
         private FolderType folderType;

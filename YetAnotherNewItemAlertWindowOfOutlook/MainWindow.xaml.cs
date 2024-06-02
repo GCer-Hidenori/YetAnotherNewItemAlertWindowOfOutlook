@@ -57,6 +57,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 this.DataContext = context;
                 SortColumn();
 
+
                 ready = true;
             }
             catch (YError e)
