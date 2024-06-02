@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
+using Microsoft.Office.Interop.Outlook;
 
 
 namespace YetAnotherNewItemAlertWindowOfOutlook
@@ -69,6 +70,29 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 ignoreFileList[storeID] = new HashSet<string>();
             }
             ignoreFileList[storeID].Add(entryID);
+        }
+        public void DeleteUnwantedIgnoreList()
+        {
+            var outlook = new Application();
+            var ns = outlook.GetNamespace("MAPI");
+
+            var list = new List<string>();
+            foreach (var storeID in ignoreFileList.Keys)
+            {
+                foreach (var entryID in ignoreFileList[storeID])
+                {
+                    try
+                    {
+                        MailItem mailItem = ns.GetItemFromID(entryID, storeID);
+                    }
+                    catch (System.Exception e)
+                    {
+                        ignoreFileList[storeID].Remove(entryID);
+                    }
+                    
+
+                }
+            }
         }
 
     }

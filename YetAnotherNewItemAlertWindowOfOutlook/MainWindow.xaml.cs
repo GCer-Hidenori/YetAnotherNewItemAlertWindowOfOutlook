@@ -212,6 +212,10 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         {
             ignoreFileList = new IgnoreFileList();
         }
+        private void DeleteUnwantedIgnoreList_Click(object sender, RoutedEventArgs e)
+        {
+            ignoreFileList.DeleteUnwantedIgnoreList();
+        }
         private void OpenSettingFile_Click(object sender, RoutedEventArgs e)
         {
             var psi = new System.Diagnostics.ProcessStartInfo() { FileName = Setting.fileName, UseShellExecute = true };
