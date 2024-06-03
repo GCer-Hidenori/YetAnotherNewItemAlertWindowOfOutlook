@@ -4,16 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:YetAnotherNewItemAlertWindowOfOutlook"
-        xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=Windowsbase"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" Deactivated="Window_Deactivated" Closed="Window_Closed" KeyDown="Window_KeyDown">
-    <Window.Resources>
-        <CollectionViewSource x:Key="OutlookMailItemCollectionViewSource" Source="{Binding OutlookMailItemCollection}">
-            <CollectionViewSource.SortDescriptions>
-                <ComponentModel:SortDescription PropertyName="ReceivedTime" Direction="Descending"/>
-            </CollectionViewSource.SortDescriptions>
-        </CollectionViewSource>
-    </Window.Resources>
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
@@ -45,7 +37,7 @@
                 </Grid.ColumnDefinitions>
                 <TextBox TextWrapping="Wrap" Text="Search Box" Height="20" Grid.Column="0" x:Name="SearchTextBox" TextChanged = "SearchTextBox_TextChanged" KeyDown="SearchTextBox_KeyDown" Foreground="#FFC8C8C8" GotFocus="SearchTextBox_GotFocus" />
             </Grid>
-            <DataGrid ItemsSource="{Binding Source={StaticResource OutlookMailItemCollectionViewSource}}"  AutoGenerateColumns="False" IsReadOnly="True" Grid.Row="2" x:Name="OutlookMailItemDataGrid"    >
+            <DataGrid ItemsSource="{Binding OutlookMailItemCollection}"  AutoGenerateColumns="False" IsReadOnly="True" Grid.Row="2" x:Name="OutlookMailItemDataGrid"    >
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Sender Name" Binding="{Binding SenderName}" IsReadOnly="True" />
                     <DataGridTextColumn Header="CC" Binding="{Binding Cc}"  IsReadOnly="True" x:Name="Column_CC" />
