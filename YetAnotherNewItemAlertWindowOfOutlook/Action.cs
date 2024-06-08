@@ -1,4 +1,5 @@
 using Microsoft.Office.Interop.Outlook;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -10,6 +11,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
     public enum ActionType
     {
         ActivateWindow,
+        AddCategory,
         CreateFile
     }
     [XmlRoot("Action")]
@@ -18,6 +20,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private ActionType action_type;
         private string? fileName = null;
         private string? body = null;
+        private string? attribute_value = null;
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         [XmlAttribute("fileName")]
@@ -28,6 +31,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
         [XmlAttribute("type")]
         public ActionType ActionType { get => action_type; set => action_type = value; }
+        [XmlAttribute("value")]
+        public string? AttributeValue { get => attribute_value; set => attribute_value = value; }
 
 
         private string ReplaceWords(string? source, MailItem mailItem)
@@ -57,6 +62,20 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
             Logger.Info($"file create or updated {valfileName}");
         }
+        public void AddCategory(MailItem mailItem,string? categoryID)
+        {
+            if(categoryID != null)
+            {
+            
+                if( new List<string>(mailItem.Categories.Split(';')).Exists(c => c.ToUpper()==categoryID.ToUpper() ))
+                {
+                    return;
+                }
+                mailItem.Categories = mailItem.Categories + ";" + categoryID;
+                mailItem.Save();
+            }
+
+        }
 
         public void Execute(MailItem mailItem, Window window)
         {
@@ -72,6 +91,10 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                             window.Activate();
                             window.WindowState = WindowState.Normal;
                         });
+                    break;
+                case ActionType.AddCategory:
+                    Logger.Info("add category.");
+                    AddCategory(mailItem, attribute_value);
                     break;
             }
         }

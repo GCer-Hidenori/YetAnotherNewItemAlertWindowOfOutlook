@@ -88,6 +88,41 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 Condition = rule_condition,
                 Actions = new List<Action>() { action1, action2 }
             };
+            target_normal_folder.Rules.Add(rule1);
+
+            var rule_condition2 = new Condition()
+            {
+                Type = ConditionType.And,
+                Conditions = new List<Condition>()
+                {
+                    new Condition()
+                    {
+                        Type = ConditionType.Subject,
+                        Value = "test"
+                    },
+                    new Condition()
+                    {
+                        Type=ConditionType.SenderName,
+                        Value = "test"
+                    },
+                    new Condition()
+                    {
+                        Type = ConditionType.SenderAddress,
+                        Value = "ccc@example.com"
+                    }
+                }
+            };
+            var rule2 = new Rule()
+            {
+                Condition = rule_condition2,
+                Actions = new List<Action>() {
+                    new Action(){
+                        ActionType = ActionType.AddCategory,
+                        AttributeValue = "important"
+                    }
+                }
+            };
+            target_normal_folder.Rules.Add(rule2);
 
 
             var filter_condition = new Condition()
@@ -115,7 +150,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             var filter = new Filter() { Conditions = new List<Condition>() { filter_condition } };
             target_normal_folder.Filter = filter;
 
-            target_normal_folder.Rules.Add(rule1);
             setting.Save();
             return setting;
         }
