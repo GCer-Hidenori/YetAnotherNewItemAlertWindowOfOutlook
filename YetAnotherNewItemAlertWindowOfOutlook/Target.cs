@@ -18,6 +18,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         private int timers_to_check_mail = 1;   //How many timers does it take to start?
         private FolderType folderType;
         private string path = "";
+        private int? mailReceivedDaysThreshold;
+
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         public FolderType TargetFolderType
         {
@@ -34,6 +36,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             get { return path; }
             set { path = value; }
         }
+        public int? MailReceivedDaysThreshold { get => mailReceivedDaysThreshold; set => mailReceivedDaysThreshold = value; }
+
         //private bool activateWindow = false;
 
 
@@ -56,7 +60,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         public Filter? Filter { get => filter; set => filter = value; }
         [XmlArray("Rules")]
         public List<Rule> Rules { get => rules; set => rules = value; }
-
+    
         public bool Filtering(MailItem mailItem)
         {
             if (Filter != null)

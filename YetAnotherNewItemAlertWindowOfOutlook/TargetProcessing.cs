@@ -37,6 +37,18 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
         public List<MailID> List_OutlookMailID { get => list_outlookmail_mail_id; set => list_outlookmail_mail_id = value; }
 
+        private Items GetItems(MAPIFolder folder)
+        {
+            if(target.MailReceivedDaysThreshold == null)
+            {
+                return folder.Items;
+            }
+            else
+            {
+                string filter = "[ReceivedTime] >= '" + System.DateTime.Now.AddDays(-1 * target.MailReceivedDaysThreshold.Value).ToString("yyyy/MM/dd HH:mm") + "'";
+                return folder.Items.Restrict(filter);
+            }
+        }
 
         public ResultOfTargetProcessing RefreshOutlookMailItem(IgnoreFileList ignoreFileList, Window window)
         {
@@ -44,7 +56,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             List<MailID> original_list_outlookmail_mail_id = new(list_outlookmail_mail_id);
             list_outlookmail_mail_id.Clear();
             var folder = GetTargetFolder();
-            foreach (object item in folder.Items)
+            var mails = GetItems(folder);
+            foreach (object item in mails)
             {
                 if (item is MailItem mailItem)
                 {

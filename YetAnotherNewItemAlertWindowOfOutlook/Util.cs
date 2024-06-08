@@ -43,6 +43,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 setting.Targets.Add(target_search_folder);
             }
             var target_normal_folder = new Target();
+            target_normal_folder.MailReceivedDaysThreshold = 30;
             var inboxFolder = outlook.GetNamespace("MAPI").GetDefaultFolder(OlDefaultFolders.olFolderInbox);
             target_normal_folder.TargetFolderType = Target.FolderType.NormalFolder;
             target_normal_folder.Path = inboxFolder.FullFolderPath;
