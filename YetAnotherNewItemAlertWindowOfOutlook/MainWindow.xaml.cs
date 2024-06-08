@@ -302,6 +302,12 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     if (mailItem != null)
                     {
                         mailItem.Display();
+                        System.Diagnostics.Process[] ps =
+    System.Diagnostics.Process.GetProcessesByName("outlook");
+                        if (0 < ps.Length)
+                        {
+                            Microsoft.VisualBasic.Interaction.AppActivate(ps[0].Id);
+                        }
                     }
                 }
                 catch (System.Runtime.InteropServices.COMException e2)
@@ -330,6 +336,12 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     if (mailItem != null)
                     {
                         mailItem.GetInspector.Display(false);
+                        System.Diagnostics.Process[] ps =
+    System.Diagnostics.Process.GetProcessesByName("outlook");
+                        if (0 < ps.Length)
+                        {
+                            Microsoft.VisualBasic.Interaction.AppActivate(ps[0].Id);
+                        }
                     }
                 }
                 catch (System.Runtime.InteropServices.COMException e2)
@@ -358,6 +370,12 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     if (mailItem != null)
                     {
                         mailItem.GetInspector.Activate();
+                        System.Diagnostics.Process[] ps =
+    System.Diagnostics.Process.GetProcessesByName("outlook");
+                        if (0 < ps.Length)
+                        {
+                            Microsoft.VisualBasic.Interaction.AppActivate(ps[0].Id);
+                        }
                     }
                 }
                 catch (System.Runtime.InteropServices.COMException e2)
@@ -388,6 +406,13 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                         mailItem.Display();
                         mailItem.GetInspector.Display(false);
                         mailItem.GetInspector.Activate();
+                        
+                        System.Diagnostics.Process[] ps =
+                            System.Diagnostics.Process.GetProcessesByName("outlook");
+                        if (0 < ps.Length)
+                        {
+                            Microsoft.VisualBasic.Interaction.AppActivate(ps[0].Id);
+                        }
                     }
                 }
                 catch (System.Runtime.InteropServices.COMException e2)
@@ -710,6 +735,9 @@ ConversationID:{mailItem.ConversationID}
                     break;
             }
         }
+
+
+
 
         /*
         private void OutlookMailItemDataGrid_Sorting(object sender, DataGridSortingEventArgs e)
