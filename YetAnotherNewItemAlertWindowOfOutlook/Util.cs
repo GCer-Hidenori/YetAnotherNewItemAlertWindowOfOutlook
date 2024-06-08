@@ -119,6 +119,10 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     new Action(){
                         ActionType = ActionType.AddCategory,
                         AttributeValue = "important"
+                    },
+                    new Action(){
+                        ActionType = ActionType.MoveMail,
+                        AttributeValue = @"aaa\Inbox\Test"
                     }
                 }
             };

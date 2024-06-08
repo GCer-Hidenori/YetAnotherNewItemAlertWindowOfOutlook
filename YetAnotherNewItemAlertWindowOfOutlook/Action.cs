@@ -13,7 +13,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
     {
         ActivateWindow,
         AddCategory,
-        CreateFile
+        CreateFile,
+        MoveMail
     }
     [XmlRoot("Action")]
     public class Action
@@ -84,6 +85,11 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
 
         }
+        public void MoveMail(MailItem item,string folder_path)
+        {
+            MAPIFolder folder = OutlookUtil.GetNormalFolder(folder_path);
+            item.Move(folder);
+        }
 
         public void Execute(MailItem mailItem, Window window)
         {
@@ -103,6 +109,10 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 case ActionType.AddCategory:
                     Logger.Info("add category.");
                     AddCategory(mailItem, attribute_value);
+                    break;
+                case ActionType.MoveMail:
+                    Logger.Info("MoveMail.");
+                    MoveMail(mailItem, attribute_value);
                     break;
             }
         }
