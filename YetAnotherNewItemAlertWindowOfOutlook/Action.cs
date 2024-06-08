@@ -1,4 +1,5 @@
 using Microsoft.Office.Interop.Outlook;
+using Microsoft.Win32;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -66,12 +67,19 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         {
             if(categoryID != null)
             {
-            
-                if( new List<string>(mailItem.Categories.Split(';')).Exists(c => c.ToUpper()==categoryID.ToUpper() ))
+                string registry_key_name = @"HKEY_CURRENT_USER\Control Panel\International";
+                string registry_value_nake = "sList";
+                RegistryKey registry_key = Registry.LocalMachine.OpenSubKey(registry_key_name);
+
+                // レジストリの値を取得
+                string delimiter = (string)registry_key.GetValue(registry_value_nake);
+
+                if ( new List<string>(mailItem.Categories.Split(delimiter)).Exists(c => c.ToUpper()==categoryID.ToUpper() ))
                 {
                     return;
                 }
-                mailItem.Categories = mailItem.Categories + ";" + categoryID;
+
+                mailItem.Categories = mailItem.Categories + delimiter + categoryID;
                 mailItem.Save();
             }
 
