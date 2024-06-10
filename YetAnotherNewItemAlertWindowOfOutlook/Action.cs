@@ -68,12 +68,15 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         {
             if(categoryID != null)
             {
+                /*
                 string registry_key_name = @"HKEY_CURRENT_USER\Control Panel\International";
-                string registry_value_nake = "sList";
+                string registry_value_name = "sList";
                 RegistryKey registry_key = Registry.LocalMachine.OpenSubKey(registry_key_name);
 
-                // レジストリの値を取得
-                string delimiter = (string)registry_key.GetValue(registry_value_nake);
+               
+                string delimiter = (string)registry_key.GetValue(registry_value_name);
+                */
+                string delimiter = ",";
 
                 if ( new List<string>(mailItem.Categories.Split(delimiter)).Exists(c => c.ToUpper()==categoryID.ToUpper() ))
                 {
