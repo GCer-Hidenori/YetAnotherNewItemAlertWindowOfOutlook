@@ -65,7 +65,6 @@
                         <MenuItem Header="Add to ignore list(Insert)" Click="HideMenuItem_Click"/>
                         <MenuItem Header="Inspect" Click="InspectMenuItem_Click"/>
                         <MenuItem Header="Moved to the same folder as the emails in the same thread" Click="MoveToSameFolderSameThres_Click"/>
-                        <MenuItem Header="Moved to the same folder as the emails in the same thread2" Click="MoveToSameFolderSameThres_Click2"/>
                         <MenuItem Header="Open1" Click="OpenMenuItem1_Click"/>
                         <MenuItem Header="Open2" Click="OpenMenuItem2_Click"/>
                         <MenuItem Header="Open3" Click="OpenMenuItem3_Click"/>

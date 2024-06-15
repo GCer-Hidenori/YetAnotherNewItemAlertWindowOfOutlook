@@ -56,25 +56,31 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             List<MailID> original_list_outlookmail_mail_id = new(list_outlookmail_mail_id);
             list_outlookmail_mail_id.Clear();
             var folder = GetTargetFolder();
-            var mails = GetItems(folder);
-            foreach (object item in mails)
+            var mails = OutlookUtil.Items2MailItems(GetItems(folder));
+            if(target.TargetFolderType==Target.FolderType.SearchFolder &&  target.ViewSameThreadSameFolderMail)
             {
-                if (item is MailItem mailItem)
+                var sameFolderSameThreadMails = OutlookUtil.GetSameFolderSameThreadMails(mails);
+                mails.AddRange(sameFolderSameThreadMails);
+                mails = mails.Distinct().ToList();
+            }
+
+            foreach (MailItem mailItem in mails)
+            {
+
+                if (ignoreFileList.Exists(folder.StoreID, mailItem.EntryID))
                 {
-                    if (ignoreFileList.Exists(folder.StoreID, mailItem.EntryID))
+                    continue;
+                }
+                else
+                {
+                    if (!target.Filtering(mailItem))
                     {
                         continue;
                     }
-                    else
-                    {
-                        if (!target.Filtering(mailItem))
-                        {
-                            continue;
-                        }
-                    }
-                    MailID mailID = new() { StoreID = folder.StoreID, EntryID = mailItem.EntryID };    //here
-                    List_OutlookMailID.Add(mailID);
                 }
+                MailID mailID = new() { StoreID = folder.StoreID, EntryID = mailItem.EntryID };    //here
+                List_OutlookMailID.Add(mailID);
+
             }
             result.List_new_mail_id = list_outlookmail_mail_id.Except(original_list_outlookmail_mail_id).ToList();
             var outlook = new Microsoft.Office.Interop.Outlook.Application();

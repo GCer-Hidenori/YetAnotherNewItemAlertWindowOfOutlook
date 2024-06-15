@@ -40,6 +40,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 var target_search_folder = new Target();
                 target_search_folder.TargetFolderType = Target.FolderType.SearchFolder;
                 target_search_folder.Path = searchFolder.FullFolderPath;
+                target_search_folder.ViewSameThreadSameFolderMail = true;
                 setting.Targets.Add(target_search_folder);
             }
             var target_normal_folder = new Target();

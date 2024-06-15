@@ -546,106 +546,6 @@ ConversationID:{mailItem.ConversationID}
             }
         }
 
-        private MAPIFolder? GetSameThreadMailFolder(MailItem mailItem)
-        {
-            var outlook = new Microsoft.Office.Interop.Outlook.Application();
-            var ns = outlook.GetNamespace("MAPI");
-
-            string folder_path = mailItem.Parent.FolderPath;
-            string sent_folder_path = ns.GetDefaultFolder(OlDefaultFolders.olFolderSentMail).FolderPath;
-            string draft_folder_path = ns.GetDefaultFolder(OlDefaultFolders.olFolderDrafts).FolderPath;
-            string conflicts_folder_path = "";
-            try
-            {
-                conflicts_folder_path = ns.GetDefaultFolder(OlDefaultFolders.olFolderConflicts).FolderPath;
-            }
-            catch (System.Runtime.InteropServices.COMException)
-            {
-                //
-            }
-            Conversation conversation = mailItem.GetConversation();
-            /*
-            foreach (Object samethread_root_mailItem in conversation.GetRootItems()) ‚±‚±
-            {
-                var a = samethread_root_mailItem.GetType();
-                */
-            /*
-            MAPIFolder? sameThreadMailFolder = conversation.GetChildren(samethread_root_mailItem).Cast<MailItem>().FirstOrDefault(m => (m.Parent.FolderPath != folder_path && m.Parent.FolderPath != sent_folder_path && m.Parent.FolderPath != draft_folder_path && m.Parent.FolderPath != conflicts_folder_path))?.Parent;
-            if (sameThreadMailFolder != null)
-            {
-                return sameThreadMailFolder;
-            }
-            */
-            /*
-            }
-            */
-
-            MailItem? sameThreadMailItem = conversation.GetRootItems().Cast<MailItem>().FirstOrDefault(m => (m.Parent.FolderPath != folder_path && m.Parent.FolderPath != sent_folder_path && m.Parent.FolderPath != draft_folder_path && m.Parent.FolderPath != conflicts_folder_path));
-            if (sameThreadMailItem != null)
-            {
-                return sameThreadMailItem.Parent;
-            }
-            else
-            {
-                foreach (MailItem samethread_root_mailItem in conversation.GetRootItems())
-                {
-                    sameThreadMailItem = conversation.GetChildren(samethread_root_mailItem).Cast<MailItem>().FirstOrDefault(m => (m.Parent.FolderPath != folder_path && m.Parent.FolderPath != sent_folder_path && m.Parent.FolderPath != draft_folder_path && m.Parent.FolderPath != conflicts_folder_path));
-                    if (sameThreadMailItem != null)
-                    {
-                        return sameThreadMailItem.Parent;
-                    }
-
-                }
-            }
-            return null;
-        }
-        private MAPIFolder? GetSameThreadMailFolder2(MailItem mailItem)
-        {
-            var outlook = new Microsoft.Office.Interop.Outlook.Application();
-            var ns = outlook.GetNamespace("MAPI");
-
-            string folder_path = mailItem.Parent.FolderPath;
-            string sent_folder_path = ns.GetDefaultFolder(OlDefaultFolders.olFolderSentMail).FolderPath;
-            string draft_folder_path = ns.GetDefaultFolder(OlDefaultFolders.olFolderDrafts).FolderPath;
-            string conflicts_folder_path = "";
-            try
-            {
-                conflicts_folder_path = ns.GetDefaultFolder(OlDefaultFolders.olFolderConflicts).FolderPath;
-            }
-            catch (System.Runtime.InteropServices.COMException)
-            {
-                //
-            }
-            Conversation conversation = mailItem.GetConversation();
-
-            //MailItem? sameThreadMailItem = conversation.GetRootItems().Cast<object>().FirstOrDefault(m => (TypeDescriptor.GetProperties(m)["MessageClass"].GetValue(m)== "IPM.Note\r\n" &&   m.Parent.FolderPath != folder_path && m.Parent.FolderPath != sent_folder_path && m.Parent.FolderPath != draft_folder_path && m.Parent.FolderPath != conflicts_folder_path));
-
-
-            foreach (object object_samethread_root_mailItem in conversation.GetRootItems())
-            {
-                if (TypeDescriptor.GetProperties(object_samethread_root_mailItem)["MessageClass"].GetValue(object_samethread_root_mailItem).ToString() == "IPM.Note")
-                {
-                    MailItem samethread_root_mailItem = (MailItem)object_samethread_root_mailItem;
-                    MAPIFolder samethread_root_mailItem_folder = samethread_root_mailItem.Parent;
-                    if (samethread_root_mailItem_folder.FolderPath != folder_path && samethread_root_mailItem_folder.FolderPath != sent_folder_path && samethread_root_mailItem_folder.FolderPath != draft_folder_path && samethread_root_mailItem_folder.FolderPath != conflicts_folder_path)
-                    {
-                        return samethread_root_mailItem.Parent;
-                    }
-                }
-                foreach (object object_samethread_mailItem in conversation.GetChildren(object_samethread_root_mailItem))
-                {
-                    if (TypeDescriptor.GetProperties(object_samethread_mailItem)["MessageClass"].GetValue(object_samethread_mailItem).ToString() == "IPM.Note")
-                    {
-                        MailItem samethread_mailItem = (MailItem)object_samethread_mailItem;
-                        if (samethread_mailItem.Parent.FolderPath != folder_path && samethread_mailItem.Parent.FolderPath != sent_folder_path && samethread_mailItem.Parent.FolderPath != draft_folder_path && samethread_mailItem.Parent.FolderPath != conflicts_folder_path)
-                        {
-                            return samethread_mailItem.Parent;
-                        }
-                    }
-                }
-            }
-            return null;
-        }
 
         private void MoveToSameFolderSameThres_Click(object sender, RoutedEventArgs e)
         {
@@ -661,7 +561,7 @@ ConversationID:{mailItem.ConversationID}
             foreach (OutlookMailItem outlookMailItem in listSelectedItems)
             {
                 MailItem mailItem = ns.GetItemFromID(outlookMailItem.EntryID, outlookMailItem.StoreID);
-                MAPIFolder? sameThreadMailFolder = GetSameThreadMailFolder(mailItem);
+                MAPIFolder? sameThreadMailFolder = OutlookUtil.GetSameThreadMailFolder(mailItem);
                 if (sameThreadMailFolder != null)
                 {
                     MessageBoxResult res = MessageBox.Show($"Would you like to move this mail to here?\n{sameThreadMailFolder.FullFolderPath}", "Confirmation", MessageBoxButton.YesNoCancel);
@@ -685,45 +585,7 @@ ConversationID:{mailItem.ConversationID}
                 }
             }
         }
-        private void MoveToSameFolderSameThres_Click2(object sender, RoutedEventArgs e)
-        {
-            e.Handled = true;
-            var outlook = new Microsoft.Office.Interop.Outlook.Application();
-            var ns = outlook.GetNamespace("MAPI");
-            if (datagrid.SelectedItems.Count > 10)
-            {
-                MessageBox.Show("Too many items selected.");
-                return;
-            }
-            List<OutlookMailItem> listSelectedItems = datagrid.SelectedItems.Cast<OutlookMailItem>().ToList();
-            foreach (OutlookMailItem outlookMailItem in listSelectedItems)
-            {
-                MailItem mailItem = ns.GetItemFromID(outlookMailItem.EntryID, outlookMailItem.StoreID);
-                MAPIFolder? sameThreadMailFolder = GetSameThreadMailFolder2(mailItem);
-                if (sameThreadMailFolder != null)
-                {
-                    MessageBoxResult res = MessageBox.Show($"Would you like to move this mail to here?\n{sameThreadMailFolder.FullFolderPath}", "Confirmation", MessageBoxButton.YesNoCancel);
-                    switch (res)
-                    {
-                        case MessageBoxResult.Yes:
-                            mailItem.Move(sameThreadMailFolder);
-                            context?.HideMail(outlookMailItem.EntryID, outlookMailItem.StoreID);
-                            break;
-                        case MessageBoxResult.Cancel:
-                            MessageBox.Show("Canceled.");
-                            return;
-                        default:
-                            break;
-                    }
-
-                }
-                else
-                {
-                    MessageBox.Show("No same thread mail in other folder.");
-                }
-            }
-        }
-
+   
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)
