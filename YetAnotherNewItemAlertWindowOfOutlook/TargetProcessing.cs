@@ -100,11 +100,11 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                             action.Execute(mailItem, window);
                         }
                     }
+                    while (Marshal.ReleaseComObject(mailItem) > 0) { }
+                    mailItem = null;
 
                 }
             }
-
-
             return result;
         }
     }
