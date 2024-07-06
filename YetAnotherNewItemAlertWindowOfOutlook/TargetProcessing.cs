@@ -1,6 +1,7 @@
 using Microsoft.Office.Interop.Outlook;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows;
 
 namespace YetAnotherNewItemAlertWindowOfOutlook
@@ -56,15 +57,15 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             List<MailID> original_list_outlookmail_mail_id = new(list_outlookmail_mail_id);
             list_outlookmail_mail_id.Clear();
             var folder = GetTargetFolder();
-            var mails = OutlookUtil.Items2MailItems(GetItems(folder));
+            var listMailItems = OutlookUtil.Items2MailItems(GetItems(folder));
             if(target.TargetFolderType==Target.FolderType.SearchFolder &&  target.ViewSameThreadSameFolderMail)
             {
-                var sameFolderSameThreadMails = OutlookUtil.GetSameFolderSameThreadMails(mails);
-                mails.AddRange(sameFolderSameThreadMails);
-                mails = mails.Distinct().ToList();
+                var sameFolderSameThreadMails = OutlookUtil.GetSameFolderSameThreadMails(listMailItems);
+                listMailItems.AddRange(sameFolderSameThreadMails);
+                listMailItems = listMailItems.Distinct().ToList();
             }
 
-            foreach (MailItem mailItem in mails)
+            foreach (MailItem mailItem in listMailItems)
             {
 
                 if (ignoreFileList.Exists(folder.StoreID, mailItem.EntryID))
@@ -80,6 +81,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 }
                 MailID mailID = new() { StoreID = folder.StoreID, EntryID = mailItem.EntryID };    //here
                 List_OutlookMailID.Add(mailID);
+                while (Marshal.ReleaseComObject(mailItem) > 0) { }
 
             }
             result.List_new_mail_id = list_outlookmail_mail_id.Except(original_list_outlookmail_mail_id).ToList();
