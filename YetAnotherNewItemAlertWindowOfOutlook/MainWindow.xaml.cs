@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -308,6 +309,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                         {
                             Microsoft.VisualBasic.Interaction.AppActivate(ps[0].Id);
                         }
+                        while (Marshal.ReleaseComObject(mailItem) > 0) { }
+                        mailItem = null;
+
                     }
                 }
                 catch (System.Runtime.InteropServices.COMException e2)
@@ -342,6 +346,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                         {
                             Microsoft.VisualBasic.Interaction.AppActivate(ps[0].Id);
                         }
+                        while (Marshal.ReleaseComObject(mailItem) > 0) { }
+                        mailItem = null;
+
                     }
                 }
                 catch (System.Runtime.InteropServices.COMException e2)
@@ -376,6 +383,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                         {
                             Microsoft.VisualBasic.Interaction.AppActivate(ps[0].Id);
                         }
+                        while (Marshal.ReleaseComObject(mailItem) > 0) { }
+                        mailItem = null;
+
                     }
                 }
                 catch (System.Runtime.InteropServices.COMException e2)
