@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace YetAnotherNewItemAlertWindowOfOutlook
 {
@@ -158,6 +159,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     {
                         return samethread_root_mailItem.Parent;
                     }
+                    //while (Marshal.ReleaseComObject(samethread_root_mailItem) > 0) { }
+                    samethread_root_mailItem = null;
+
                 }
                 foreach (object object_samethread_mailItem in conversation.GetChildren(object_samethread_root_mailItem))
                 {
@@ -168,8 +172,13 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                         {
                             return samethread_mailItem.Parent;
                         }
+                        //while (Marshal.ReleaseComObject(samethread_mailItem) > 0) { }
+                        samethread_mailItem = null;
+
                     }
                 }
+                //while (Marshal.ReleaseComObject(object_samethread_root_mailItem) > 0) { }
+
             }
             return null;
         }
