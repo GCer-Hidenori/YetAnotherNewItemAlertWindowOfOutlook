@@ -1,6 +1,7 @@
 ﻿using Microsoft.Office.Interop.Outlook;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 
 
@@ -84,6 +85,8 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     try
                     {
                         MailItem mailItem = ns.GetItemFromID(entryID, storeID);
+                        while (Marshal.ReleaseComObject(mailItem) > 0) { }
+                        mailItem = null;
                     }
                     catch (System.Exception e)
                     {

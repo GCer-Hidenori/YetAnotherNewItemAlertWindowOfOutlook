@@ -213,6 +213,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                         {
                             sameFolderSameThreadMails.Add(samethread_mailItem);
                         }
+                        samethread_mailItem = null;
                     }
                 }
             }
