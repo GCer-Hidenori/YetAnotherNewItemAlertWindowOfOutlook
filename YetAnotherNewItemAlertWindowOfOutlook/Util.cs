@@ -163,42 +163,6 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             return setting;
         }
 
-        //https://dobon.net/vb/dotnet/process/getprocessesbyfilename.html
-        public static System.Diagnostics.Process[] GetProcessesByFileName(string searchFileName)
-        {
-            searchFileName = searchFileName.ToLower();
-            System.Collections.ArrayList list = new System.Collections.ArrayList();
-
-            //すべてのプロセスを列挙する
-            foreach (System.Diagnostics.Process p
-                in System.Diagnostics.Process.GetProcesses())
-            {
-                string fileName;
-                try
-                {
-                    //メインモジュールのパスを取得する
-                    fileName = p.MainModule.FileName;
-                }
-                catch (System.ComponentModel.Win32Exception)
-                {
-                    //MainModuleの取得に失敗
-                    fileName = "";
-                }
-                if (0 < fileName.Length)
-                {
-                    //ファイル名の部分を取得する
-                    fileName = System.IO.Path.GetFileName(fileName);
-                    //探しているファイル名と一致した時、コレクションに追加
-                    if (searchFileName.Equals(fileName.ToLower()))
-                    {
-                        list.Add(p);
-                    }
-                }
-            }
-
-            //コレクションを配列にして返す
-            return (System.Diagnostics.Process[])
-                list.ToArray(typeof(System.Diagnostics.Process));
-        }
+     
     }
 }
