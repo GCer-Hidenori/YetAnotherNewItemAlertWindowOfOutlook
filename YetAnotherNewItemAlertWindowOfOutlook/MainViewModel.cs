@@ -130,6 +130,10 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                             throw new ArgumentException();
                         }
                     }
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
                     timer_count++;
                 }
             }
