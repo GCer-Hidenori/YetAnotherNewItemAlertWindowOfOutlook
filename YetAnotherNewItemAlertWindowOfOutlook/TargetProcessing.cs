@@ -92,16 +92,25 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             {
                 foreach (Rule rule in target.Rules)
                 {
-                    MailItem mailItem = ns.GetItemFromID(new_mail_id.EntryID, new_mail_id.StoreID);
-                    if (rule.Condition != null && rule.Condition.Evaluate(mailItem))
+                    MailItem mailItem;
+                    try
                     {
-                        foreach (Action action in rule.Actions)
+                        mailItem = ns.GetItemFromID(new_mail_id.EntryID, new_mail_id.StoreID);
+                        if (rule.Condition != null && rule.Condition.Evaluate(mailItem))
                         {
-                            action.Execute(mailItem, window);
+                            foreach (Action action in rule.Actions)
+                            {
+                                action.Execute(mailItem, window);
+                            }
                         }
+                        while (Marshal.ReleaseComObject(mailItem) > 0) { }
+                        mailItem = null;
+                    }catch (System.Runtime.InteropServices.COMException e)
+                    {
+                        Logger.Error("Error happened when processing mail item. Skip this mail item.");
+                        Logger.Error($"mail entry id {new_mail_id.EntryID}");
+                        Logger.Error(e);
                     }
-                    while (Marshal.ReleaseComObject(mailItem) > 0) { }
-                    mailItem = null;
 
                 }
             }
