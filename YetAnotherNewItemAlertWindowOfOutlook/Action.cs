@@ -88,11 +88,12 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
 
         }
-        public void MoveMail(MailItem item,string folder_path)
-        {
-            MAPIFolder folder = OutlookUtil.GetNormalFolder(folder_path);
-            item.Move(folder);
-        }
+
+        //public void MoveMail(MailItem item,string folder_path)
+        //{
+        //    MAPIFolder folder = OutlookUtil.GetNormalFolder(folder_path);
+        //    item.Move(folder);
+        //}
 
         public void Execute(MailItem mailItem, Window window)
         {
@@ -115,7 +116,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     break;
                 case ActionType.MoveMail:
                     Logger.Info("MoveMail.");
-                    MoveMail(mailItem, attribute_value);
+                    OutlookUtil.MoveMail(mailItem, attribute_value);
                     break;
             }
         }

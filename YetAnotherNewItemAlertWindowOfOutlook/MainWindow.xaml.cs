@@ -469,6 +469,13 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             e.Handled = true;
             HideItemByEvent();
         }
+        private void EasyFilterMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
+            EasyFilter();
+        }
+
+
         private void DeleteMenuItem_Click(object sender, RoutedEventArgs e)
         {
             e.Handled = true;

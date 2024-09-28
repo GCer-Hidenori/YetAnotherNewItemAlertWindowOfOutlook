@@ -246,6 +246,11 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             }
             return mailItems;
         }
+        public static void MoveMail(MailItem item, string folder_path)
+        {
+            MAPIFolder folder = OutlookUtil.GetNormalFolder(folder_path);
+            item.Move(folder);
+        }
     }
 
 }

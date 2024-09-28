@@ -59,6 +59,7 @@
                 </DataGrid.RowStyle>
                 <DataGrid.ContextMenu>
                     <ContextMenu>
+                        <MenuItem Header="EasyFilter" Click="EasyFilterMenuItem_Click"/>
                         <MenuItem Header="Open" Click="OpenMenuItem_Click"/>
                         <MenuItem Header="Delete from this app(Delete)" Click="DeleteMenuItem_Click"/>
                         <MenuItem Header="Delete from Outlook(Shift-Delete)" Click="DeleteFromOutlookMenuItem_Click"/>

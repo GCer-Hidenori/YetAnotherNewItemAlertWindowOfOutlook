@@ -10,6 +10,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
         public static readonly string fileName = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "setting.xml");
         private int timer_interval_sec = 60;
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private string? easyFilterXmlPath = null;
 
         private List<Column> columns = new();
 
@@ -37,6 +38,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
 
 
         public List<Column> Columns { get => columns; set => columns = value; }
+        public string? EasyFilterXmlPath { get => easyFilterXmlPath; set => easyFilterXmlPath = value; }
 
         public void Save()
         {
