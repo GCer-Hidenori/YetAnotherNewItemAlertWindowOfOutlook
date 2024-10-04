@@ -86,7 +86,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                         return false;
                     }
                 case "cc":
-                    if (mailItem.CC.Contains(conditionElement.InnerText))
+                    if (mailItem.CC?.Contains(conditionElement.InnerText) == true)
                     {
                         return true;
                     }
@@ -100,7 +100,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     {
                         return true;
                     }
-                    else if (mailItem.CC.Contains(conditionElement.InnerText))
+                    else if (mailItem.CC?.Contains(conditionElement.InnerText) == true)
                     {
                         return true;
                     }
