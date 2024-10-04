@@ -40,9 +40,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 case "false":
                     return false;
                 case "and":
-                    return conditionElement.ChildNodes.Cast<XmlElement>().ToList().All(c => EasyFilter_ConditionEvaluate(c, mailItem));
+                    return conditionElement.ChildNodes.Cast<XmlNode>().Where(n => n.NodeType == XmlNodeType.Element).Cast<XmlElement>().ToList().All(c => EasyFilter_ConditionEvaluate(c, mailItem));
                 case "or":
-                    return conditionElement.ChildNodes.Cast<XmlElement>().ToList().Any(c => EasyFilter_ConditionEvaluate(c, mailItem));
+                    return conditionElement.ChildNodes.Cast<XmlNode>().Where(n => n.NodeType == XmlNodeType.Element).Cast<XmlElement>().ToList().Any(c => EasyFilter_ConditionEvaluate(c, mailItem));
                 case "not":
                     return !EasyFilter_ConditionEvaluate((XmlElement)conditionElement.FirstChild, mailItem);
                 case "condition":
@@ -160,7 +160,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                     Logger.Warn(e2);
                     return;
                 }
-                foreach(XmlElement filterElement in root.ChildNodes)
+                foreach(XmlElement filterElement in root.ChildNodes.Cast<XmlNode>().Where(n=>n.NodeType==XmlNodeType.Element))
                 {
                     XmlElement conditionElement = (XmlElement)filterElement.SelectSingleNode("condition");
                     if (EasyFilter_ConditionEvaluate(conditionElement,mailItem))
