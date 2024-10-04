@@ -175,7 +175,9 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                             case "delete":
                                 if (operationElement.GetAttribute("kakunin") != null)
                                 {
-                                    MessageBoxResult res2 = MessageBox.Show($"Would you like to delete this mail from Outlook?", "Confirmation", MessageBoxButton.YesNoCancel);
+                                    MessageBoxResult res2 = MessageBox.Show($@"Would you like to delete this mail from Outlook?
+subject: {mailItem.Subject}
+", "Confirmation", MessageBoxButton.YesNoCancel);
                                     switch (res2)
                                     {
                                         case MessageBoxResult.Yes:
@@ -197,7 +199,10 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                             case "moveto":
                                 if (operationElement.GetAttribute("kakunin") != null)
                                 {
-                                    MessageBoxResult res2 = MessageBox.Show($"Would you like to move this mail?", "Confirmation", MessageBoxButton.YesNoCancel);
+                                    MessageBoxResult res2 = MessageBox.Show($@"Would you like to move this mail?
+subject: {mailItem.Subject}
+moveto : {operationElement.InnerText}
+", "Confirmation", MessageBoxButton.YesNoCancel);
                                     switch (res2)
                                     {
 
