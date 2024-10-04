@@ -1,4 +1,4 @@
-﻿using Microsoft.Office.Interop.Outlook;
+using Microsoft.Office.Interop.Outlook;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -42,7 +42,7 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 case "and":
                     return conditionElement.ChildNodes.Cast<XmlNode>().Where(n => n.NodeType == XmlNodeType.Element).Cast<XmlElement>().ToList().All(c => EasyFilter_ConditionEvaluate(c, mailItem));
                 case "or":
-                    return conditionElement.ChildNodes.Cast<XmlNode>().Where(n => n.NodeType == XmlNodeType.Element).Cast<XmlElement>().ToList().Any(c => EasyFilter_ConditionEvaluate(c, mailItem));
+                        return conditionElement.ChildNodes.Cast<XmlNode>().Where(n => n.NodeType == XmlNodeType.Element).Cast<XmlElement>().ToList().Any(c => EasyFilter_ConditionEvaluate(c, mailItem));
                 case "not":
                     return !EasyFilter_ConditionEvaluate((XmlElement)conditionElement.FirstChild, mailItem);
                 case "condition":
@@ -143,84 +143,85 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
                 return;
             }
             
-            XmlNode root = xmlDoc.DocumentElement;
-
-
             List<OutlookMailItem> listSelectedItems = datagrid.SelectedItems.Cast<OutlookMailItem>().ToList();
             foreach (OutlookMailItem outlookMailItem in listSelectedItems)
             {
-                MailItem mailItem;
-                try
+                EasyFilter_Operation(outlookMailItem,ns,xmlDoc);
+            }
+        }
+        private void EasyFilter_Operation(OutlookMailItem outlookMailItem,NameSpace ns,XmlDocument xmlDoc)
+        {
+            XmlNode root = xmlDoc.DocumentElement;
+            MailItem mailItem;
+            try
+            {
+                mailItem = ns.GetItemFromID(outlookMailItem.EntryID, outlookMailItem.StoreID);
+            }
+            catch (System.Runtime.InteropServices.COMException e2)
+            {
+                MessageBox.Show("Can't open mail.");
+                Logger.Warn(e2);
+                return;
+            }
+            foreach (XmlElement filterElement in root.ChildNodes.Cast<XmlNode>().Where(n => n.NodeType == XmlNodeType.Element))
+            {
+                XmlElement conditionElement = (XmlElement)filterElement.SelectSingleNode("condition");
+                if (EasyFilter_ConditionEvaluate(conditionElement, mailItem))
                 {
-                    mailItem = ns.GetItemFromID(outlookMailItem.EntryID, outlookMailItem.StoreID);
-                }
-                catch (System.Runtime.InteropServices.COMException e2)
-                {
-                    MessageBox.Show("Can't open mail.");
-                    Logger.Warn(e2);
-                    return;
-                }
-                foreach(XmlElement filterElement in root.ChildNodes.Cast<XmlNode>().Where(n=>n.NodeType==XmlNodeType.Element))
-                {
-                    XmlElement conditionElement = (XmlElement)filterElement.SelectSingleNode("condition");
-                    if (EasyFilter_ConditionEvaluate(conditionElement,mailItem))
+                    foreach (XmlElement operationElement in filterElement.SelectNodes("operation/*"))
                     {
-                        foreach(XmlElement operationElement in filterElement.SelectNodes("operation/*"))
+                        switch (operationElement.Name)
                         {
-                           switch(operationElement.Name)
-                           {
-                               case "delete":
-                                    if (operationElement.GetAttribute("kakunin") != null)
+                            case "delete":
+                                if (operationElement.GetAttribute("kakunin") != null)
+                                {
+                                    MessageBoxResult res2 = MessageBox.Show($"Would you like to delete this mail from Outlook?", "Confirmation", MessageBoxButton.YesNoCancel);
+                                    switch (res2)
                                     {
-                                        MessageBoxResult res2 = MessageBox.Show($"Would you like to delete this mail from Outlook?", "Confirmation", MessageBoxButton.YesNoCancel);
-                                        switch (res2)
-                                        {
-                                            case MessageBoxResult.Yes:
-                                                EasyFilter_DeleteMail(mailItem);
-                                                break;
-                                            case MessageBoxResult.Cancel:
-                                                MessageBox.Show("Canceled.");
-                                                return;
-                                            default:
-                                                break;
-                                        }
+                                        case MessageBoxResult.Yes:
+                                            EasyFilter_DeleteMail(mailItem);
+                                            return;
+                                        case MessageBoxResult.Cancel:
+                                            MessageBox.Show("Canceled.");
+                                            return;
+                                        default:
+                                            break;
                                     }
-                                    else
+                                }
+                                else
+                                {
+                                    EasyFilter_DeleteMail(mailItem);
+                                    return;
+                                }
+                                break;
+                            case "moveto":
+                                if (operationElement.GetAttribute("kakunin") != null)
+                                {
+                                    MessageBoxResult res2 = MessageBox.Show($"Would you like to move this mail?", "Confirmation", MessageBoxButton.YesNoCancel);
+                                    switch (res2)
                                     {
-                                        EasyFilter_DeleteMail(mailItem);
-                                    }
-                                    break;
-                                case "moveto":
-                                    if(operationElement.GetAttribute("kakunin") != null)
-                                    {
-                                        MessageBoxResult res2 = MessageBox.Show($"Would you like to move this mail?", "Confirmation", MessageBoxButton.YesNoCancel);
-                                        switch (res2)
-                                        {
 
-                                            case MessageBoxResult.Yes:
-                                                context?.HideMail(mailItem.EntryID, mailItem.Parent.StoreID);
-                                                OutlookUtil.MoveMail(mailItem, operationElement.InnerText);
-                                                break;
-                                            case MessageBoxResult.Cancel:
-                                                MessageBox.Show("Canceled.");
-                                                return;
-                                            default:
-                                                break;
-                                        }
+                                        case MessageBoxResult.Yes:
+                                            context?.HideMail(mailItem.EntryID, mailItem.Parent.StoreID);
+                                            OutlookUtil.MoveMail(mailItem, operationElement.InnerText);
+                                            return;
+                                        case MessageBoxResult.Cancel:
+                                            MessageBox.Show("Canceled.");
+                                            return;
+                                        default:
+                                            break;
                                     }
-                                    else
-                                    {
-                                        context?.HideMail(mailItem.EntryID, mailItem.Parent.StoreID);
-                                        OutlookUtil.MoveMail(mailItem, operationElement.Value);
-                                    }
-                                    break;
-     
-
-                                default:
-                                   break;
-                           }
+                                }
+                                else
+                                {
+                                    context?.HideMail(mailItem.EntryID, mailItem.Parent.StoreID);
+                                    OutlookUtil.MoveMail(mailItem, operationElement.Value);
+                                    return;
+                                }
+                                break;
+                            default:
+                                break;
                         }
-
                     }
                 }
             }

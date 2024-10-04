@@ -1,4 +1,4 @@
-﻿using Microsoft.Office.Interop.Outlook;
+using Microsoft.Office.Interop.Outlook;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
