@@ -58,12 +58,14 @@ namespace YetAnotherNewItemAlertWindowOfOutlook
             list_outlookmail_mail_id.Clear();
             var folder = GetTargetFolder();
             var listMailItems = OutlookUtil.Items2MailItems(GetItems(folder));
+            /* Issue #5 Outlook mail search takes too long
             if(target.TargetFolderType==Target.FolderType.SearchFolder &&  target.ViewSameThreadSameFolderMail)
             {
                 var sameFolderSameThreadMails = OutlookUtil.GetSameFolderSameThreadMails(listMailItems);
                 listMailItems.AddRange(sameFolderSameThreadMails);
                 listMailItems = listMailItems.Distinct().ToList();
             }
+            */
 
             foreach (MailItem mailItem in listMailItems)
             {
